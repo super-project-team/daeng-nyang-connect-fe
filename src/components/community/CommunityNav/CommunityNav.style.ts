@@ -17,7 +17,7 @@ export const TitleAndSearchWrap = styled.div<NavOptionProps>`
 	padding: ${(props) => (props.$isMobile ? '0 0 0 4px' : '0 0 20px 0')};
 	margin: ${(props) =>
 		props.$isMobile
-			? '70px 10px 0'
+			? '70px 0 0 0'
 			: props.$isMaxWidth
 			  ? '105px 30px 0'
 			  : '105px 0 0 0'};
@@ -76,9 +76,9 @@ export const Nav = styled.nav<NavOptionProps>`
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: ${(props) => (props.$isMobile ? 'calc(100% - 20px)' : '15%')};
+	width: ${(props) => (props.$isMobile ? '100%' : '15%')};
 	min-height: ${(props) => (props.$isMobile ? '100%' : '100vh')};
-	margin: ${(props) => (props.$isMobile ? '0 10px' : '0')};
+	margin: ${(props) => (props.$isMobile ? '0' : '0')};
 	padding: ${(props) =>
 		props.$isTablet ? '10px' : props.$isMobile ? '0px' : '20px'};
 	border-right: ${(props) =>
@@ -88,6 +88,7 @@ export const Nav = styled.nav<NavOptionProps>`
 
 	& div {
 		margin: 4px 0;
+		width: 100%;
 		text-align: center;
 
 		& button:hover {
@@ -104,7 +105,7 @@ export const NavOption = styled.button<NavOptionProps>`
 	outline: none;
 	background-color: transparent;
 	font-size: ${(props) =>
-		props.$isTablet ? '16px' : props.$isMobile ? '16px' : '18px'};
+		props.$isTablet ? '16px' : props.$isMobile ? '14px' : '18px'};
 	cursor: pointer;
 `;
 

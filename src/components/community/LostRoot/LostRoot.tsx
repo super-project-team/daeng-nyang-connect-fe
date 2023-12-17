@@ -1,69 +1,78 @@
+import { useQuery } from 'react-query';
+import { getAllBoard } from '../../../api/communityApi';
 import { useResponsive } from '../../../hooks/useResponsive';
+import { Board, RootState } from '../../../types/BoardTypes';
 import LostList from './LostList/LostList';
 import { LostLists } from './LostRoot.style';
-
-export interface LostPet {
-	id: number;
-	petImage: string;
-	place: string;
-	lost_date: string;
-	lost_time: string;
-	lost_minute: string;
-	text: string;
-}
-
-const getRandomDate = (): string => {
-	const start = new Date(2019, 0, 1);
-	const end = new Date();
-	const randomDate = new Date(
-		start.getTime() + Math.random() * (end.getTime() - start.getTime()),
-	);
-
-	return randomDate
-		.toLocaleDateString('ko-KR', {
-			year: 'numeric',
-			month: '2-digit',
-			day: '2-digit',
-		})
-		.replace(/\. /g, '.')
-		.replace(/\.$/, '');
-};
-
-const getRandomTime = (): string => {
-	const hour = Math.floor(Math.random() * 24);
-	const minute = Math.floor(Math.random() * 60);
-	return `${hour.toString().padStart(2, '0')}:${minute
-		.toString()
-		.padStart(2, '0')}`;
-};
-
-const createRandomLostPetList = (): LostPet[] => {
-	const lostPetList: LostPet[] = [];
-	for (let i = 0; i < 100; i++) {
-		const randomTime = getRandomTime();
-		lostPetList.push({
-			id: i,
-			petImage: `pet-${i}.jpg`,
-			place: `Place${i}`,
-			lost_date: getRandomDate(),
-			lost_time: randomTime.split(':')[0],
-			lost_minute: randomTime.split(':')[1],
-			text: `please find my pet ${i}`,
-		});
-	}
-	return lostPetList;
-};
+import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import useInfiniteScroll from '../../../hooks/useInfiniteScroll';
+import useSearchData from '../../../hooks/useSearchData';
 
 const LostRoot = () => {
-	const lostPets = createRandomLostPetList();
-
 	const { $isTablet, $isMobile } = useResponsive();
+
+	const category = useSelector(
+		(state: RootState) => state.community.subCategory,
+	);
+
+	const [filteredData, setFilteredData] = useState<Board[]>([]);
+
+	const fetchGetAllLostBoard = async (): Promise<Board[]> => {
+		const response = await getAllBoard('lost');
+
+		return response;
+	};
+
+	const { data, refetch, isLoading } = useQuery<Board[]>(
+		'lostAllBoard',
+		fetchGetAllLostBoard,
+	);
+
+	const { searchData, isSearch } = useSearchData();
+	console.log('searchData', searchData);
+
+	useEffect(() => {
+		if (Array.isArray(data)) {
+			const filteredData = (data as Board[])?.filter((item) => {
+				if (category === null) {
+					return item;
+				} else {
+					return item.category === category;
+				}
+			});
+			setFilteredData(filteredData);
+		}
+	}, [data, category]);
+
+	const visibleData = useInfiniteScroll(data, refetch, 6);
+	const visibleFilteredData = useInfiniteScroll(filteredData, refetch, 6);
+
+	console.log('visibleData', visibleData);
+
+	if (isLoading) return <div>로딩 중..</div>;
 
 	return (
 		<LostLists $isMobile={$isMobile} $isTablet={$isTablet}>
-			{lostPets.map((pet) => (
-				<LostList key={pet.id} list={pet} />
-			))}
+			{isSearch
+				? Array.isArray(searchData) &&
+				  searchData.map(
+						(list) =>
+							'boardId' in list && <LostList key={list.boardId} list={list} />,
+				  )
+				: category === ''
+				  ? visibleData?.map(
+							(list) =>
+								'boardId' in list && (
+									<LostList key={list.boardId} list={list} />
+								),
+				    )
+				  : visibleFilteredData?.map(
+							(list) =>
+								'boardId' in list && (
+									<LostList key={list.boardId} list={list} />
+								),
+				    )}
 		</LostLists>
 	);
 };

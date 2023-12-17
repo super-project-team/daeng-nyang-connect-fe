@@ -8,11 +8,14 @@ interface NavOptionProps {
 export const CommentWrap = styled.div<NavOptionProps>`
 	width: 100%;
 	padding: ${(props) => (props.$isMobile ? '0px' : '8px 16px')};
+	padding-bottom: ${(props) => (props.$isMobile ? '60px' : '60px')};
 `;
 
 export const ImageAndTextWrap = styled.div<NavOptionProps>`
 	display: flex;
 	flex-direction: ${(props) => (props.$isMobile ? 'column' : 'row')};
+	min-height: ${(props) => (props.$isMobile ? '500px' : '450px')};
+	height: auto;
 	padding: 12px 0px;
 	margin-bottom: 12px;
 	border-bottom: 1px solid var(--color-light-salmon);
@@ -24,7 +27,7 @@ export const ImageWrap = styled.div<NavOptionProps>`
 
 	& img {
 		width: 100%;
-		height: auto;
+		height: ${(props) => (props.$isMobile ? '300px' : '480px')};
 		max-width: 100%;
 	}
 `;
@@ -51,6 +54,7 @@ export const TextBox = styled.div<NavOptionProps>`
 		margin-top: 8px;
 		font-size: ${(props) =>
 			props.$isTablet ? '14px' : props.$isMobile ? '12px' : '16px'};
+		line-height: 1.5;
 	}
 `;
 
@@ -79,4 +83,11 @@ export const Description = styled.div<NavOptionProps>`
 	font-size: ${(props) =>
 		props.$isTablet ? '14px' : props.$isMobile ? '12px' : '16px'};
 	font-weight: 300;
+`;
+
+export const Text = styled.div<NavOptionProps>`
+	margin-top: 8px;
+	font-size: ${(props) =>
+		props.$isTablet ? '14px' : props.$isMobile ? '12px' : '16px'};
+	line-height: 1.5;
 `;

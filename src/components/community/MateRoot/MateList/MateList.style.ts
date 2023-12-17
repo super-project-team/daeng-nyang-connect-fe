@@ -9,9 +9,13 @@ export const MateLi = styled.li<NavOptionProps>`
 	display: flex;
 	flex-direction: column;
 	height: ${(props) => (props.$isMobile ? '200px' : '250px')};
-	padding: 16px;
+	padding: ${(props) => (props.$isMobile ? '8px' : '16px')};
 	border: 1px solid var(--color-peach);
 	border-radius: 8px;
+
+	& p {
+		line-height: 1.5;
+	}
 `;
 
 export const SubNav = styled.div`
@@ -57,7 +61,7 @@ export const PlaceWrap = styled.div<NavOptionProps>`
 		props.$isTablet ? '14px' : props.$isMobile ? '12px' : '16px'};
 `;
 
-export const ButtonWrap = styled.div`
+export const ButtonWrap = styled.div<NavOptionProps>`
 	text-align: right;
 
 	& button:hover {
@@ -68,7 +72,7 @@ export const ButtonWrap = styled.div`
 
 export const Button = styled.button<NavOptionProps>`
 	padding: ${(props) =>
-		props.$isTablet ? '4px 16px' : props.$isMobile ? '4px 8px' : '4px 16px'};
+		props.$isTablet ? '4px 16px' : props.$isMobile ? '2px 4px' : '4px 16px'};
 	border-radius: 4px;
 	border: 1px solid var(--color-light-salmon);
 	outline: none;

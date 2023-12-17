@@ -1,3 +1,4 @@
+import { useParams } from 'react-router-dom';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import Comment from '../../../Comment/Comment';
 import RegisterCommentForm from '../../../Comment/RegisterCommentForm';
@@ -11,65 +12,62 @@ import {
 	SubTitle,
 	TextBox,
 } from './MyPetDetail.style';
-
-export interface CommentForm {
-	user_id: number;
-	nickname: string;
-	comment: string;
-	created_at: string;
-}
-
-const getRandomDate = (): string => {
-	const start = new Date(2020, 0, 1);
-	const end = new Date();
-	const randomDate = new Date(
-		start.getTime() + Math.random() * (end.getTime() - start.getTime()),
-	);
-	return randomDate.toISOString().split('T')[0];
-};
-
-const createRandomComments = (): CommentForm[] => {
-	const comments: CommentForm[] = [];
-	for (let i = 1; i <= 10; i++) {
-		comments.push({
-			user_id: i,
-			nickname: `User${i}`,
-			comment: `This is a comment ${i}`,
-			created_at: getRandomDate(),
-		});
-	}
-	return comments;
-};
+import { getBoard } from '../../../../api/communityApi';
+import { useQuery } from 'react-query';
+import { BoardDetail } from '../../../../types/BoardTypes';
+import { useState } from 'react';
 
 const MyPetDetail = () => {
-	const commentsList = createRandomComments();
-	const images = ['/assets/cat.jpeg', '/assets/cat.jpeg'];
+	const [modifyPopUpClick, setModifyPopUpClick] = useState(false);
+	const [modifyCommentId, setModifyCommentId] = useState(0);
 
 	const { $isTablet, $isMobile } = useResponsive();
+	const { myPetId } = useParams();
+
+	const fetchGetDetailBoard = async (): Promise<BoardDetail> => {
+		const response = await getBoard('my_pet', myPetId);
+
+		return response;
+	};
+
+	const { data, refetch } = useQuery('myPetDetailBoard', fetchGetDetailBoard);
 
 	return (
 		<div>
 			<DetailUserNav />
 			<ImageAndTextWrap $isMobile={$isMobile} $isTablet={$isTablet}>
 				<ImageWrap $isMobile={$isMobile} $isTablet={$isTablet}>
-					<CommunitySwiper images={images} />
+					<CommunitySwiper images={data?.img} />
 				</ImageWrap>
 				<TextBox $isMobile={$isMobile} $isTablet={$isTablet}>
 					<h3>자랑하기</h3>
 					<Description $isMobile={$isMobile} $isTablet={$isTablet}>
 						상세 설명
 					</Description>
-					<p>내 고양이는 요...</p>
+					<p>{data?.text}</p>
 				</TextBox>
 			</ImageAndTextWrap>
 			<CommentWrap $isMobile={$isMobile}>
 				<SubTitle>댓글</SubTitle>
 				<ul>
-					{commentsList.map((list) => (
-						<Comment key={list.user_id} list={list} />
-					))}
+					{data &&
+						data.comments?.map((list) => {
+							if ('commentsId' in list) {
+								return (
+									<Comment
+										key={list.commentsId}
+										list={list}
+										refetch={refetch}
+										modifyCommentId={modifyCommentId}
+										setModifyCommentId={setModifyCommentId}
+										setModifyPopUpClick={setModifyPopUpClick}
+										modifyPopUpClick={modifyPopUpClick}
+									/>
+								);
+							}
+						})}
 				</ul>
-				<RegisterCommentForm />
+				{modifyCommentId === 0 && <RegisterCommentForm />}
 			</CommentWrap>
 		</div>
 	);

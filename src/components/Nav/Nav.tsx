@@ -26,7 +26,7 @@ const Nav = () => {
 	const { $isMaxWidth, $isMobile } = useResponsive();
 	const [mMenuIsOpen, setmMenuIsOpen] = useState(false);
 
-	const scrollProps = scrollNav() ? { isHome: 'home' } : {};
+	const scrollProps = scrollNav() ? { $isHome: 'home' } : {};
 
 	const id = 3;
 

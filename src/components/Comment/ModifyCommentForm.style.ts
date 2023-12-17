@@ -6,16 +6,18 @@ interface NavOptionProps {
 }
 
 export const Form = styled.form`
+	position: absolute;
+	top: -50px;
+	left: 50%;
 	width: 100%;
 	height: 150px;
 	padding: 10px;
 	margin-top: 60px;
+	background-color: white;
+	transform: translateX(-50%);
 	border: 1px solid var(--color-light-salmon);
 	border-radius: 10px;
-
-	& textarea {
-		letter-spacing: 0.1px;
-	}
+	z-index: 10;
 `;
 
 export const TextArea = styled.textarea`
@@ -38,4 +40,9 @@ export const ButtonWrap = styled.div<NavOptionProps>`
 		cursor: pointer;
 		font-size: ${(props) => (props.$isMobile ? '14px' : '16px')};
 	}
+`;
+
+export const ButtonContainer = styled.div`
+	display: flex;
+	justify-content: flex-end;
 `;

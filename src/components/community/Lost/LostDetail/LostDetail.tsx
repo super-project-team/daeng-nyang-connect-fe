@@ -1,3 +1,5 @@
+import { useParams } from 'react-router-dom';
+import { getBoard } from '../../../../api/communityApi';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import Comment from '../../../Comment/Comment';
 import RegisterCommentForm from '../../../Comment/RegisterCommentForm';
@@ -13,70 +15,33 @@ import {
 	TextBox,
 	DescriptionSpan,
 } from './LostDetail.style';
-
-export interface CommentForm {
-	user_id: number;
-	nickname: string;
-	comment: string;
-	created_at: string;
-}
-
-const getRandomDate = (): string => {
-	const start = new Date(2020, 0, 1);
-	const end = new Date();
-	const randomDate = new Date(
-		start.getTime() + Math.random() * (end.getTime() - start.getTime()),
-	);
-	return randomDate.toISOString().split('T')[0];
-};
-
-const createRandomComments = (): CommentForm[] => {
-	const comments: CommentForm[] = [];
-	for (let i = 1; i <= 10; i++) {
-		comments.push({
-			user_id: i,
-			nickname: `User${i}`,
-			comment: `This is a comment ${i}`,
-			created_at: getRandomDate(),
-		});
-	}
-	return comments;
-};
-
-[
-	{
-		load_board_id: 1,
-		user_id: 3,
-		user_thumbnail: 'url',
-		category: '',
-		place: '경기도 안산시 상록구',
-		reward: 100000,
-		phone: '010-0000-0001',
-		kind: 'cat', // 강아지, 고양이, 그 외 반려동물
-		breed: '', // 품종
-		gender: 'male',
-		color: 'white',
-		lost_date: '2023.11.07',
-		lost_time: '오후 02:12',
-		created_at: '2023.11.08',
-		text: '',
-		images: [],
-		comments: [],
-	},
-];
+import { useQuery } from 'react-query';
+import { useState } from 'react';
+import formatDate from '../../../../utils/formatDate';
+import formatTime from '../../../../utils/formatTime';
 
 const LostDetail = () => {
-	const commentsList = createRandomComments();
-	const images = ['/assets/cat.jpeg', '/assets/cat.jpeg'];
+	const [modifyPopUpClick, setModifyPopUpClick] = useState(false);
+	const [modifyCommentId, setModifyCommentId] = useState(0);
 
 	const { $isTablet, $isMobile } = useResponsive();
+
+	const { lostId } = useParams();
+
+	const fetchGetDetailBoard = async () => {
+		const response = await getBoard('lost', lostId);
+
+		return response;
+	};
+
+	const { data, refetch } = useQuery('lostDetailBoard', fetchGetDetailBoard);
 
 	return (
 		<div>
 			<DetailUserNav />
 			<ImageAndTextWrap $isMobile={$isMobile} $isTablet={$isTablet}>
 				<ImageWrap $isMobile={$isMobile} $isTablet={$isTablet}>
-					<CommunitySwiper images={images} />
+					<CommunitySwiper images={data?.images} />
 				</ImageWrap>
 				<TextBox $isMobile={$isMobile} $isTablet={$isTablet}>
 					<SubTitle>잃어버린 가족을 찾아주세요!</SubTitle>
@@ -85,7 +50,7 @@ const LostDetail = () => {
 							잃어버린 지역
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							서울 강서구
+							{data?.place}
 						</Text>
 					</div>
 					<div>
@@ -93,7 +58,7 @@ const LostDetail = () => {
 							잃어버린 날짜
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							2023-10-23
+							{formatDate(data?.lostDate)}
 						</Text>
 					</div>
 					<div>
@@ -101,7 +66,7 @@ const LostDetail = () => {
 							잃어버린 시간
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							오후 10시 30분
+							{formatTime(data?.lostTime)}
 						</Text>
 					</div>
 					<div>
@@ -109,7 +74,7 @@ const LostDetail = () => {
 							사례금
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							100,000
+							{Number(data?.reward)?.toLocaleString()}
 						</Text>
 					</div>
 					<div>
@@ -117,7 +82,7 @@ const LostDetail = () => {
 							전화번호
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							010-0000-0001
+							{data?.mobile}
 						</Text>
 					</div>
 					<div>
@@ -125,9 +90,15 @@ const LostDetail = () => {
 							종류 및 품종
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							<div>고양이</div>
+							<div>
+								{data?.kind === 'dog'
+									? '강아지'
+									: data?.kind === 'cat'
+									  ? '고양이'
+									  : '기타 반려동물'}
+							</div>
 							<div>, </div>
-							<div>페르시안</div>
+							<div>{data?.breed}</div>
 						</Text>
 					</div>
 					<div>
@@ -135,7 +106,11 @@ const LostDetail = () => {
 							성별
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							여자
+							{data?.gender === 'mail'
+								? '남자'
+								: data?.gender === 'female'
+								  ? '여자'
+								  : '중성'}
 						</Text>
 					</div>
 					<div>
@@ -143,23 +118,31 @@ const LostDetail = () => {
 							색깔
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							흰색
+							{data?.color}
 						</Text>
 					</div>
 					<DescriptionSpan $isMobile={$isMobile} $isTablet={$isTablet}>
 						상세 설명
 					</DescriptionSpan>
-					<p>강서구 초록마을로 144번길 근처 버스 정류장에서 잃어버렸어요ㅜ</p>
+					<p>{data?.text}</p>
 				</TextBox>
 			</ImageAndTextWrap>
 			<CommentWrap $isMobile={$isMobile}>
 				<SubTitle>댓글</SubTitle>
 				<ul>
-					{commentsList.map((list) => (
-						<Comment key={list.user_id} list={list} />
+					{data?.comments?.map((list) => (
+						<Comment
+							key={list.commentsId}
+							list={list}
+							refetch={refetch}
+							modifyCommentId={modifyCommentId}
+							setModifyCommentId={setModifyCommentId}
+							setModifyPopUpClick={setModifyPopUpClick}
+							modifyPopUpClick={modifyPopUpClick}
+						/>
 					))}
 				</ul>
-				<RegisterCommentForm />
+				{modifyCommentId === 0 && <RegisterCommentForm />}
 			</CommentWrap>
 		</div>
 	);

@@ -1,16 +1,16 @@
 import { useNavigate } from 'react-router-dom';
-import { MyTip } from '../TipRoot';
 import { TipLi } from './TipList.style';
 import { useResponsive } from '../../../../hooks/useResponsive';
+import { Board } from '../../../../types/BoardTypes';
 
 interface MyTipListProps {
-	list: MyTip;
+	list: Board;
 }
 
 const TipList = ({ list }: MyTipListProps) => {
 	const navigate = useNavigate();
 
-	const moveToTheDetailPage = (id: number) => {
+	const moveToTheDetailPage = (id: number | undefined) => {
 		navigate(`/community/tips/tip/${id}`);
 	};
 
@@ -18,7 +18,7 @@ const TipList = ({ list }: MyTipListProps) => {
 
 	return (
 		<TipLi
-			onClick={() => moveToTheDetailPage(list.id)}
+			onClick={() => moveToTheDetailPage(list.boardId)}
 			$isMobile={$isMobile}
 			$isTablet={$isTablet}>
 			<div>{list.title}</div>

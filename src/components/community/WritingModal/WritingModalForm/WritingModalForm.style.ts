@@ -6,7 +6,7 @@ interface NavOptionProps {
 	$isMobile?: boolean;
 }
 
-export const ModalForm = styled.form`
+export const ModalForm = styled.form<NavOptionProps>`
 	height: 100%;
 	padding: 12px;
 
@@ -23,7 +23,8 @@ export const ModalForm = styled.form`
 		border: 1px solid var(--color-light-salmon);
 		border-radius: 4px;
 		outline: none;
-		font-size: 16px;
+		font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
+		letter-spacing: 0.1px;
 	}
 `;
 
@@ -49,11 +50,15 @@ export const LabelWrap = styled.div`
 	display: flex;
 	align-items: center;
 	margin-bottom: 10px;
+
+	@media (max-height: 724px) {
+		margin-bottom: 8px;
+	}
 `;
 
 export const LabelTitle = styled.label<NavOptionProps>`
-	width: 20%;
-	font-size: ${(props) => (props.$isMobile ? '14px' : '16px')};
+	width: ${(props) => (props.$isMobile ? '25%' : '20%')};
+	font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
 	font-weight: 400;
 `;
 
@@ -105,4 +110,8 @@ export const TextInput = styled.input<NavOptionProps>`
 export const StyledIoClose = styled(IoClose)`
 	width: 20px;
 	height: 20px;
+`;
+
+export const ImageAndParagraphWrap = styled.div<NavOptionProps>`
+	margin-top: ${(props) => (props.$isMobile ? '8px' : '')};
 `;

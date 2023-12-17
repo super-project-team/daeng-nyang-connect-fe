@@ -1,41 +1,58 @@
-import { useState } from 'react';
 import MyPetList from './MyPetList/MyPetList';
 import { MyPetLists } from './MyPetRoot.style';
 import { useResponsive } from '../../../hooks/useResponsive';
-
-export interface MyPet {
-	id: number;
-	userThumbnail: string;
-	userName: string;
-	petImage: string;
-}
+import { getAllBoard } from '../../../api/communityApi';
+import { useQuery } from 'react-query';
+import { Board } from '../../../types/BoardTypes';
+import useInfiniteScroll from '../../../hooks/useInfiniteScroll';
+import useSearchData from '../../../hooks/useSearchData';
 
 const MyPetRoot = () => {
-	const createMockMyPets = (): MyPet[] => {
-		const mockData: MyPet[] = [];
-
-		for (let i = 0; i < 20; i++) {
-			mockData.push({
-				id: i,
-				userThumbnail: `userThumbnail-${i}`,
-				userName: `userName-${i}`,
-				petImage: `petImage-${i}`,
-			});
-		}
-
-		return mockData;
-	};
-
-	const [myPetList, setMyPetList] = useState<MyPet[]>(createMockMyPets());
 	const { $isTablet, $isMobile } = useResponsive();
 
-	return (
-		<MyPetLists $isTablet={$isTablet} $isMobile={$isMobile}>
-			{myPetList.map((list) => (
-				<MyPetList key={list.id} list={list} />
-			))}
-		</MyPetLists>
+	const fetchGetAllMyPetBoard = async (): Promise<Board[]> => {
+		const response = await getAllBoard('my_pet');
+
+		return response;
+	};
+
+	const { data, refetch, isLoading } = useQuery<Board[]>(
+		'myPetAllBoard',
+		fetchGetAllMyPetBoard,
 	);
+
+	console.log('data', data);
+
+	const visibleData = useInfiniteScroll(data, refetch, 6);
+
+	const { searchData, isSearch } = useSearchData();
+
+	if (isSearch) {
+		return (
+			<MyPetLists $isTablet={$isTablet} $isMobile={$isMobile}>
+				{Array.isArray(searchData) &&
+					searchData.map((list) => {
+						if ('boardId' in list) {
+							return <MyPetList key={list.boardId} list={list} />;
+						}
+					})}
+			</MyPetLists>
+		);
+	} else {
+		return (
+			<>
+				{isLoading && <section>로딩 중...</section>}
+				<MyPetLists $isTablet={$isTablet} $isMobile={$isMobile}>
+					{Array.isArray(visibleData) &&
+						visibleData.map((list) => {
+							if ('boardId' in list) {
+								return <MyPetList key={list.boardId} list={list} />;
+							}
+						})}
+				</MyPetLists>
+			</>
+		);
+	}
 };
 
 export default MyPetRoot;

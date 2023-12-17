@@ -8,6 +8,7 @@ interface NavOptionProps {
 export const CommentWrap = styled.div<NavOptionProps>`
 	width: 100%;
 	padding: ${(props) => (props.$isMobile ? '0px' : '8px 16px')};
+	padding-bottom: ${(props) => (props.$isMobile ? '60px' : '60px')};
 `;
 
 export const SubTitle = styled.h3`
@@ -15,11 +16,22 @@ export const SubTitle = styled.h3`
 	font-weight: 600;
 `;
 
-export const TextBox = styled.div`
-	height: 500px;
+export const TextBox = styled.div<NavOptionProps>`
+	height: auto;
 	padding: 20px;
 	margin-bottom: 12px;
 	border-bottom: 1px solid var(--color-light-salmon);
+
+	& li {
+		height: ${(props) => (props.$isMobile ? '200px' : 'auto')};
+		width: 100%;
+		margin-bottom: 10px;
+
+		& img {
+			width: 100%;
+			height: 100%;
+		}
+	}
 `;
 
 export const Paragraph = styled.div<NavOptionProps>`

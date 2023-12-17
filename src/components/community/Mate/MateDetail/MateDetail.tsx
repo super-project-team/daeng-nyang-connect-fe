@@ -9,52 +9,41 @@ import {
 	PlaceWrap,
 	SubTitle,
 	TextBox,
+	Text,
 } from './MateDetail.style';
 import RegisterCommentForm from '../../../Comment/RegisterCommentForm';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import CommunitySwiper from '../../CommunitySwiper/CommunitySwiper';
-
-export interface CommentForm {
-	user_id: number;
-	nickname: string;
-	comment: string;
-	created_at: string;
-}
-
-const getRandomDate = (): string => {
-	const start = new Date(2020, 0, 1);
-	const end = new Date();
-	const randomDate = new Date(
-		start.getTime() + Math.random() * (end.getTime() - start.getTime()),
-	);
-	return randomDate.toISOString().split('T')[0];
-};
-
-const createRandomComments = (): CommentForm[] => {
-	const comments: CommentForm[] = [];
-	for (let i = 1; i <= 10; i++) {
-		comments.push({
-			user_id: i,
-			nickname: `User${i}`,
-			comment: `This is a comment ${i}`,
-			created_at: getRandomDate(),
-		});
-	}
-	return comments;
-};
+import { getBoard } from '../../../../api/communityApi';
+import { useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import { useState } from 'react';
 
 const MateDetail = () => {
-	const commentsList = createRandomComments();
-	const images = ['/assets/cat.jpeg', '/assets/cat.jpeg'];
+	const [modifyPopUpClick, setModifyPopUpClick] = useState(false);
+	const [modifyCommentId, setModifyCommentId] = useState(0);
 
 	const { $isTablet, $isMobile } = useResponsive();
+
+	const { mateId } = useParams();
+
+	const fetchGetDetailMateBoard = async () => {
+		const response = await getBoard('mate', mateId);
+
+		return response;
+	};
+
+	const { data, refetch } = useQuery(
+		'mateDetailBoard',
+		fetchGetDetailMateBoard,
+	);
 
 	return (
 		<div>
 			<DetailUserNav />
 			<ImageAndTextWrap $isMobile={$isMobile} $isTablet={$isTablet}>
 				<ImageWrap $isMobile={$isMobile} $isTablet={$isTablet}>
-					<CommunitySwiper images={images} />
+					<CommunitySwiper images={data?.img} />
 				</ImageWrap>
 				<TextBox $isMobile={$isMobile} $isTablet={$isTablet}>
 					<SubTitle>메이트 구하기</SubTitle>
@@ -63,23 +52,33 @@ const MateDetail = () => {
 							지역
 						</Description>
 						<Place $isMobile={$isMobile} $isTablet={$isTablet}>
-							서울
+							{data?.place}
 						</Place>
 					</PlaceWrap>
 					<Description $isMobile={$isMobile} $isTablet={$isTablet}>
 						상세 설명
 					</Description>
-					<p>서울 강서구에서 같이 산책 하실 메이트 구해요</p>
+					<Text $isMobile={$isMobile} $isTablet={$isTablet}>
+						{data?.text}
+					</Text>
 				</TextBox>
 			</ImageAndTextWrap>
 			<CommentWrap $isMobile={$isMobile}>
 				<SubTitle>댓글</SubTitle>
 				<ul>
-					{commentsList.map((list) => (
-						<Comment key={list.user_id} list={list} />
+					{data?.comments.map((list) => (
+						<Comment
+							key={list.commentsId}
+							list={list}
+							refetch={refetch}
+							modifyCommentId={modifyCommentId}
+							setModifyCommentId={setModifyCommentId}
+							setModifyPopUpClick={setModifyPopUpClick}
+							modifyPopUpClick={modifyPopUpClick}
+						/>
 					))}
 				</ul>
-				<RegisterCommentForm />
+				{modifyCommentId === 0 && <RegisterCommentForm />}
 			</CommentWrap>
 		</div>
 	);

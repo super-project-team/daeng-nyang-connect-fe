@@ -1,9 +1,7 @@
 import { CiUser } from 'react-icons/ci';
-import { CiMenuKebab } from 'react-icons/ci';
 import {
 	Button,
 	ButtonWrap,
-	KebabWrap,
 	MateLi,
 	PlaceWrap,
 	SubNav,
@@ -20,12 +18,17 @@ interface MateListProps {
 
 const MateList = ({ list }: MateListProps) => {
 	const navigate = useNavigate();
+	const { $isTablet, $isMobile } = useResponsive();
+
+	const truncatedText =
+		list?.text?.length > 50
+			? ($isMobile ? list.text.substring(0, 70) : list.text.substring(0, 120)) +
+			  ' ...'
+			: list.text;
 
 	const moveToTheDetailPage = (id: number) => {
 		navigate(`/community/mates/mate/${id}`);
 	};
-
-	const { $isTablet, $isMobile } = useResponsive();
 
 	return (
 		<MateLi $isMobile={$isMobile}>
@@ -36,9 +39,6 @@ const MateList = ({ list }: MateListProps) => {
 					</div>
 					<span>{list.nickname}</span>
 				</UserWrap>
-				<KebabWrap>
-					<CiMenuKebab />
-				</KebabWrap>
 			</SubNav>
 			<TextWrap
 				onClick={() => moveToTheDetailPage(list.boardId)}
@@ -47,7 +47,7 @@ const MateList = ({ list }: MateListProps) => {
 				<PlaceWrap $isMobile={$isMobile} $isTablet={$isTablet}>
 					지역 : {list.place}
 				</PlaceWrap>
-				<p>{list.text}</p>
+				<p>{truncatedText}</p>
 			</TextWrap>
 			<ButtonWrap>
 				<Button $isMobile={$isMobile} $isTablet={$isTablet}>

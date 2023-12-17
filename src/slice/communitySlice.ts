@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Board, BoardComment } from '../types/BoardTypes';
+import { Board } from '../types/BoardTypes';
 
 export interface CommunityState {
 	category: string;
@@ -10,15 +10,18 @@ export interface CommunityState {
 	breed: string;
 	gender: string;
 	color: string;
-	date: string;
-	time: string;
+	lostDate: string;
+	lostTime: string;
 	title: string;
 	text: string;
 	images: File[];
 	displayLabel?: string;
 	subCategory: string;
-	comments: BoardComment[];
+	isSearch: boolean;
+	searchText: string;
+
 	boardAll: Board[];
+	isModifyPopUp: boolean;
 }
 
 const initialState: CommunityState = {
@@ -30,15 +33,18 @@ const initialState: CommunityState = {
 	breed: '',
 	gender: '',
 	color: '',
-	date: '',
-	time: '',
+	lostDate: '',
+	lostTime: '',
 	title: '',
 	text: '',
 	images: [],
 	displayLabel: '',
 	subCategory: '',
-	comments: [],
+	isSearch: false,
+	searchText: '',
+
 	boardAll: [],
+	isModifyPopUp: false,
 };
 
 const communitySlice = createSlice({
@@ -70,8 +76,8 @@ const communitySlice = createSlice({
 			return {
 				...state,
 				place: action.payload.place,
-				date: action.payload.date,
-				time: action.payload.time,
+				lostDate: action.payload.lost_date,
+				lostTime: action.payload.lost_time,
 				breed: action.payload.breed,
 				color: action.payload.color,
 				mobile: action.payload.mobile,
@@ -86,11 +92,24 @@ const communitySlice = createSlice({
 		SET_SUB_CATEGORY(state, action) {
 			state.subCategory = action.payload;
 		},
-		SET_COMMENT_LIST(state, action) {
-			state.comments = action.payload;
-		},
 		SET_GET_ALL_BOARD(state, action) {
 			state.boardAll = action.payload;
+		},
+		SET_MODIFY_VALUE(state, action) {
+			return {
+				...state,
+				kind: action.payload?.kind,
+				text: action.payload?.text,
+			};
+		},
+		SET_MODIFY_POPUP(state, action) {
+			state.isModifyPopUp = action.payload;
+		},
+		SET_SEARCH_TEXT(state, action) {
+			state.searchText = action.payload;
+		},
+		SET_IS_SEARCH(state, action) {
+			state.isSearch = action.payload;
 		},
 	},
 });
@@ -103,8 +122,11 @@ export const {
 	SET_INPUT_VALUE,
 	SET_IMAGES,
 	SET_SUB_CATEGORY,
-	SET_COMMENT_LIST,
 	SET_GET_ALL_BOARD,
+	SET_MODIFY_VALUE,
+	SET_MODIFY_POPUP,
+	SET_SEARCH_TEXT,
+	SET_IS_SEARCH,
 } = communitySlice.actions;
 
 export default communitySlice.reducer;

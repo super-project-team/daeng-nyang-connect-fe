@@ -14,12 +14,12 @@ const usePagination = (
 	const totalPages = totalItems && Math.ceil(totalItems / itemsPerPage);
 	const dispatch = useDispatch();
 
-	// useEffect(() => {
-	// 	if (totalPages) {
-	// 		const endPage = Math.min(5, totalPages);
-	// 		setPageRange(Array.from({ length: endPage }, (_, i) => i + 1));
-	// 	}
-	// }, [totalItems, totalPages]);
+	useEffect(() => {
+		if (totalPages) {
+			const endPage = Math.min(5, totalPages);
+			setPageRange(Array.from({ length: endPage }, (_, i) => i));
+		}
+	}, [totalItems, totalPages]);
 
 	const displayLabel = useSelector(
 		(state: RootState) => state.community.displayLabel,
@@ -28,12 +28,12 @@ const usePagination = (
 	const fetchGetAllBoard = async (): Promise<Board[]> => {
 		const response = await getAllBoard(
 			displayLabel === '나의 댕냥이'
-				? 'myPets'
+				? 'my_pet'
 				: displayLabel === '댕냥 꿀팁'
 				  ? 'tips'
 				  : displayLabel === '댕냥 메이트'
-				    ? 'mates'
-				    : 'losts',
+				    ? 'mate'
+				    : 'lost',
 			displayLabel === '나의 댕냥이' || displayLabel === '댕냥 미아센터'
 				? ''
 				: String(currentPage),
@@ -42,12 +42,17 @@ const usePagination = (
 		return response;
 	};
 
-	const { data, refetch } = useQuery<Board[]>('tipAllBoard', fetchGetAllBoard);
+	const { data, refetch } = useQuery<Board[]>(
+		displayLabel === '댕냥 꿀팁' ? 'tipAllBoard' : 'mateAllBoard',
+		fetchGetAllBoard,
+	);
 
-	const handlePageClick = (pageNumber: number) => {
-		dispatch(SET_GET_ALL_BOARD(data));
-		refetch();
+	const handlePageClick = async (pageNumber: number) => {
 		setCurrentPage(pageNumber);
+		await fetchGetAllBoard();
+		refetch();
+		window.scrollTo(0, 0);
+		dispatch(SET_GET_ALL_BOARD(data));
 	};
 
 	const handlePrevNextClick = (direction: 'prev' | 'next') => {
@@ -69,6 +74,10 @@ const usePagination = (
 			}
 		}
 	};
+
+	useEffect(() => {
+		dispatch(SET_GET_ALL_BOARD(data));
+	}, []);
 
 	return {
 		currentPage,

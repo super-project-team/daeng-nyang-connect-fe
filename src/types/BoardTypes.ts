@@ -1,5 +1,4 @@
 import { CommunityState } from '../slice/communitySlice';
-
 export interface PostBoard {
 	category?: string;
 	title?: string;
@@ -53,6 +52,10 @@ export interface Likes {
 	userId: number;
 }
 
+export interface BoardDetailImg {
+	url: string;
+}
+
 export interface BoardDetail {
 	boardId: number;
 	category: string;
@@ -61,7 +64,7 @@ export interface BoardDetail {
 	nickname: string;
 	userThumbnail: string;
 	images: LostImage[];
-	img: string[];
+	img: BoardDetailImg[];
 	comments: BoardComment[];
 	title?: string;
 	likes?: Likes[];
@@ -74,7 +77,7 @@ export interface BoardDetail {
 	lostComments?: string[];
 	lostDate?: string;
 	lostTime?: string;
-	phone?: string;
+	mobile?: string;
 	place?: string;
 	reward?: number;
 	userId?: number;
@@ -92,4 +95,8 @@ export interface BoardComment {
 
 export interface RootState {
 	community: CommunityState;
+}
+
+export interface BoardSize {
+	size: number;
 }

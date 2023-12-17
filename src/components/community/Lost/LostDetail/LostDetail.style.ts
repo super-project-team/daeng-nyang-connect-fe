@@ -8,14 +8,21 @@ interface NavOptionProps {
 export const CommentWrap = styled.div<NavOptionProps>`
 	width: 100%;
 	padding: ${(props) => (props.$isMobile ? '0px' : '8px 16px')};
+	padding-bottom: ${(props) => (props.$isMobile ? '60px' : '60px')};
 `;
 
 export const ImageAndTextWrap = styled.div<NavOptionProps>`
 	display: flex;
 	flex-direction: ${(props) => (props.$isMobile ? 'column' : 'row')};
+	min-height: ${(props) => (props.$isMobile ? '500px' : '450px')};
+	height: auto;
 	padding: 12px 0px;
 	margin-bottom: 12px;
 	border-bottom: 1px solid var(--color-light-salmon);
+
+	p {
+		line-height: 1.5;
+	}
 `;
 
 export const ImageWrap = styled.div<NavOptionProps>`
@@ -24,7 +31,7 @@ export const ImageWrap = styled.div<NavOptionProps>`
 
 	& img {
 		width: 100%;
-		height: auto;
+		height: ${(props) => (props.$isMobile ? '300px' : '480px')};
 		max-width: 100%;
 	}
 `;

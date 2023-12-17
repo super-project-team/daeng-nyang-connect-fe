@@ -2,12 +2,15 @@ import { useNavigate } from 'react-router-dom';
 import {
 	Button,
 	ButtonWrap,
+	DateText,
 	ImgWrap,
 	LostLi,
+	PlaceText,
 	TextWrap,
 } from './LostList.style';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import { Board } from '../../../../types/BoardTypes';
+import formatDate from '../../../../utils/formatDate';
 
 interface LostPetProps {
 	list: Board;
@@ -15,30 +18,42 @@ interface LostPetProps {
 
 const LostList = ({ list }: LostPetProps) => {
 	const navigate = useNavigate();
+	const { $isTablet, $isMobile } = useResponsive();
+	const truncatedText =
+		list?.text?.length > 50
+			? ($isMobile ? list.text.substring(0, 80) : list.text.substring(0, 250)) +
+			  '...'
+			: list.text;
 
 	const moveToTheDetailPage = (id: number) => {
 		navigate(`/community/losts/lost/${id}`);
 	};
 
-	const { $isTablet, $isMobile } = useResponsive();
+	const isDefaultImage =
+		list.images && list.images.length > 0
+			? list.images[0].url
+			: '/assets/LOGO.svg';
 
 	return (
-		<LostLi onClick={() => moveToTheDetailPage(list.boardId)}>
+		<LostLi
+			onClick={() => moveToTheDetailPage(list.boardId)}
+			$isMobile={$isMobile}>
 			<ImgWrap>
-				{list.images && list.images.length > 0 && (
-					<img src={list.images[0].url} alt="" />
-				)}
+				<img
+					src={isDefaultImage}
+					className={
+						isDefaultImage === '/assets/LOGO.svg' ? 'default-image' : ''
+					}
+				/>
 			</ImgWrap>
 			<TextWrap $isMobile={$isMobile} $isTablet={$isTablet}>
-				<div>잃어버린 곳 : {list.place}</div>
-				<div>
-					잃어버린 일시 : {list.lostDate}
-					{'  '}
-					{/* {list.lost_time}시 {list.lost_minute}분{'  '}경 */}
-				</div>
-				<p>{list.text}</p>
+				<PlaceText $isMobile={$isMobile}>잃어버린 곳 : {list.place}</PlaceText>
+				<DateText $isMobile={$isMobile}>
+					잃어버린 날짜 : {formatDate(list.lostDate)}
+				</DateText>
+				<p>{truncatedText}</p>
 			</TextWrap>
-			<ButtonWrap>
+			<ButtonWrap $isMobile={$isMobile}>
 				<Button $isMobile={$isMobile} $isTablet={$isTablet}>
 					채팅하기
 				</Button>

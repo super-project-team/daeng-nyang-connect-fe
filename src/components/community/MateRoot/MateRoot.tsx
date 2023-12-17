@@ -3,12 +3,13 @@ import { MateLists } from './MateRoot.style';
 import Pagination from '../../Pagination/Pagination';
 import usePagination from '../../../hooks/usePagination';
 import { useResponsive } from '../../../hooks/useResponsive';
-import { getAllBoard } from '../../../api/communityApi';
+import { getAllBoard, getSize } from '../../../api/communityApi';
 import { Board } from '../../../types/BoardTypes';
 import { useQuery } from 'react-query';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CommunityState } from '../../../slice/communitySlice';
+import useSearchData from '../../../hooks/useSearchData';
 
 interface RootState {
 	community: CommunityState;
@@ -16,6 +17,7 @@ interface RootState {
 
 const MateRoot = () => {
 	const [filteredData, setFilteredData] = useState<Board[]>([]);
+	const [totalBoardSize, setTotalBoardSize] = useState(0);
 
 	const category = useSelector(
 		(state: RootState) => state.community.subCategory,
@@ -29,15 +31,23 @@ const MateRoot = () => {
 		return response;
 	};
 
+	const fetchGetAllBoardSize = async () => {
+		const response = await getSize('mate');
+
+		setTotalBoardSize(response.size);
+
+		return response.size;
+	};
+
 	const { data } = useQuery<Board[]>('mateAllBoard', fetchGetAllMateBoard);
 
 	const itemsPerPage = 12;
 	const { currentPage, pageRange, handlePageClick, handlePrevNextClick } =
-		usePagination(data && data.length, itemsPerPage);
+		usePagination(totalBoardSize, itemsPerPage);
 
-	const startIndex = (currentPage - 1) * itemsPerPage;
-	const endIndex = startIndex + itemsPerPage;
-	const currentMatePublishLists = data && data.slice(startIndex, endIndex);
+	useEffect(() => {
+		fetchGetAllBoardSize();
+	}, []);
 
 	useEffect(() => {
 		if (data) {
@@ -52,21 +62,32 @@ const MateRoot = () => {
 		}
 	}, [data, category]);
 
+	const { searchData, isSearch } = useSearchData();
+	console.log('searchData', searchData);
+
 	return (
 		<>
 			<MateLists $isMobile={$isMobile} $isTablet={$isTablet}>
-				{category === ''
-					? data?.map((list) => {
-							if ('boardId' in list) {
-								return <MateList key={list.boardId} list={list} />;
-							}
-					  })
-					: filteredData &&
-					  filteredData.map((list) => {
-							if ('boardId' in list) {
-								return <MateList key={list.boardId} list={list} />;
-							}
-					  })}
+				{isSearch
+					? Array.isArray(searchData) &&
+					  searchData.map(
+							(list) =>
+								'boardId' in list && (
+									<MateList key={list.boardId} list={list} />
+								),
+					  )
+					: category === ''
+					  ? data?.map((list) => {
+								if ('boardId' in list) {
+									return <MateList key={list.boardId} list={list} />;
+								}
+					    })
+					  : filteredData &&
+					    filteredData.map((list) => {
+								if ('boardId' in list) {
+									return <MateList key={list.boardId} list={list} />;
+								}
+					    })}
 			</MateLists>
 			<Pagination
 				currentPage={currentPage}

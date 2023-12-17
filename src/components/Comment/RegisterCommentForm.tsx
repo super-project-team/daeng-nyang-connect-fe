@@ -1,11 +1,13 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { CommunityState, SET_COMMENT_LIST } from '../../slice/communitySlice';
+import { useSelector } from 'react-redux';
+import { CommunityState } from '../../slice/communitySlice';
 import { ButtonWrap, Form, TextArea } from './RegisterCommentForm.style';
 import { getBoard, postComment } from '../../api/communityApi';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BoardDetail } from '../../types/BoardTypes';
 import { useQuery } from 'react-query';
+import labelMappings from '../../utils/communityLabel';
+import { useResponsive } from '../../hooks/useResponsive';
 
 interface RootState {
 	community: CommunityState;
@@ -16,9 +18,15 @@ const RegisterCommentForm = () => {
 	const displayLabel = useSelector(
 		(state: RootState) => state.community.displayLabel,
 	);
-	const dispatch = useDispatch();
 
-	const { myPetId, mateId, tipId, lostId } = useParams();
+	const { $isMobile } = useResponsive();
+
+	const params = useParams();
+	const mapping = displayLabel
+		? labelMappings[displayLabel as keyof typeof labelMappings]
+		: undefined;
+	const boardType = mapping?.boardType;
+	const id = mapping?.getId(params);
 
 	const textAreaChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
 		setText(e.target.value);
@@ -27,23 +35,7 @@ const RegisterCommentForm = () => {
 	const fetchPostComment = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		const response = await postComment(
-			displayLabel === '나의 댕냥이'
-				? 'my_pet'
-				: displayLabel === '댕냥 꿀팁'
-				  ? 'tips'
-				  : displayLabel === '댕냥 메이트'
-				    ? 'mate'
-				    : 'lost',
-			displayLabel === '나의 댕냥이'
-				? myPetId
-				: displayLabel === '댕냥 꿀팁'
-				  ? tipId
-				  : displayLabel === '댕냥 메이트'
-				    ? mateId
-				    : lostId,
-			text,
-		);
+		const response = await postComment(boardType, id, text);
 
 		refetch();
 		setText('');
@@ -52,24 +44,7 @@ const RegisterCommentForm = () => {
 	};
 
 	const fetchGetDetailBoard = async (): Promise<BoardDetail> => {
-		const response = await getBoard(
-			displayLabel === '나의 댕냥이'
-				? 'my_pet'
-				: displayLabel === '댕냥 꿀팁'
-				  ? 'tips'
-				  : displayLabel === '댕냥 메이트'
-				    ? 'mate'
-				    : displayLabel === '댕냥 미아센터'
-				      ? 'lost'
-				      : '',
-			displayLabel === '나의 댕냥이'
-				? myPetId
-				: displayLabel === '댕냥 꿀팁'
-				  ? tipId
-				  : displayLabel === '댕냥 메이트'
-				    ? mateId
-				    : lostId,
-		);
+		const response = await getBoard(boardType, id);
 
 		return response;
 	};
@@ -85,11 +60,7 @@ const RegisterCommentForm = () => {
 		fetchGetDetailBoard,
 	);
 
-	useEffect(() => {
-		if (data) {
-			dispatch(SET_COMMENT_LIST(data.comments));
-		}
-	}, [data]);
+	console.log('data', data);
 
 	return (
 		<Form onSubmit={fetchPostComment}>
@@ -99,7 +70,7 @@ const RegisterCommentForm = () => {
 				value={text}
 				onChange={textAreaChangeHandler}
 			/>
-			<ButtonWrap>
+			<ButtonWrap $isMobile={$isMobile}>
 				<button type="submit">등록</button>
 			</ButtonWrap>
 		</Form>

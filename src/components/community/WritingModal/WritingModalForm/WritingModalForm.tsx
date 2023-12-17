@@ -6,10 +6,12 @@ import {
 	SET_GET_ALL_BOARD,
 	SET_INPUT_VALUE,
 	SET_KIND_PET,
+	SET_MODIFY_POPUP,
 } from '../../../../slice/communitySlice';
 import {
 	ButtonWrap,
 	CheckInput,
+	ImageAndParagraphWrap,
 	InfoWrap,
 	InputWrap,
 	LabelTitle,
@@ -20,13 +22,20 @@ import {
 	Title,
 	TitleAndButtonWrap,
 } from './WritingModalForm.style';
-import { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { useResponsive } from '../../../../hooks/useResponsive';
-import { getAllBoard, postBoard } from '../../../../api/communityApi';
-import { useNavigate } from 'react-router-dom';
-import { Board } from '../../../../types/BoardTypes';
+import {
+	getAllBoard,
+	getBoard,
+	getSize,
+	modifyBoard,
+	postBoard,
+} from '../../../../api/communityApi';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Board, BoardDetail } from '../../../../types/BoardTypes';
 import usePagination from '../../../../hooks/usePagination';
 import { useQuery } from 'react-query';
+import labelMappings from '../../../../utils/communityLabel';
 
 interface RootState {
 	community: CommunityState;
@@ -50,38 +59,58 @@ interface ComponentState {
 const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 	const [inputValue, setInputValue] = useState({
 		place: '',
-		date: '',
-		time: '',
+		lost_date: '',
+		lost_time: '',
 		breed: '',
 		color: '',
 		mobile: '',
 		reward: 0,
 		text: '',
 		title: '',
+		category: '',
+		kind: '',
+		gender: '',
 	});
 	const [state, setState] = useState<ComponentState>({
 		filesMetadata: [],
 		selectedFiles: [],
 	});
+	const [totalBoardSize, setTotalBoardSize] = useState(0);
+
+	const params = useParams();
 	const dispatch = useDispatch();
 	const displayLabel = useSelector(
 		(state: RootState) => state.community.displayLabel,
 	);
-	const petKind = useSelector((state: RootState) => state.community.kind);
-	const category = useSelector((state: RootState) => state.community.category);
-	const gender = useSelector((state: RootState) => state.community.gender);
+
+	const mapping = displayLabel
+		? labelMappings[displayLabel as keyof typeof labelMappings]
+		: undefined;
+	const boardType = mapping?.boardType;
+	const idType = mapping?.idType;
+	const id = mapping?.getId(params);
+	const urlType = mapping?.urlType;
 
 	const communityState = useSelector((state: RootState) => state.community);
+	const isModifyPopUp = useSelector(
+		(state: RootState) => state.community.isModifyPopUp,
+	);
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		console.log('communityState', communityState);
-	}, [communityState]);
+	}, []);
 
 	const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		const updatedInputValue = { ...inputValue, [name]: value };
+		let updatedValue = value;
+
+		if (name === 'reward' && parseInt(value, 10) < 0) {
+			updatedValue = '0';
+		}
+
+		const updatedInputValue = { ...inputValue, [name]: updatedValue };
 
 		setInputValue(updatedInputValue);
 		dispatch(SET_INPUT_VALUE(updatedInputValue));
@@ -102,14 +131,17 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 
 		switch (name) {
 			case 'petKind':
+				setInputValue({ ...inputValue, kind: value });
 				dispatch(SET_KIND_PET(value));
 				break;
 			case 'tip':
 			case 'mate':
 			case 'lost':
+				setInputValue({ ...inputValue, category: value });
 				dispatch(SET_CATEGORY(value));
 				break;
 			case 'gender':
+				setInputValue({ ...inputValue, gender: value });
 				dispatch(SET_GENDER(value));
 				break;
 			default:
@@ -137,73 +169,137 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 
 	const closeThePopUp = () => {
 		setIsPopUp(false);
+		dispatch(SET_MODIFY_POPUP(false));
 		document.body.style.overflow = 'visible';
 	};
 
-	const fetchPostBoardHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+	const fetchPostBoardHandler = async (e: React.MouseEvent) => {
 		e.preventDefault();
 		const postData = {
 			...communityState,
 			images: state.selectedFiles,
 		};
-		const response = await postBoard(
-			displayLabel === '나의 댕냥이'
-				? 'my_pet'
-				: displayLabel === '댕냥 꿀팁'
-				  ? 'tips'
-				  : displayLabel === '댕냥 메이트'
-				    ? 'mate'
-				    : 'lost',
-			postData,
-		);
-		console.log(response);
-		navigate(
-			`/community/${
-				displayLabel === '나의 댕냥이'
-					? 'myPets'
-					: displayLabel === '댕냥 꿀팁'
-					  ? 'tips'
-					  : displayLabel === '댕냥 메이트'
-					    ? 'mates'
-					    : 'losts'
-			}`,
-		);
+		const response = await postBoard(boardType, postData);
+
+		console.log('postData', postData);
+
+		navigate(`/community/${urlType}`);
 
 		dispatch(SET_GET_ALL_BOARD(data));
 		refetch();
 		setIsPopUp(false);
 		document.body.style.overflow = 'visible';
-	};
-
-	console.log(state);
-
-	const fetchGetAllBoard = async (): Promise<Board[]> => {
-		const response = await getAllBoard(
-			displayLabel === '나의 댕냥이'
-				? 'myPets'
-				: displayLabel === '댕냥 꿀팁'
-				  ? 'tips'
-				  : displayLabel === '댕냥 메이트'
-				    ? 'mates'
-				    : 'losts',
-			displayLabel === '나의 댕냥이' || displayLabel === '댕냥 미아센터'
-				? ''
-				: String(currentPage),
-		);
-		console.log('response', response);
 
 		return response;
 	};
 
-	const { data, refetch } = useQuery<Board[]>('tipAllBoard', fetchGetAllBoard);
-	const itemsPerPage = 20;
+	const fetchGetAllBoard = async (): Promise<Board[]> => {
+		const response = await getAllBoard(
+			boardType,
+			displayLabel === '나의 댕냥이' || displayLabel === '댕냥 미아센터'
+				? ''
+				: String(currentPage),
+		);
 
-	const { currentPage } = usePagination(data && data.length, itemsPerPage);
+		return response;
+	};
+
+	const fetchGetAllBoardSize = async () => {
+		const response = await getSize(boardType);
+
+		setTotalBoardSize(response.size);
+
+		return response.size;
+	};
+
+	const { data, refetch } = useQuery<Board[]>(
+		displayLabel === '나의 댕냥이'
+			? 'myPetAllBoard'
+			: displayLabel === '댕냥 메이트'
+			  ? 'mateAllBoard'
+			  : displayLabel === '댕냥 꿀팁'
+			    ? 'tipAllBoard'
+			    : 'lostAllBoard',
+		fetchGetAllBoard,
+	);
+
+	const itemsPerPage = displayLabel === '댕냥 꿀팁' ? 20 : 12;
+	const { currentPage } = usePagination(totalBoardSize, itemsPerPage);
 
 	console.log('data', data);
+	console.log('inputValue', inputValue);
+
+	const fetchGetDetailBoard = async (): Promise<BoardDetail> => {
+		const response = await getBoard(boardType, id);
+
+		return response;
+	};
+
+	const { data: detailData, refetch: detailRefetch } = useQuery<BoardDetail>(
+		displayLabel === '나의 댕냥이'
+			? 'myPetDetailBoard'
+			: displayLabel === '댕냥 메이트'
+			  ? 'mateDetailBoard'
+			  : displayLabel === '댕냥 꿀팁'
+			    ? 'tipDetailBoard'
+			    : 'lostDetailBoard',
+		fetchGetDetailBoard,
+	);
+
+	const fetchModifyDetailBoard = async () => {
+		const postData = {
+			...inputValue,
+			images: state.selectedFiles,
+		};
+
+		const response = await modifyBoard(
+			boardType,
+			idType,
+			detailData?.boardId,
+			postData,
+		);
+
+		return response;
+	};
+
+	const modifyClickHandler = async (e: React.MouseEvent) => {
+		e.preventDefault();
+		await fetchModifyDetailBoard();
+		setIsPopUp(false);
+		dispatch(SET_MODIFY_POPUP(false));
+		detailRefetch();
+		document.body.style.overflow = 'visible';
+	};
+
+	console.log('detailData', detailData);
+
+	useEffect(() => {
+		fetchGetAllBoardSize();
+	}, []);
+
+	useEffect(() => {
+		if (isModifyPopUp && detailData) {
+			setInputValue({
+				place: detailData?.place || '',
+				lost_date: detailData.lostDate || '',
+				lost_time: detailData.lostTime || '',
+				breed: detailData.breed || '',
+				color: detailData.color || '',
+				mobile: detailData.mobile || '',
+				reward: detailData.reward || 0,
+				text: detailData.text || '',
+				title: detailData.title || '',
+				category: detailData.category || '',
+				kind: detailData.kind || '',
+				gender: detailData?.gender || '',
+			});
+		} else {
+			setInputValue(inputValue);
+		}
+	}, [isModifyPopUp, detailData]);
 
 	return (
-		<ModalForm onSubmit={fetchPostBoardHandler}>
+		<ModalForm $isMobile={$isMobile}>
 			<TitleAndButtonWrap>
 				<Title>{displayLabel} 글쓰기</Title>
 				<button onClick={closeThePopUp}>
@@ -253,10 +349,10 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 									onChange={radioChangeHandler}
 									checked={
 										displayLabel === '댕냥 꿀팁'
-											? category === 'item'
+											? inputValue.category === 'item'
 											: displayLabel === '댕냥 메이트'
-											  ? category === 'mate'
-											  : category === 'find'
+											  ? inputValue.category === 'mate'
+											  : inputValue.category === 'find'
 									}
 								/>
 							</div>
@@ -294,10 +390,10 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 									onChange={radioChangeHandler}
 									checked={
 										displayLabel === '댕냥 꿀팁'
-											? category === 'center'
+											? inputValue.category === 'center'
 											: displayLabel === '댕냥 메이트'
-											  ? category === 'care'
-											  : category === 'found'
+											  ? inputValue.category === 'care'
+											  : inputValue.category === 'found'
 									}
 								/>
 							</div>
@@ -309,7 +405,7 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 										name="tip"
 										value="etc"
 										onChange={radioChangeHandler}
-										checked={category === 'etc'}
+										checked={inputValue.category === 'etc'}
 									/>
 								</div>
 							)}
@@ -338,8 +434,8 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 						</LabelTitle>
 						<TextInput
 							type="date"
-							name="date"
-							value={inputValue.date}
+							name="lost_date"
+							value={inputValue.lost_date}
 							onChange={inputChangeHandler}
 							$isMobile={$isMobile}
 						/>
@@ -352,8 +448,8 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 						</LabelTitle>
 						<TextInput
 							type="time"
-							name="time"
-							value={inputValue.time}
+							name="lost_time"
+							value={inputValue.lost_time}
 							onChange={inputChangeHandler}
 							$isMobile={$isMobile}
 						/>
@@ -387,7 +483,7 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 									name="petKind"
 									value="dog"
 									onChange={radioChangeHandler}
-									checked={petKind === 'dog'}
+									checked={inputValue.kind === 'dog'}
 								/>
 							</div>
 							<div>
@@ -397,7 +493,7 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 									name="petKind"
 									value="cat"
 									onChange={radioChangeHandler}
-									checked={petKind === 'cat'}
+									checked={inputValue.kind === 'cat'}
 								/>
 							</div>
 							<div>
@@ -407,7 +503,7 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 									name="petKind"
 									value="etc"
 									onChange={radioChangeHandler}
-									checked={petKind === 'etc'}
+									checked={inputValue.kind === 'etc'}
 								/>
 							</div>
 						</InputWrap>
@@ -440,7 +536,7 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 									name="gender"
 									value="male"
 									onChange={radioChangeHandler}
-									checked={gender === 'male'}
+									checked={inputValue.gender === 'male'}
 								/>
 							</div>
 							<div>
@@ -450,7 +546,7 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 									name="gender"
 									value="female"
 									onChange={radioChangeHandler}
-									checked={gender === 'female'}
+									checked={inputValue.gender === 'female'}
 								/>
 							</div>
 							<div>
@@ -460,7 +556,7 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 									name="gender"
 									value="middle"
 									onChange={radioChangeHandler}
-									checked={gender === 'middle'}
+									checked={inputValue.gender === 'middle'}
 								/>
 							</div>
 						</InputWrap>
@@ -520,16 +616,27 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 						value={inputValue.text}
 						onChange={textareaChangeHandler}></textarea>
 				</LabelWrap>
-				<LabelWrap>
-					<LabelTitle htmlFor="images" $isMobile={$isMobile}>
-						이미지 등록
-					</LabelTitle>
-					<input type="file" multiple onChange={handleImageChange} />
-				</LabelWrap>
+				{!isModifyPopUp && (
+					<LabelWrap>
+						<LabelTitle htmlFor="images" $isMobile={$isMobile}>
+							이미지 등록
+						</LabelTitle>
+						<ImageAndParagraphWrap $isMobile={$isMobile}>
+							<input type="file" multiple onChange={handleImageChange} />
+						</ImageAndParagraphWrap>
+					</LabelWrap>
+				)}
 			</InfoWrap>
-			<ButtonWrap>
-				<button type="submit">등록하기</button>
-			</ButtonWrap>
+			{!isModifyPopUp && (
+				<ButtonWrap onClick={fetchPostBoardHandler}>
+					<button>등록하기</button>
+				</ButtonWrap>
+			)}
+			{isModifyPopUp && (
+				<ButtonWrap onClick={modifyClickHandler}>
+					<button>수정하기</button>
+				</ButtonWrap>
+			)}
 		</ModalForm>
 	);
 };

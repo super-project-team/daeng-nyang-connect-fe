@@ -5,17 +5,19 @@ interface NavOptionProps {
 	$isMobile?: boolean;
 }
 
-export const LostLi = styled.li`
+export const LostLi = styled.li<NavOptionProps>`
 	position: relative;
 	width: 100%;
-	height: auto;
+	height: ${(props) => (props.$isMobile ? '350px' : '600px')};
 	border: 1px solid var(--color-peach);
 	border-radius: 8px;
 	cursor: pointer;
 `;
 
 export const ImgWrap = styled.div<NavOptionProps>`
-	height: 50%;
+	display: flex;
+	justify-content: center;
+	height: ${(props) => (props.$isMobile ? '35%' : '45%')};
 	border-radius: 8px 8px 0px 0px;
 	overflow: hidden;
 
@@ -28,6 +30,11 @@ export const ImgWrap = styled.div<NavOptionProps>`
 
 	& img:hover {
 		transform: scale(1.05);
+	}
+
+	.default-image {
+		padding: 20px;
+		background-color: rgba(255, 127, 80, 0.1);
 	}
 `;
 
@@ -47,15 +54,17 @@ export const TextWrap = styled.div<NavOptionProps>`
 		height: 50%;
 		margin-top: ${(props) =>
 			props.$isTablet ? '12px' : props.$isMobile ? '8px' : '16px'};
+		line-height: 1.5;
 	}
 `;
 
-export const ButtonWrap = styled.div`
+export const ButtonWrap = styled.div<NavOptionProps>`
 	position: absolute;
 	bottom: 8px;
 	right: 4px;
 	text-align: right;
-	margin: 0px 10px 10px 0px;
+	margin: ${(props) =>
+		props.$isMobile ? '0px 4px 0px 0px' : '0px 10px 10px 0px'};
 
 	& button:hover {
 		background-color: var(--color-light-salmon);
@@ -65,7 +74,7 @@ export const ButtonWrap = styled.div`
 
 export const Button = styled.button<NavOptionProps>`
 	padding: ${(props) =>
-		props.$isTablet ? '4px 16px' : props.$isMobile ? '4px 8px' : '4px 16px'};
+		props.$isTablet ? '4px 16px' : props.$isMobile ? '2px 4px' : '4px 16px'};
 	border: 1px solid var(--color-light-salmon);
 	border-radius: 4px;
 	outline: none;
@@ -73,4 +82,12 @@ export const Button = styled.button<NavOptionProps>`
 	font-size: ${(props) =>
 		props.$isTablet ? '15px' : props.$isMobile ? '12px' : '16px'};
 	cursor: pointer;
+`;
+
+export const PlaceText = styled.div<NavOptionProps>`
+	font-size: ${(props) => (props.$isMobile ? '11px' : '16px')};
+`;
+
+export const DateText = styled.div<NavOptionProps>`
+	font-size: ${(props) => (props.$isMobile ? '11px' : '16px')};
 `;

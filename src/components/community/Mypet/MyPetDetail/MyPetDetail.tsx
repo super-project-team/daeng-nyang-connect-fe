@@ -14,16 +14,15 @@ import {
 } from './MyPetDetail.style';
 import { getBoard } from '../../../../api/communityApi';
 import { useQuery } from 'react-query';
-import { BoardDetail, RootState } from '../../../../types/BoardTypes';
-import { useSelector } from 'react-redux';
+import { BoardDetail } from '../../../../types/BoardTypes';
+import { useState } from 'react';
 
 const MyPetDetail = () => {
+	const [modifyPopUpClick, setModifyPopUpClick] = useState(false);
+	const [modifyCommentId, setModifyCommentId] = useState(0);
+
 	const { $isTablet, $isMobile } = useResponsive();
 	const { myPetId } = useParams();
-
-	const commentsList = useSelector(
-		(state: RootState) => state.community.comments,
-	);
 
 	const fetchGetDetailBoard = async (): Promise<BoardDetail> => {
 		const response = await getBoard('my_pet', myPetId);
@@ -31,7 +30,7 @@ const MyPetDetail = () => {
 		return response;
 	};
 
-	const { data } = useQuery('myPetDetailBoard', fetchGetDetailBoard);
+	const { data, refetch } = useQuery('myPetDetailBoard', fetchGetDetailBoard);
 
 	return (
 		<div>
@@ -54,11 +53,21 @@ const MyPetDetail = () => {
 					{data &&
 						data.comments?.map((list) => {
 							if ('commentsId' in list) {
-								return <Comment key={list.commentsId} list={list} />;
+								return (
+									<Comment
+										key={list.commentsId}
+										list={list}
+										refetch={refetch}
+										modifyCommentId={modifyCommentId}
+										setModifyCommentId={setModifyCommentId}
+										setModifyPopUpClick={setModifyPopUpClick}
+										modifyPopUpClick={modifyPopUpClick}
+									/>
+								);
 							}
 						})}
 				</ul>
-				<RegisterCommentForm />
+				{modifyCommentId === 0 && <RegisterCommentForm />}
 			</CommentWrap>
 		</div>
 	);

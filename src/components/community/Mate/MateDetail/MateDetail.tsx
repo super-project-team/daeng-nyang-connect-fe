@@ -9,6 +9,7 @@ import {
 	PlaceWrap,
 	SubTitle,
 	TextBox,
+	Text,
 } from './MateDetail.style';
 import RegisterCommentForm from '../../../Comment/RegisterCommentForm';
 import { useResponsive } from '../../../../hooks/useResponsive';
@@ -16,9 +17,11 @@ import CommunitySwiper from '../../CommunitySwiper/CommunitySwiper';
 import { getBoard } from '../../../../api/communityApi';
 import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { useState } from 'react';
 
 const MateDetail = () => {
-	const images = ['/assets/cat.jpeg', '/assets/cat.jpeg'];
+	const [modifyPopUpClick, setModifyPopUpClick] = useState(false);
+	const [modifyCommentId, setModifyCommentId] = useState(0);
 
 	const { $isTablet, $isMobile } = useResponsive();
 
@@ -30,7 +33,10 @@ const MateDetail = () => {
 		return response;
 	};
 
-	const { data } = useQuery('mateDetailBoard', fetchGetDetailMateBoard);
+	const { data, refetch } = useQuery(
+		'mateDetailBoard',
+		fetchGetDetailMateBoard,
+	);
 
 	return (
 		<div>
@@ -52,17 +58,27 @@ const MateDetail = () => {
 					<Description $isMobile={$isMobile} $isTablet={$isTablet}>
 						상세 설명
 					</Description>
-					{data?.text}
+					<Text $isMobile={$isMobile} $isTablet={$isTablet}>
+						{data?.text}
+					</Text>
 				</TextBox>
 			</ImageAndTextWrap>
 			<CommentWrap $isMobile={$isMobile}>
 				<SubTitle>댓글</SubTitle>
 				<ul>
 					{data?.comments.map((list) => (
-						<Comment key={list.commentsId} list={list} />
+						<Comment
+							key={list.commentsId}
+							list={list}
+							refetch={refetch}
+							modifyCommentId={modifyCommentId}
+							setModifyCommentId={setModifyCommentId}
+							setModifyPopUpClick={setModifyPopUpClick}
+							modifyPopUpClick={modifyPopUpClick}
+						/>
 					))}
 				</ul>
-				<RegisterCommentForm />
+				{modifyCommentId === 0 && <RegisterCommentForm />}
 			</CommentWrap>
 		</div>
 	);

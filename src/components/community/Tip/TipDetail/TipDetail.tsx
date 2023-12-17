@@ -13,8 +13,12 @@ import {
 import { getBoard } from '../../../../api/communityApi';
 import { useQuery } from 'react-query';
 import { BoardDetail } from '../../../../types/BoardTypes';
+import { useState } from 'react';
 
 const TipDetail = () => {
+	const [modifyPopUpClick, setModifyPopUpClick] = useState(false);
+	const [modifyCommentId, setModifyCommentId] = useState(0);
+
 	const { $isMobile, $isTablet } = useResponsive();
 	const { tipId } = useParams();
 
@@ -24,7 +28,10 @@ const TipDetail = () => {
 		return response;
 	};
 
-	const { data } = useQuery<BoardDetail>('tipDetailBoard', fetchGetDetailBoard);
+	const { data, refetch } = useQuery<BoardDetail>(
+		'tipDetailBoard',
+		fetchGetDetailBoard,
+	);
 
 	return (
 		<div>
@@ -32,19 +39,36 @@ const TipDetail = () => {
 				{data && data.title}
 			</Title>
 			<DetailUserNav />
-			<TextBox>
+			<TextBox $isMobile={$isMobile}>
+				{data?.img && (
+					<ul>
+						{data.img.map((list) => (
+							<li key={list.url}>
+								<img src={list.url} alt="" />
+							</li>
+						))}
+					</ul>
+				)}
 				<Paragraph $isMobile={$isMobile} $isTablet={$isTablet}>
-					{data && data.text}
+					{data?.text}
 				</Paragraph>
 			</TextBox>
 			<CommentWrap $isMobile={$isMobile}>
 				<SubTitle>댓글</SubTitle>
 				<ul>
 					{data?.comments.map((list) => (
-						<Comment key={list.commentsId} list={list} />
+						<Comment
+							key={list.commentsId}
+							list={list}
+							refetch={refetch}
+							modifyCommentId={modifyCommentId}
+							setModifyCommentId={setModifyCommentId}
+							setModifyPopUpClick={setModifyPopUpClick}
+							modifyPopUpClick={modifyPopUpClick}
+						/>
 					))}
 				</ul>
-				<RegisterCommentForm />
+				{modifyCommentId === 0 && <RegisterCommentForm />}
 			</CommentWrap>
 		</div>
 	);

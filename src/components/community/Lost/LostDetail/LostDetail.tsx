@@ -16,8 +16,14 @@ import {
 	DescriptionSpan,
 } from './LostDetail.style';
 import { useQuery } from 'react-query';
+import { useState } from 'react';
+import formatDate from '../../../../utils/formatDate';
+import formatTime from '../../../../utils/formatTime';
 
 const LostDetail = () => {
+	const [modifyPopUpClick, setModifyPopUpClick] = useState(false);
+	const [modifyCommentId, setModifyCommentId] = useState(0);
+
 	const { $isTablet, $isMobile } = useResponsive();
 
 	const { lostId } = useParams();
@@ -28,7 +34,7 @@ const LostDetail = () => {
 		return response;
 	};
 
-	const { data } = useQuery('myPetDetailBoard', fetchGetDetailBoard);
+	const { data, refetch } = useQuery('lostDetailBoard', fetchGetDetailBoard);
 
 	return (
 		<div>
@@ -52,7 +58,7 @@ const LostDetail = () => {
 							잃어버린 날짜
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							2023-10-23
+							{formatDate(data?.lostDate)}
 						</Text>
 					</div>
 					<div>
@@ -60,7 +66,7 @@ const LostDetail = () => {
 							잃어버린 시간
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							오후 10시 30분
+							{formatTime(data?.lostTime)}
 						</Text>
 					</div>
 					<div>
@@ -68,7 +74,7 @@ const LostDetail = () => {
 							사례금
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							100,000
+							{Number(data?.reward)?.toLocaleString()}
 						</Text>
 					</div>
 					<div>
@@ -76,7 +82,7 @@ const LostDetail = () => {
 							전화번호
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							010-0000-0001
+							{data?.mobile}
 						</Text>
 					</div>
 					<div>
@@ -84,9 +90,15 @@ const LostDetail = () => {
 							종류 및 품종
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							<div>고양이</div>
+							<div>
+								{data?.kind === 'dog'
+									? '강아지'
+									: data?.kind === 'cat'
+									  ? '고양이'
+									  : '기타 반려동물'}
+							</div>
 							<div>, </div>
-							<div>페르시안</div>
+							<div>{data?.breed}</div>
 						</Text>
 					</div>
 					<div>
@@ -94,7 +106,11 @@ const LostDetail = () => {
 							성별
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							여자
+							{data?.gender === 'mail'
+								? '남자'
+								: data?.gender === 'female'
+								  ? '여자'
+								  : '중성'}
 						</Text>
 					</div>
 					<div>
@@ -102,23 +118,31 @@ const LostDetail = () => {
 							색깔
 						</Description>
 						<Text $isMobile={$isMobile} $isTablet={$isTablet}>
-							흰색
+							{data?.color}
 						</Text>
 					</div>
 					<DescriptionSpan $isMobile={$isMobile} $isTablet={$isTablet}>
 						상세 설명
 					</DescriptionSpan>
-					<p>강서구 초록마을로 144번길 근처 버스 정류장에서 잃어버렸어요ㅜ</p>
+					<p>{data?.text}</p>
 				</TextBox>
 			</ImageAndTextWrap>
 			<CommentWrap $isMobile={$isMobile}>
 				<SubTitle>댓글</SubTitle>
 				<ul>
 					{data?.comments?.map((list) => (
-						<Comment key={list.commentsId} list={list} />
+						<Comment
+							key={list.commentsId}
+							list={list}
+							refetch={refetch}
+							modifyCommentId={modifyCommentId}
+							setModifyCommentId={setModifyCommentId}
+							setModifyPopUpClick={setModifyPopUpClick}
+							modifyPopUpClick={modifyPopUpClick}
+						/>
 					))}
 				</ul>
-				<RegisterCommentForm />
+				{modifyCommentId === 0 && <RegisterCommentForm />}
 			</CommentWrap>
 		</div>
 	);

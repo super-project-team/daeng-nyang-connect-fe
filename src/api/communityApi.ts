@@ -1,7 +1,8 @@
-import { Board, BoardDetail, PostBoard } from '../types/BoardTypes';
+import { Board, BoardDetail, BoardSize, PostBoard } from '../types/BoardTypes';
 import APIClient from './ApiClient';
 
 const ALL = 'getAll';
+const SIZE = 'getSize';
 const POST = 'post';
 const MODIFY = 'modify';
 const DELETE = 'delete';
@@ -10,7 +11,7 @@ const BASE_URL = 'http://3.35.16.126:8080';
 export const communityApi = new APIClient(BASE_URL + '/api');
 
 export const getAllBoard = async (
-	communityType: string,
+	communityType: string | undefined,
 	pages?: string,
 ): Promise<Board[]> => {
 	return await communityApi.get(
@@ -22,20 +23,32 @@ export const getAllBoard = async (
 	);
 };
 
+export const getSize = async (
+	communityType: string | undefined,
+): Promise<BoardSize> => {
+	return await communityApi.get(`${communityType}/${SIZE}`);
+};
+
 export const getBoard = async (
-	communityType: string,
+	communityType: string | undefined,
 	id: string | undefined,
 ): Promise<BoardDetail> => {
 	return await communityApi.get(`${communityType}/getBoard?id=${id}`);
 };
 
-export const searchBoard = async (communityType: string, keyword: string) => {
+export const searchBoard = async (
+	communityType: string | undefined,
+	keyword: string,
+) => {
 	return await communityApi.get(`${communityType}/search?keyword=${keyword}`);
 };
 
-export const postBoard = async (communityType: string, body: PostBoard) => {
+export const postBoard = async (
+	communityType: string | undefined,
+	body: PostBoard,
+) => {
 	const formData = new FormData();
-	console.log(body);
+	console.log('body', body);
 	const { images } = body;
 
 	Object.keys(body).forEach((key) => {
@@ -59,15 +72,12 @@ export const postBoard = async (communityType: string, body: PostBoard) => {
 };
 
 export const modifyBoard = async (
-	communityType: string,
-	communityIdType: string,
-	id: number,
+	communityType: string | undefined,
+	communityIdType: string | undefined,
+	id: number | undefined,
 	body: PostBoard,
 ) => {
 	const formData = new FormData();
-	const { images } = body;
-
-	formData.append(communityIdType, id.toString());
 
 	Object.keys(body).forEach((key) => {
 		if (key !== 'images') {
@@ -78,22 +88,16 @@ export const modifyBoard = async (
 		}
 	});
 
-	if (images) {
-		images.forEach((image) => {
-			formData.append('files', image, image.name);
-		});
-	}
-
 	return await communityApi.put<PostBoard>(
-		`${communityType}/${MODIFY}`,
+		`${communityType}/${MODIFY}?${communityIdType}=${id}`,
 		formData,
 	);
 };
 
 export const deleteBoard = async (
-	communityType: string,
-	communityIdType: string,
-	id: number,
+	communityType: string | undefined,
+	communityIdType: string | undefined,
+	id: string | undefined,
 ) => {
 	return await communityApi.delete(
 		`${communityType}/${DELETE}?${communityIdType}=${id}`,
@@ -101,8 +105,8 @@ export const deleteBoard = async (
 };
 
 export const likeBoard = async (
-	communityType: string,
-	communityIdType: string,
+	communityType: string | undefined,
+	communityIdType: string | undefined,
 	id: string | undefined,
 ) => {
 	return await communityApi.post(
@@ -111,7 +115,7 @@ export const likeBoard = async (
 };
 
 export const postComment = async (
-	communityType: string,
+	communityType: string | undefined,
 	id: string | undefined,
 	comment: string,
 ) => {
@@ -121,7 +125,7 @@ export const postComment = async (
 };
 
 export const modifyComment = async (
-	communityType: string,
+	communityType: string | undefined,
 	id: number,
 	comment: string,
 ) => {
@@ -133,7 +137,10 @@ export const modifyComment = async (
 	);
 };
 
-export const deleteComment = async (communityType: string, id: number) => {
+export const deleteComment = async (
+	communityType: string | undefined,
+	id: number,
+) => {
 	return await communityApi.delete(
 		`${communityType}/comments/${DELETE}?id=${id}`,
 	);

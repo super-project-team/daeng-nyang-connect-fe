@@ -16,13 +16,19 @@ import {
 	MenuAndSearchWrap,
 	StyledFaPlus,
 } from './CommunityNav.style';
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
 	SET_DISPLAY_LABEL,
+	SET_IS_SEARCH,
+	SET_SEARCH_TEXT,
 	SET_SUB_CATEGORY,
 } from '../../../slice/communitySlice';
 import { useResponsive } from '../../../hooks/useResponsive';
+import labelMappings from '../../../utils/communityLabel';
+import { searchBoard } from '../../../api/communityApi';
+import { useQuery } from 'react-query';
+import { RootState } from '../../../types/BoardTypes';
 
 interface CommunityNavProps {
 	setIsPopUp: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,6 +36,8 @@ interface CommunityNavProps {
 }
 
 const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
+	const [text, setText] = useState<string>('');
+
 	const location = useLocation();
 	const navigate = useNavigate();
 	const queryParams = new URLSearchParams(location.search);
@@ -57,13 +65,53 @@ const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
 	}, [displayLabel]);
 
 	const moveToTheCommunity = (community: string) => {
+		if (location.pathname === `/community/${community}`) {
+			dispatch(SET_IS_SEARCH(false));
+		}
 		navigate(`/community/${community}`);
 		dispatch(SET_SUB_CATEGORY(null));
 	};
 
+	const isSearch = useSelector((state: RootState) => state.community.isSearch);
+	console.log(isSearch);
+
 	const moveToTheCategory = (community: string, category: string) => {
-		navigate(`/community/${community}?category=${category}`);
+		const currentPath = `/community/${community}`;
+		const currentSearch = `?category=${category}`;
+
+		dispatch(SET_IS_SEARCH(false));
+		navigate(currentPath + currentSearch);
 		dispatch(SET_SUB_CATEGORY(category));
+	};
+
+	console.log('displayLabel', displayLabel);
+
+	const searchTextChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setText(e.target.value);
+		dispatch(SET_SEARCH_TEXT(e.target.value));
+	};
+
+	const mapping = displayLabel
+		? labelMappings[displayLabel as keyof typeof labelMappings]
+		: undefined;
+	const boardType = mapping?.boardType;
+	const urlType = mapping?.urlType;
+
+	const fetchSearchBoard = async () => {
+		const response = await searchBoard(boardType, text);
+
+		return response;
+	};
+
+	const { refetch } = useQuery('searchBoard', fetchSearchBoard);
+
+	const searchClickHandler = (e: React.MouseEvent) => {
+		e.preventDefault();
+		fetchSearchBoard();
+		dispatch(SET_IS_SEARCH(true));
+		refetch();
+		setText('');
+		navigate(`/community/${urlType}`);
 	};
 
 	return (
@@ -78,8 +126,13 @@ const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
 				)}
 				<MenuAndSearchWrap>
 					<SearchWrap $isMobile={$isMobile} $isTablet={$isTablet}>
-						<input type="text" placeholder="검색어를 입력해주세요" />
-						<button>
+						<input
+							type="text"
+							placeholder="검색어를 입력해주세요"
+							value={text}
+							onChange={searchTextChangeHandler}
+						/>
+						<button onClick={searchClickHandler}>
 							<StyledIoIosSearch />
 						</button>
 					</SearchWrap>

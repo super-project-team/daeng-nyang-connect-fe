@@ -17,4 +17,8 @@ export const ButtonWrap = styled.div`
 		background-color: transparent;
 		cursor: pointer;
 	}
+
+	.current-page {
+		font-weight: bold;
+	}
 `;

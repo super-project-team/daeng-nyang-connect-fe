@@ -15,10 +15,19 @@ const MyPetList = ({ list }: MyPetListProps) => {
 		navigate(`/community/myPets/myPet/${id}`);
 	};
 
+	const isDefaultImage =
+		list.img && list.img.length > 0 ? list.img[0] : '/assets/LOGO.svg';
+
 	return (
 		<MyPetLi $isMobile={$isMobile}>
 			<ImageWrap onClick={() => moveToTheDetailPage(list.boardId)}>
-				{list.img && list.img.length > 0 && <img src={list.img[0]} alt="" />}
+				<img
+					src={isDefaultImage}
+					alt=""
+					className={
+						isDefaultImage === '/assets/LOGO.svg' ? 'default-image' : ''
+					}
+				/>
 			</ImageWrap>
 			<UserWrap $isMobile={$isMobile} $isTablet={$isTablet}>
 				<div>

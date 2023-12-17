@@ -1,56 +1,72 @@
 import { CiMenuKebab } from 'react-icons/ci';
 
 import {
+	ButtonWrap,
 	CreatedAtText,
+	DeletePopUpWrap,
 	DetailUserWrap,
 	InfoWrap,
 	KebabWrap,
 	LikeCount,
 	LikeWrap,
+	MenuButtonWrap,
+	NicknameText,
+	PopUpButtonWrap,
+	PopUpInfoWrap,
 	StyledFaHeart,
 	SubInfoWrap,
 	UserImageWrap,
+	UserPageButtonWrap,
 } from './DetailUserNav.style';
-import { useSelector } from 'react-redux';
-import { CommunityState } from '../../../slice/communitySlice';
-import { getBoard, likeBoard } from '../../../api/communityApi';
-import { useParams } from 'react-router-dom';
-import { useQuery, useQueryClient } from 'react-query';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+	CommunityState,
+	SET_MODIFY_POPUP,
+	SET_MODIFY_VALUE,
+} from '../../../slice/communitySlice';
+import { deleteBoard, getBoard, likeBoard } from '../../../api/communityApi';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import { BoardDetail } from '../../../types/BoardTypes';
 import { useEffect, useState } from 'react';
 import formatDate from '../../../utils/formatDate';
+import { useResponsive } from '../../../hooks/useResponsive';
+import labelMappings from '../../../utils/communityLabel';
 
 interface RootState {
 	community: CommunityState;
 }
 
 const DetailUserNav = () => {
-	const [likeCount, setLikeCount] = useState(0);
+	const [userButtonClick, setUserButtonClick] = useState(false);
+	const [menuButtonClick, setMenuButtonClick] = useState(false);
+	const [deleteButtonClick, setDeleteButtonClick] = useState(false);
+
+	const communityState = useSelector((state: RootState) => state.community);
+	console.log('communityState', communityState);
+
+	const dispatch = useDispatch();
+
+	const navigate = useNavigate();
+	const currentUrl = window.location.origin;
+	const domainAndPort = currentUrl.split('://')[1];
 
 	const displayLabel = useSelector(
 		(state: RootState) => state.community.displayLabel,
 	);
-	const { myPetId, mateId, tipId, lostId } = useParams();
+	const params = useParams();
+	const { $isMobile } = useResponsive();
+
+	const mapping = displayLabel
+		? labelMappings[displayLabel as keyof typeof labelMappings]
+		: undefined;
+	const boardType = mapping?.boardType;
+	const idType = mapping?.idType;
+	const id = mapping?.getId(params);
+	const urlType = mapping?.urlType;
 
 	const fetchGetDetailBoard = async (): Promise<BoardDetail> => {
-		const response = await getBoard(
-			displayLabel === '나의 댕냥이'
-				? 'my_pet'
-				: displayLabel === '댕냥 꿀팁'
-				  ? 'tips'
-				  : displayLabel === '댕냥 메이트'
-				    ? 'mate'
-				    : displayLabel === '댕냥 미아센터'
-				      ? 'lost'
-				      : '',
-			displayLabel === '나의 댕냥이'
-				? myPetId
-				: displayLabel === '댕냥 꿀팁'
-				  ? tipId
-				  : displayLabel === '댕냥 메이트'
-				    ? mateId
-				    : lostId,
-		);
+		const response = await getBoard(boardType, id);
 
 		return response;
 	};
@@ -66,76 +82,125 @@ const DetailUserNav = () => {
 		fetchGetDetailBoard,
 	);
 
+	const modifyBoardData = async () => {
+		await refetch();
+		await dispatch(SET_MODIFY_VALUE(data));
+	};
+
+	useEffect(() => {
+		modifyBoardData();
+	}, []);
+
 	const fetchLikeBoard = async () => {
-		const response = await likeBoard(
-			displayLabel === '나의 댕냥이'
-				? 'my_pet'
-				: displayLabel === '댕냥 꿀팁'
-				  ? 'tips'
-				  : displayLabel === '댕냥 메이트'
-				    ? 'mate'
-				    : 'lost',
-			displayLabel === '나의 댕냥이'
-				? 'myPetId'
-				: displayLabel === '댕냥 꿀팁'
-				  ? 'tipsId'
-				  : displayLabel === '댕냥 메이트'
-				    ? 'mateId'
-				    : '',
-			displayLabel === '나의 댕냥이'
-				? myPetId
-				: displayLabel === '댕냥 꿀팁'
-				  ? tipId
-				  : displayLabel === '댕냥 메이트'
-				    ? mateId
-				    : '',
-		);
+		const response = await likeBoard(boardType, idType, id);
 
 		return response;
 	};
 
 	const handleLikeClick = async () => {
-		setLikeCount((prev) => prev + 1);
-
 		try {
 			await fetchLikeBoard();
 			refetch();
 		} catch (error) {
 			console.error('Error updating like status:', error);
-			setLikeCount((prev) => prev - 1);
 		}
 	};
 
-	useEffect(() => {
-		if (data) {
-			setLikeCount(data.likes?.length || 0);
-		}
-	}, [data]);
+	const userButtonClickHandler = () => {
+		setUserButtonClick((prev) => !prev);
+	};
+
+	const menuButtonClickHandler = () => {
+		setMenuButtonClick((prev) => !prev);
+	};
+
+	const deleteButtonClickHandler = () => {
+		setDeleteButtonClick((prev) => !prev);
+		document.body.style.overflow = 'hidden';
+	};
+
+	const deletePopUpCancelHandler = () => {
+		setDeleteButtonClick(false);
+		document.body.style.overflow = 'visible';
+	};
+
+	const deleteClickHandler = async () => {
+		setDeleteButtonClick(false);
+		await fetchDeleteDetailBoard();
+		refetch();
+		navigate(`/community/${urlType}`);
+		document.body.style.overflow = 'visible';
+	};
+
+	const ModifyPopUpClickHandler = () => {
+		dispatch(SET_MODIFY_POPUP(true));
+	};
+
+	const moveToTheUserPage = () => {
+		navigate('/users/3');
+	};
+
+	const fetchDeleteDetailBoard = async () => {
+		const response = await deleteBoard(boardType, idType, id);
+
+		return response;
+	};
 
 	return (
 		<DetailUserWrap>
 			<InfoWrap>
-				<UserImageWrap>
+				<UserImageWrap onClick={userButtonClickHandler}>
 					<img src={data?.userThumbnail} alt="" />
 				</UserImageWrap>
 				<div>
-					<div>{data?.nickname}</div>
-					<CreatedAtText>{formatDate(data?.createdAt)}</CreatedAtText>
+					<NicknameText $isMobile={$isMobile}>{data?.nickname}</NicknameText>
+					<CreatedAtText $isMobile={$isMobile}>
+						{formatDate(data?.createdAt)}
+					</CreatedAtText>
 				</div>
+				{userButtonClick && (
+					<UserPageButtonWrap onClick={moveToTheUserPage}>
+						<button>유저 페이지</button>
+					</UserPageButtonWrap>
+				)}
 			</InfoWrap>
 			<SubInfoWrap>
 				{displayLabel !== '댕냥 미아센터' && (
-					<LikeWrap onClick={handleLikeClick}>
+					<LikeWrap onClick={handleLikeClick} $isMobile={$isMobile}>
 						<div>
 							<StyledFaHeart />
 						</div>
-						<LikeCount>{data?.likes?.length}</LikeCount>{' '}
+						<LikeCount $isMobile={$isMobile}>{data?.likes?.length}</LikeCount>{' '}
 					</LikeWrap>
 				)}
-				<KebabWrap>
+				<KebabWrap onClick={menuButtonClickHandler}>
 					<CiMenuKebab />
+					{menuButtonClick && (
+						<MenuButtonWrap>
+							<ButtonWrap onClick={ModifyPopUpClickHandler}>
+								<button>수정하기</button>
+							</ButtonWrap>
+							<ButtonWrap onClick={deleteButtonClickHandler}>
+								<button>삭제하기</button>
+							</ButtonWrap>
+						</MenuButtonWrap>
+					)}
 				</KebabWrap>
 			</SubInfoWrap>
+			{deleteButtonClick && (
+				<DeletePopUpWrap $isMobile={$isMobile}>
+					<PopUpInfoWrap>
+						<div>{domainAndPort} 내용:</div>
+						<div>게시글을 삭제하시겠습니까?</div>
+					</PopUpInfoWrap>
+					<PopUpButtonWrap>
+						<div>
+							<button onClick={deletePopUpCancelHandler}>취소</button>
+							<button onClick={deleteClickHandler}>확인</button>
+						</div>
+					</PopUpButtonWrap>
+				</DeletePopUpWrap>
+			)}
 		</DetailUserWrap>
 	);
 };

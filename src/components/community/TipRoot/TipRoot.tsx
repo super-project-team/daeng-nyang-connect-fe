@@ -3,12 +3,13 @@ import TipList from './TipList/TipList';
 import Pagination from '../../Pagination/Pagination';
 import usePagination from '../../../hooks/usePagination';
 import { useResponsive } from '../../../hooks/useResponsive';
-import { getAllBoard } from '../../../api/communityApi';
+import { getAllBoard, getSize } from '../../../api/communityApi';
 import { useQuery } from 'react-query';
 import { Board } from '../../../types/BoardTypes';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { CommunityState } from '../../../slice/communitySlice';
+import useSearchData from '../../../hooks/useSearchData';
 
 export interface MyTip {
 	id: number;
@@ -23,6 +24,7 @@ interface RootState {
 
 const TipRoot = () => {
 	const { $isMobile } = useResponsive();
+	const [totalBoardSize, setTotalBoardSize] = useState(0);
 
 	const category = useSelector(
 		(state: RootState) => state.community.subCategory,
@@ -36,6 +38,14 @@ const TipRoot = () => {
 		return response;
 	};
 
+	const fetchGetAllBoardSize = async () => {
+		const response = await getSize('tips');
+
+		setTotalBoardSize(response.size);
+
+		return response.size;
+	};
+
 	const { data, isLoading } = useQuery<Board[]>(
 		'tipAllBoard',
 		fetchGetAllTipBoard,
@@ -43,11 +53,11 @@ const TipRoot = () => {
 
 	const itemsPerPage = 20;
 	const { currentPage, pageRange, handlePageClick, handlePrevNextClick } =
-		usePagination(data && data.length, itemsPerPage);
+		usePagination(totalBoardSize, itemsPerPage);
 
-	const startIndex = (currentPage - 1) * itemsPerPage;
-	const endIndex = startIndex + itemsPerPage;
-	const currentTips = data && data.slice(startIndex, endIndex);
+	useEffect(() => {
+		fetchGetAllBoardSize();
+	}, []);
 
 	useEffect(() => {
 		if (Array.isArray(data)) {
@@ -62,6 +72,9 @@ const TipRoot = () => {
 		}
 	}, [data, category]);
 
+	const { searchData, isSearch } = useSearchData();
+	console.log('searchData', searchData);
+
 	return (
 		<>
 			{isLoading && <section>로딩 중..</section>}
@@ -73,19 +86,27 @@ const TipRoot = () => {
 					<div>좋아요</div>
 				</TipsNav>
 				<TipLists $isMobile={$isMobile}>
-					{category === ''
-						? data?.map(
+					{isSearch
+						? Array.isArray(searchData) &&
+						  searchData.map(
 								(list) =>
 									'boardId' in list && (
 										<TipList key={list.boardId} list={list} />
 									),
 						  )
-						: filteredData?.map(
-								(list) =>
-									'boardId' in list && (
-										<TipList key={list.boardId} list={list} />
-									),
-						  )}
+						: category === ''
+						  ? data?.map(
+									(list) =>
+										'boardId' in list && (
+											<TipList key={list.boardId} list={list} />
+										),
+						    )
+						  : filteredData?.map(
+									(list) =>
+										'boardId' in list && (
+											<TipList key={list.boardId} list={list} />
+										),
+						    )}
 				</TipLists>
 				<Pagination
 					currentPage={currentPage}

@@ -23,23 +23,20 @@ class APIClient {
 		this.api = axios.create({ baseURL, headers });
 	}
 
-	get<T>(
-		endpoint: string,
-		body?: FormData | Record<string, string | boolean | number>,
-	): Promise<T> {
-		return this.request('get', endpoint, body);
+	get<T>(endpoint: string): Promise<T> {
+		return this.request('get', endpoint);
 	}
 
-	post<T extends FormData | Record<string, string | boolean>>(
+	post<T>(
 		endpoint: string,
-		body?: FormData | Record<string, string | boolean | string[] | number>,
+		body?: FormData | Record<string, string | boolean | number>,
 	): Promise<T> {
 		return this.request('post', endpoint, body);
 	}
 
 	put<T>(
 		endpoint: string,
-		body?: FormData | Record<string, string | boolean | number>,
+		body: FormData | Record<string, string | boolean | number>,
 	): Promise<T> {
 		return this.request('put', endpoint, body);
 	}
@@ -51,10 +48,7 @@ class APIClient {
 	private request<T>(
 		method: Method,
 		url: string,
-		data:
-			| FormData
-			| FormData
-			| Record<string, string | boolean | string[] | number> = {},
+		data: FormData | Record<string, string | boolean | number> = {},
 		config?: AxiosRequestConfig,
 	): Promise<T> {
 		const headers = {

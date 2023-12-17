@@ -29,7 +29,9 @@ const Pagination = ({
 					key={pageNumber}
 					disabled={currentPage === pageNumber}
 					onClick={() => onPageClick(pageNumber)}>
-					<span>{pageNumber + 1}</span>
+					<span className={currentPage === pageNumber ? 'current-page' : ''}>
+						{pageNumber + 1}
+					</span>
 				</button>
 			))}
 			<button onClick={onNextClick}>

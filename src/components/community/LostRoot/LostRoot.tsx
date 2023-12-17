@@ -6,6 +6,8 @@ import LostList from './LostList/LostList';
 import { LostLists } from './LostRoot.style';
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import useInfiniteScroll from '../../../hooks/useInfiniteScroll';
+import useSearchData from '../../../hooks/useSearchData';
 
 const LostRoot = () => {
 	const { $isTablet, $isMobile } = useResponsive();
@@ -22,7 +24,13 @@ const LostRoot = () => {
 		return response;
 	};
 
-	const { data } = useQuery<Board[]>('lostAllBoard', fetchGetAllLostBoard);
+	const { data, refetch, isLoading } = useQuery<Board[]>(
+		'lostAllBoard',
+		fetchGetAllLostBoard,
+	);
+
+	const { searchData, isSearch } = useSearchData();
+	console.log('searchData', searchData);
 
 	useEffect(() => {
 		if (Array.isArray(data)) {
@@ -37,17 +45,34 @@ const LostRoot = () => {
 		}
 	}, [data, category]);
 
+	const visibleData = useInfiniteScroll(data, refetch, 6);
+	const visibleFilteredData = useInfiniteScroll(filteredData, refetch, 6);
+
+	console.log('visibleData', visibleData);
+
+	if (isLoading) return <div>로딩 중..</div>;
+
 	return (
 		<LostLists $isMobile={$isMobile} $isTablet={$isTablet}>
-			{category === ''
-				? data?.map(
+			{isSearch
+				? Array.isArray(searchData) &&
+				  searchData.map(
 						(list) =>
 							'boardId' in list && <LostList key={list.boardId} list={list} />,
 				  )
-				: filteredData?.map(
-						(list) =>
-							'boardId' in list && <LostList key={list.boardId} list={list} />,
-				  )}
+				: category === ''
+				  ? visibleData?.map(
+							(list) =>
+								'boardId' in list && (
+									<LostList key={list.boardId} list={list} />
+								),
+				    )
+				  : visibleFilteredData?.map(
+							(list) =>
+								'boardId' in list && (
+									<LostList key={list.boardId} list={list} />
+								),
+				    )}
 		</LostLists>
 	);
 };

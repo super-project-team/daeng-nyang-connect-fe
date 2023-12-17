@@ -23,6 +23,11 @@ export const MyPetLi = styled.li<NavOptionProps>`
 	& img:hover {
 		transform: scale(1.05);
 	}
+
+	.default-image {
+		padding: 20px;
+		background-color: rgba(255, 127, 80, 0.1);
+	}
 `;
 
 export const ImageWrap = styled.div`

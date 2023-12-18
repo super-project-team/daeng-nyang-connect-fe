@@ -17,9 +17,10 @@ export const CardImgDiv = styled.div`
 	width: 100%;
 	height: 70%;
 	img {
-		position: relative;
-		left: -20%;
+		width: 100%;
 		height: 100%;
+		object-fit: cover;
+		object-position: center center;
 	}
 `;
 export const CardTextDiv = styled.div`

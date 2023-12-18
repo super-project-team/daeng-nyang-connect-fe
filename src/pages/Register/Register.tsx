@@ -22,7 +22,7 @@ import { idCheck, nicknameCheck, signupUser } from '../../api/authApi';
 
 interface SignupRequestBody {
 	name: string;
-	nickName: string;
+	nickname: string;
 	email: string;
 	password: string;
 	pwdck: string;
@@ -62,14 +62,13 @@ const Register = () => {
 	const [pwdckIsTouched, setPwdckIsTouched] = useState(false);
 
 	const [confirmModalIsOpen, setConfirmModalIsOpen] = useState(false);
-	const [allIsValid, setAllisValid] = useState(false);
 	const [textIsTouched, setTextIsTouched] = useState(false);
 
 	const [nicknameIsDuplicated, setNicknameIsDuplicated] = useState(false);
 
 	const [inputValue, setInputValue] = useState<SignupRequestBody>({
 		name: '',
-		nickName: '',
+		nickname: '',
 		email: '',
 		password: '',
 		pwdck: '',
@@ -77,7 +76,7 @@ const Register = () => {
 		city: '',
 		town: '',
 		experience: false,
-		gender: '',
+		gender: 'X',
 	});
 
 	interface ConfirmModalProps {
@@ -242,6 +241,10 @@ const Register = () => {
 			[name]: processedValue,
 		}));
 		setTextIsTouched(true);
+	};
+
+	const signupUserHandler = async (e: React.FormEvent) => {
+		e.preventDefault();
 
 		if (
 			nameIsValid &&
@@ -252,14 +255,8 @@ const Register = () => {
 			passwordIsValid &&
 			pwdckIsValid
 		) {
-			setAllisValid(true);
-		}
-	};
-
-	const signupUserHandler = async (e: React.FormEvent) => {
-		e.preventDefault();
-		if (allIsValid) {
 			try {
+				console.log('test');
 				const { pwdck, ...dataToSend } = inputValue;
 				const response = await signupUser(dataToSend);
 				if (!response) return;
@@ -281,15 +278,13 @@ const Register = () => {
 	const nickNameCheckHandler = async (e: React.FormEvent) => {
 		e.preventDefault();
 		try {
-			const response = await nicknameCheck({ nickname: inputValue.nickName });
+			const response = await nicknameCheck({ nickname: inputValue.nickname });
 			if (!response) {
 				setNicknameIsDuplicated(true);
 				return;
 			}
 			if (response.msg === '사용가능한 아이디 입니다.') {
-				setEmailIsDuplicated(false);
-			} else {
-				setEmailIsDuplicated(true);
+				setNicknameIsDuplicated(false);
 			}
 		} catch (error) {
 			if (e instanceof TypeError) {
@@ -443,7 +438,7 @@ const Register = () => {
 						<RegisterInputSmall
 							placeholder="닉네임"
 							type="text"
-							name="nickName"
+							name="nickname"
 							onFocus={nickNameOnFocusHandler}
 							onBlur={nickNameCheckHandler}
 							onChange={inputValueHandler}

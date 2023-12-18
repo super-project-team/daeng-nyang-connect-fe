@@ -105,7 +105,7 @@ const Login = () => {
 					return;
 				}
 
-				const { access_token, nickname, email } = response;
+				const { access_token, nickname, id } = response;
 
 				const saveToken = (token: string) => {
 					localToken.save(token);
@@ -115,7 +115,7 @@ const Login = () => {
 					LOGIN_USER({
 						isLoggedIn: true,
 						nickname: nickname,
-						id: email,
+						id: id,
 					}),
 				);
 

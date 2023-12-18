@@ -52,7 +52,7 @@ export const RegisterInput = styled.input<ResponsiveProps>`
 `;
 
 export const RegisterSelectBox = styled.select<ResponsiveProps>`
-	width: ${(props) => (props.$isMobile ? '300px' : '205px')};
+	width: ${(props) => (props.$isMobile ? '300px' : '220px')};
 	height: 35px;
 	margin-bottom: 16px;
 	border: none;
@@ -78,8 +78,32 @@ export const RegisterSelectBox = styled.select<ResponsiveProps>`
 	}
 `;
 
-export const RegisterSelectBoxLeft = styled(RegisterSelectBox)`
-	margin-left: 12px;
+export const RegisterSelectBoxLeft = styled.select<ResponsiveProps>`
+	margin-left: ${(props) => (props.$isMobile ? '15px' : '0px')};
+	width: ${(props) => (props.$isMobile ? '300px' : '220px')};
+	height: 35px;
+	margin-bottom: 16px;
+	border: none;
+	padding-left: 16px;
+	font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
+	box-shadow: 1px 2px 6px 1px rgba(0, 0, 0, 0.3);
+	border-radius: 10px;
+	&:required:invalid {
+		color: #808080;
+	}
+	&:hover {
+		box-shadow: 1px 2px 6px 1px rgba(0, 0, 0, 0.5);
+	}
+	&:focus {
+		box-shadow: 1px 2px 6px 1px rgba(0, 0, 0, 0.5);
+		outline: none;
+	}
+	option[value=''][disabled] {
+		display: none;
+	}
+	option {
+		color: #111;
+	}
 `;
 
 export const Option = styled.option``;

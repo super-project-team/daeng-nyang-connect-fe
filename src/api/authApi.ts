@@ -14,7 +14,7 @@ interface SignupRequestBody {
 	email: string;
 	password: string;
 	name: string;
-	nickName: string;
+	nickname: string;
 	mobile: string;
 	city: string;
 	town: string;
@@ -54,7 +54,7 @@ export const signupUser = async (body: SignupRequestBody): Promise<any> => {
 		email: body.email,
 		password: body.password,
 		name: body.name,
-		nickName: body.nickName,
+		nickname: body.nickname,
 		mobile: body.mobile,
 		city: body.city,
 		town: body.town,
@@ -105,7 +105,7 @@ export const myPageGet = async (): Promise<any> => {
 	return await authApi.get(MY_PAGE, {
 		email: '',
 		name: '',
-		nickName: '',
+		nickname: '',
 		mobile: '',
 		city: '',
 		info: '',

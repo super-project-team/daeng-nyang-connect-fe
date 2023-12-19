@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;200;300;400&display=swap');
 
 :root {
-	--color-light-blue: #c6d0d9;
-	--color-teal: #2d6580;
-	--color-deep-blue: #0b3241;
-	--color-peach: #ffe1d6;
-	--color-misty-rose: #9e848d;
-	--color-light-salmon: #e39ba6;
+	--color-light-blue: rgb(198, 208, 217);
+	--color-teal: rgb(45, 101, 128);
+	--color-deep-blue: rgb(11, 50, 65);
+	--color-peach: rgb(255, 225, 214);
+	--color-misty-rose: rgb(158, 132, 141);
+	--color-light-salmon: rgb(227, 155, 166);
 }
 
 html,

@@ -8,15 +8,18 @@ import {
 	ModalWrap,
 	Overlay,
 	TitleDiv,
-} from './TelChangeModal.style';
+} from './PasswordChangeModal.style';
 import { useResponsive } from '../../../hooks/useResponsive';
 
-interface TelChangeModalProps {
+interface PasswordChangeModalProps {
 	open: boolean;
 	onClose: (isClosed: boolean) => void;
 }
 
-const TelChangeModal: FC<TelChangeModalProps> = ({ open, onClose }) => {
+const PasswordChangeModal: FC<PasswordChangeModalProps> = ({
+	open,
+	onClose,
+}) => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 	return (
 		<Overlay>
@@ -31,7 +34,7 @@ const TelChangeModal: FC<TelChangeModalProps> = ({ open, onClose }) => {
 						$isTablet={$isTablet}
 						$isPc={$isPc}
 						$isMaxWidth={$isMaxWidth}>
-						전화번호 변경
+						비밀번호 변경
 					</TitleDiv>
 					<ModalForm>
 						<ModalInput
@@ -39,14 +42,21 @@ const TelChangeModal: FC<TelChangeModalProps> = ({ open, onClose }) => {
 							$isTablet={$isTablet}
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}
-							type="text"
-							placeholder="변경할 전화번호를 입력해주세요."></ModalInput>
+							type="password"
+							placeholder="변경할 비밀번호를 입력해주세요."></ModalInput>
+						<ModalInput
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}
+							type="password"
+							placeholder="변경할 비밀번호를 다시한번 입력해주세요."></ModalInput>
 						<ChangeButton
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}>
-							전화번호 변경
+							비밀번호 변경
 						</ChangeButton>
 						<CloseButton
 							$isMobile={$isMobile}
@@ -65,4 +75,4 @@ const TelChangeModal: FC<TelChangeModalProps> = ({ open, onClose }) => {
 	);
 };
 
-export default TelChangeModal;
+export default PasswordChangeModal;

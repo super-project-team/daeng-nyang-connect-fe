@@ -8,6 +8,10 @@ const NICKNAME_CHECK = '/NicknameCheck';
 const FIND_ID = '/findId';
 const FIND_PASSWORD = '/findPassword';
 const MY_PAGE = '/myPage/get';
+const CHANGE_IMG = '/myPage/modifyProfile';
+const CHANGE_INFO = '/myPage/modifyInfo';
+const CHANGE_NICKNAME = '/myPage/modifyNickname';
+const CHANGE_PASSWORD = '/myPage/modifyPassword';
 const BASE_URL = 'http://3.35.16.126:8080';
 
 interface SignupRequestBody {
@@ -45,6 +49,14 @@ interface FindPasswordRequestBody {
 	mobile: string;
 	email: string;
 	newPassword: string;
+}
+
+interface ChangeInfoRequestBody {
+	info: string;
+}
+
+interface ChangeNicknameRequestBody {
+	nickname: string;
 }
 
 export const authApi = new APIClient(BASE_URL + '/api');
@@ -113,5 +125,19 @@ export const myPageGet = async (): Promise<any> => {
 		gender: '',
 		town: '',
 		experience: '',
+	});
+};
+
+export const changeInfo = async (body: ChangeInfoRequestBody): Promise<any> => {
+	return await authApi.put(CHANGE_INFO, {
+		info: body.info,
+	});
+};
+
+export const changeNickname = async (
+	body: ChangeNicknameRequestBody,
+): Promise<any> => {
+	return await authApi.put(CHANGE_NICKNAME, {
+		nickName: body.nickname,
 	});
 };

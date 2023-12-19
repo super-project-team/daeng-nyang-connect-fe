@@ -16,6 +16,7 @@ import {
 	UserItemDiv,
 	UserItemTitleDiv,
 	UserLeftItemDiv,
+	UserLeftItemDivEmail,
 	UserLeftItemDivWrapper,
 	UserNameDiv,
 	UserNamePhotoDiv,
@@ -32,15 +33,25 @@ import { logoutUser, myPageGet } from '../../../api/authApi';
 import { useDispatch } from 'react-redux';
 import { LOGOUT_USER } from '../../../slice/userSlice';
 import { useResponsive } from '../../../hooks/useResponsive';
+import InfoChangeModal from '../InfoChangeModal/InfoChangeModal';
+import NicknameChangeModal from '../NicknameChangeModal/NicknameChangeModal';
+import PasswordChangeModal from '../PasswordChangeModal/PasswordChangeModal';
 
 const User = () => {
+	interface AddressChangeModalProps {
+		open: boolean;
+		onClose: () => void;
+	}
+
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 	const [imgFile, setImgFile] = useState('');
-	const imgRef = useRef<HTMLInputElement>(null);
+	const imgRef = useRef<HTMLInputElement>();
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
+	const [infoIsOpen, infoSetIsOpen] = useState(false);
 	const [deleteIsOpen, deleteSetIsOpen] = useState(false);
+	const [nicknameIsOpen, nicknameSetIsOpen] = useState(false);
 	const [addressIsOpen, addressSetIsOpen] = useState(false);
 	const [telIsOpen, telSetIsOpen] = useState(false);
 	const [passwordIsOpen, passwordSetIsOpen] = useState(false);
@@ -98,8 +109,16 @@ const User = () => {
 		passwordSetIsOpen(true);
 	};
 
+	const nicknameOnClickButton = () => {
+		nicknameSetIsOpen(true);
+	};
+
 	const telOnClickButton = () => {
 		telSetIsOpen(true);
+	};
+
+	const infoOnClickButton = () => {
+		infoSetIsOpen(true);
 	};
 
 	const deleteOnClickButton = () => {
@@ -129,10 +148,41 @@ const User = () => {
 		}
 	};
 
-	interface AddressChangeModalProps {
-		open: boolean;
-		onClose: () => void;
-	}
+	// const saveImgFile = async () => {
+	// 	try {
+	// 		const selectedFile = imgRef.current?.files?.[0];
+	// 		if (!selectedFile) {
+	// 			console.log('파일이 선택되지 않았습니다.');
+	// 			return; // 파일이 선택되지 않은 경우 함수 종료
+	// 		}
+
+	// 		if (!(selectedFile instanceof Blob)) {
+	// 			console.error('선택된 파일이 유효한 파일 또는 Blob 객체가 아닙니다.');
+	// 			return; // 유효하지 않은 파일인 경우 함수 종료
+	// 		}
+	// 		const formData = new FormData();
+	// 		formData.append('file', selectedFile);
+	// 		const response = await uploadUser(formData);
+	// 		console.log('이미지 업로드 후 반환되는 URl값:', response);
+
+	// 		setUserInfo((prevUserInfo) => ({
+	// 			...prevUserInfo,
+	// 			profileImg: response,
+	// 		}));
+
+	// 		console.log('유저 스테이트에 이미지 url 업로드 되는지 체크:', userInfo);
+	// 		const putResponse = await putMyInfo(userInfo);
+	// 		if (!response) return;
+
+	// 		const reader = new FileReader();
+	// 		reader.readAsDataURL(selectedFile);
+	// 		reader.onloadend = () => {
+	// 			setImgFile(reader.result);
+	// 		};
+	// 	} catch (error) {
+	// 		console.error('이미지 업로드 중 오류 발생:', error.message);
+	// 	}
+	// };
 
 	return (
 		<UserWrapper>
@@ -146,8 +196,20 @@ const User = () => {
 								$isPc={$isPc}
 								$isMaxWidth={$isMaxWidth}>
 								<ProfileImgDiv>
-									<ProfileImg />
-									<ProfileImgInput />
+									<ProfileImg
+										src={userInfo.img || '/assets/icons/icon-user.png'}
+										onClick={() => {
+											imgRef.current?.click();
+										}}
+									/>
+									<ProfileImgInput
+										className="signup-profileImg-input"
+										type="file"
+										accept="image/jpg,image/png,image/jpeg"
+										id="profileImg"
+										// onChange={saveImgFile}
+										ref={imgRef as React.RefObject<HTMLInputElement>}
+									/>
 								</ProfileImgDiv>
 							</UserPhotoDiv>
 							<UserNameDiv>{userInfo.name}</UserNameDiv>
@@ -164,21 +226,52 @@ const User = () => {
 								$isMaxWidth={$isMaxWidth}>
 								이메일
 							</UserItemTitleDiv>
+							<UserLeftItemDivEmail
+								$isMobile={$isMobile}
+								$isTablet={$isTablet}
+								$isPc={$isPc}
+								$isMaxWidth={$isMaxWidth}>
+								{userInfo.email}
+							</UserLeftItemDivEmail>
+							<div></div>
+						</UserLeftItemDivWrapper>
+						<UserLeftItemDivWrapper
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}>
+							<UserItemTitleDiv
+								$isMobile={$isMobile}
+								$isTablet={$isTablet}
+								$isPc={$isPc}
+								$isMaxWidth={$isMaxWidth}>
+								닉네임
+							</UserItemTitleDiv>
 							<UserLeftItemDiv
 								$isMobile={$isMobile}
 								$isTablet={$isTablet}
 								$isPc={$isPc}
 								$isMaxWidth={$isMaxWidth}>
-								asdasd@asdasd.com
+								{userInfo.nickname}
 							</UserLeftItemDiv>
 							<ModalDiv
+								onClick={nicknameOnClickButton}
 								$isMobile={$isMobile}
 								$isTablet={$isTablet}
 								$isPc={$isPc}
 								$isMaxWidth={$isMaxWidth}>
 								변경
 							</ModalDiv>
+							{nicknameIsOpen && (
+								<NicknameChangeModal
+									open={nicknameIsOpen}
+									onClose={() => {
+										nicknameSetIsOpen(false);
+									}}
+								/>
+							)}
 						</UserLeftItemDivWrapper>
+
 						<UserLeftItemDivWrapper
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
@@ -199,12 +292,21 @@ const User = () => {
 								{userInfo.info ? userInfo.info : <p>소개글을 입력해 주세요.</p>}
 							</UserLeftItemDiv>
 							<ModalDiv
+								onClick={infoOnClickButton}
 								$isMobile={$isMobile}
 								$isTablet={$isTablet}
 								$isPc={$isPc}
 								$isMaxWidth={$isMaxWidth}>
-								{userInfo.info ? <p>변경</p> : <p>입력</p>}
+								변경
 							</ModalDiv>
+							{infoIsOpen && (
+								<InfoChangeModal
+									open={infoIsOpen}
+									onClose={() => {
+										infoSetIsOpen(false);
+									}}
+								/>
+							)}
 						</UserLeftItemDivWrapper>
 						<UserLeftItemDivWrapper
 							$isMobile={$isMobile}
@@ -260,7 +362,7 @@ const User = () => {
 								$isTablet={$isTablet}
 								$isPc={$isPc}
 								$isMaxWidth={$isMaxWidth}>
-								010-0000-0000
+								{userInfo.mobile}
 							</UserLeftItemDiv>
 							<ModalDiv
 								onClick={telOnClickButton}
@@ -291,13 +393,21 @@ const User = () => {
 						로그아웃
 					</SignOutDiv>
 					<SignOutDiv
-						onClick={logoutHandler}
+						onClick={passwordOnClickButton}
 						$isMobile={$isMobile}
 						$isTablet={$isTablet}
 						$isPc={$isPc}
 						$isMaxWidth={$isMaxWidth}>
 						비밀번호 변경
 					</SignOutDiv>
+					{passwordIsOpen && (
+						<PasswordChangeModal
+							open={infoIsOpen}
+							onClose={() => {
+								passwordSetIsOpen(false);
+							}}
+						/>
+					)}
 					<SignOutDiv
 						onClick={deleteOnClickButton}
 						$isMobile={$isMobile}

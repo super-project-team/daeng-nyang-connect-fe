@@ -8,15 +8,18 @@ import {
 	ModalWrap,
 	Overlay,
 	TitleDiv,
-} from './TelChangeModal.style';
+} from './NicknameChangeModal.style';
 import { useResponsive } from '../../../hooks/useResponsive';
 
-interface TelChangeModalProps {
+interface NicknameChangeModalProps {
 	open: boolean;
 	onClose: (isClosed: boolean) => void;
 }
 
-const TelChangeModal: FC<TelChangeModalProps> = ({ open, onClose }) => {
+const NicknameChangeModal: FC<NicknameChangeModalProps> = ({
+	open,
+	onClose,
+}) => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 	return (
 		<Overlay>
@@ -31,7 +34,7 @@ const TelChangeModal: FC<TelChangeModalProps> = ({ open, onClose }) => {
 						$isTablet={$isTablet}
 						$isPc={$isPc}
 						$isMaxWidth={$isMaxWidth}>
-						전화번호 변경
+						닉네임 변경
 					</TitleDiv>
 					<ModalForm>
 						<ModalInput
@@ -40,13 +43,13 @@ const TelChangeModal: FC<TelChangeModalProps> = ({ open, onClose }) => {
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}
 							type="text"
-							placeholder="변경할 전화번호를 입력해주세요."></ModalInput>
+							placeholder="변경할 닉네임을 입력해주세요."></ModalInput>
 						<ChangeButton
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}>
-							전화번호 변경
+							닉네임 변경
 						</ChangeButton>
 						<CloseButton
 							$isMobile={$isMobile}
@@ -65,4 +68,4 @@ const TelChangeModal: FC<TelChangeModalProps> = ({ open, onClose }) => {
 	);
 };
 
-export default TelChangeModal;
+export default NicknameChangeModal;

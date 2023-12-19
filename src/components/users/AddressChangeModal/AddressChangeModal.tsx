@@ -53,6 +53,7 @@ const AddressChangeModal: FC<AddressChangeModalProps> = ({ open, onClose }) => {
 			}
 		}
 	};
+
 	return (
 		<Overlay>
 			<ModalWrap

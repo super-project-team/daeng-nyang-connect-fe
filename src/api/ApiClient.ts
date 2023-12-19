@@ -44,8 +44,11 @@ class APIClient {
 		return this.request('put', endpoint, body);
 	}
 
-	delete<T>(endpoint: string): Promise<T> {
-		return this.request('delete', endpoint);
+	delete<T>(
+		endpoint: string,
+		body?: FormData | Record<string, string | boolean | string[] | number>,
+	): Promise<T> {
+		return this.request('delete', endpoint, body);
 	}
 
 	private request<T>(
@@ -70,7 +73,10 @@ class APIClient {
 			.request({
 				method,
 				url,
-				data: method === 'post' || method === 'put' ? data : undefined,
+				data:
+					method === 'post' || method === 'put' || method === 'delete'
+						? data
+						: undefined,
 				headers,
 				...config,
 			})

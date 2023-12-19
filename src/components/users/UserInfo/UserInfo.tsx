@@ -23,13 +23,14 @@ import TelChangeModal from '../TelChangeModal/TelChangeModal';
 import DeleteModal from '../DeleteModal/DeleteModal';
 import AddressChangeModal from '../AddressChangeModal/AddressChangeModal';
 import localToken from '../../../api/LocalToken';
-import { logoutUser, myPageGet } from '../../../api/authApi';
+import { logoutUser } from '../../../api/authApi';
 import { useDispatch } from 'react-redux';
 import { LOGOUT_USER } from '../../../slice/userSlice';
 import { useResponsive } from '../../../hooks/useResponsive';
 import InfoChangeModal from '../InfoChangeModal/InfoChangeModal';
 import NicknameChangeModal from '../NicknameChangeModal/NicknameChangeModal';
 import PasswordChangeModal from '../PasswordChangeModal/PasswordChangeModal';
+import { myPageGet } from '../../../api/myPageApi';
 
 const UserInfo = () => {
 	interface AddressChangeModalProps {

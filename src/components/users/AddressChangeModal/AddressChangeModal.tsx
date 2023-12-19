@@ -10,7 +10,7 @@ import {
 	TitleDiv,
 } from './AddressChangeModal.style';
 import { useResponsive } from '../../../hooks/useResponsive';
-import { changeAddress } from '../../../api/authApi';
+import { changeAddress } from '../../../api/myPageApi';
 
 interface AddressChangeModalProps {
 	open: boolean;

@@ -7,15 +7,8 @@ const ID_CHECK = '/IdCheck';
 const NICKNAME_CHECK = '/NicknameCheck';
 const FIND_ID = '/findId';
 const FIND_PASSWORD = '/findPassword';
-const MY_PAGE = '/myPage/get';
-const CHANGE_IMG = '/myPage/modifyProfile';
-const CHANGE_INFO = '/myPage/modifyInfo';
-const CHANGE_NICKNAME = '/myPage/modifyNickname';
-const CHANGE_PASSWORD = '/myPage/modifyPassword';
-const CHANGE_MOBILE = '/myPage/modifyMobile';
-const CHANGE_ADDRESS = '/myPage/modifyCityTown';
 const BASE_URL = 'http://3.35.16.126:8080';
-
+export const authApi = new APIClient(BASE_URL + '/api');
 interface SignupRequestBody {
 	email: string;
 	password: string;
@@ -52,13 +45,6 @@ interface FindPasswordRequestBody {
 	email: string;
 	newPassword: string;
 }
-
-interface ChangeAddressRequestBody {
-	city: string;
-	town: string;
-}
-
-export const authApi = new APIClient(BASE_URL + '/api');
 
 export const signupUser = async (body: SignupRequestBody): Promise<any> => {
 	return await authApi.post(SIGNUP, {
@@ -110,43 +96,4 @@ export const findPassword = async (
 		email: body.email,
 		newPassword: body.newPassword,
 	});
-};
-
-export const myPageGet = async (): Promise<any> => {
-	return await authApi.get(MY_PAGE, {
-		email: '',
-		name: '',
-		nickname: '',
-		mobile: '',
-		city: '',
-		info: '',
-		img: '',
-		gender: '',
-		town: '',
-		experience: '',
-	});
-};
-
-export const changeInfo = async (body: string): Promise<any> => {
-	return await authApi.put(CHANGE_INFO + `?info=${body}`);
-};
-
-export const changeNickname = async (body: string): Promise<any> => {
-	return await authApi.put(CHANGE_NICKNAME + `?nickname=${body}`);
-};
-
-export const changePassword = async (body: string): Promise<any> => {
-	return await authApi.put(CHANGE_PASSWORD + `?password=${body}`);
-};
-
-export const changeMobile = async (body: string): Promise<any> => {
-	return await authApi.put(CHANGE_MOBILE + `?mobile=${body}`);
-};
-
-export const changeAddress = async (
-	body: ChangeAddressRequestBody,
-): Promise<any> => {
-	return await authApi.put(
-		CHANGE_ADDRESS + `?city=${body.city}&town=${body.town}`,
-	);
 };

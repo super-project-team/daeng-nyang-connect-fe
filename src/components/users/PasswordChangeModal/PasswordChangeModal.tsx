@@ -11,7 +11,7 @@ import {
 	TitleDiv,
 } from './PasswordChangeModal.style';
 import { useResponsive } from '../../../hooks/useResponsive';
-import { changePassword } from '../../../api/authApi';
+import { changePassword } from '../../../api/myPageApi';
 
 interface PasswordChangeModalProps {
 	open: boolean;

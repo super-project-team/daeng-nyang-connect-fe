@@ -10,7 +10,7 @@ import {
 	TitleDiv,
 } from './NicknameChangeModal.style';
 import { useResponsive } from '../../../hooks/useResponsive';
-import { changeNickname } from '../../../api/authApi';
+import { changeNickname } from '../../../api/myPageApi';
 
 interface NicknameChangeModalProps {
 	open: boolean;

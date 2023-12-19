@@ -10,7 +10,7 @@ import {
 	TitleDiv,
 } from './TelChangeModal.style';
 import { useResponsive } from '../../../hooks/useResponsive';
-import { changeMobile } from '../../../api/authApi';
+import { changeMobile } from '../../../api/myPageApi';
 
 interface TelChangeModalProps {
 	open: boolean;

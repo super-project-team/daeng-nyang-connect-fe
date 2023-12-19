@@ -10,7 +10,7 @@ import {
 	TitleDiv,
 } from './InfoChangeModal.style';
 import { useResponsive } from '../../../hooks/useResponsive';
-import { changeInfo } from '../../../api/authApi';
+import { changeInfo } from '../../../api/myPageApi';
 
 interface InfoChangeModalProps {
 	open: boolean;

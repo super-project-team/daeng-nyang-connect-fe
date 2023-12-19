@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, FormEvent, useState } from 'react';
 import {
 	ChangeButton,
 	CloseButton,
@@ -10,6 +10,7 @@ import {
 	TitleDiv,
 } from './TelChangeModal.style';
 import { useResponsive } from '../../../hooks/useResponsive';
+import { changeMobile } from '../../../api/authApi';
 
 interface TelChangeModalProps {
 	open: boolean;
@@ -18,6 +19,36 @@ interface TelChangeModalProps {
 
 const TelChangeModal: FC<TelChangeModalProps> = ({ open, onClose }) => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
+
+	const [newMobile, setNewMobile] = useState<string>('');
+
+	const inputValueHandler = (
+		event: React.ChangeEvent<HTMLInputElement>,
+	): void => {
+		setNewMobile(event.target.value);
+	};
+
+	const mobileChange = async (
+		event: FormEvent<HTMLFormElement>,
+	): Promise<void> => {
+		event.preventDefault();
+
+		try {
+			await changeMobile(newMobile);
+			onClose(false);
+		} catch (error) {
+			if (error instanceof TypeError) {
+				// TypeError
+			} else if (error instanceof SyntaxError) {
+				// SyntaxError
+			} else if (typeof error === 'string') {
+				// string
+			} else {
+				// other
+			}
+		}
+	};
+
 	return (
 		<Overlay>
 			<ModalWrap
@@ -33,15 +64,17 @@ const TelChangeModal: FC<TelChangeModalProps> = ({ open, onClose }) => {
 						$isMaxWidth={$isMaxWidth}>
 						전화번호 변경
 					</TitleDiv>
-					<ModalForm>
+					<ModalForm onSubmit={mobileChange}>
 						<ModalInput
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}
+							onChange={inputValueHandler}
 							type="text"
-							placeholder="변경할 전화번호를 입력해주세요."></ModalInput>
+							placeholder="새 전화번호"></ModalInput>
 						<ChangeButton
+							type="submit"
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}

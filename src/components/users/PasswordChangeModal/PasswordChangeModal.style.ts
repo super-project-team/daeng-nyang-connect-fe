@@ -116,3 +116,13 @@ export const CloseButton = styled.button<ResponsiveProps>`
 		background-color: rgba(158, 132, 141, 1);
 	}
 `;
+
+export const Paragraph = styled.p<ResponsiveProps>`
+	margin-top: -5px;
+	margin-bottom: 5px;
+	width: 80%;
+	text-align: left;
+	font-size: ${(props) => (props.$isMobile ? '9px' : '12px')};
+	color: var(--color--deep-blue);
+	font-weight: 500;
+`;

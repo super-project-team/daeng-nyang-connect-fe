@@ -75,7 +75,7 @@ const NicknameChangeModal: FC<NicknameChangeModalProps> = ({
 							$isMaxWidth={$isMaxWidth}
 							onChange={inputValueHandler}
 							type="text"
-							placeholder="변경할 닉네임을 입력해주세요."></ModalInput>
+							placeholder="새 닉네임"></ModalInput>
 						<ChangeButton
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}

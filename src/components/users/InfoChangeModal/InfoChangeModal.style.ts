@@ -65,7 +65,7 @@ export const ModalForm = styled.form`
 `;
 
 export const ModalInput = styled.input<ResponsiveProps>`
-	width: 80%;
+	width: ${(props) => (props.$isMobile ? '100%' : '80%')};
 	height: ${(props) => (props.$isMobile ? '32px' : '42px')};
 	margin-bottom: 16px;
 	border: none;
@@ -86,7 +86,7 @@ export const ChangeButton = styled.button<ResponsiveProps>`
 	background-color: rgba(227, 155, 166, 0.9);
 	color: white;
 	padding: 8px, 52px, 8px, 52px;
-	width: 80%;
+	width: ${(props) => (props.$isMobile ? '100%' : '80%')};
 	height: ${(props) => (props.$isMobile ? '32px' : '42px')};
 	font-size: ${(props) => (props.$isMobile ? '14px' : '20px')};
 	font-weight: 400;
@@ -103,7 +103,7 @@ export const CloseButton = styled.button<ResponsiveProps>`
 	background-color: rgba(158, 132, 141, 0.8);
 	color: white;
 	padding: 8px, 52px, 8px, 52px;
-	width: 80%;
+	width: ${(props) => (props.$isMobile ? '100%' : '80%')};
 	height: ${(props) => (props.$isMobile ? '32px' : '42px')};
 	font-size: ${(props) => (props.$isMobile ? '14px' : '20px')};
 	font-weight: 400;

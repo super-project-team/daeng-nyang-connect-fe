@@ -12,6 +12,8 @@ const CHANGE_IMG = '/myPage/modifyProfile';
 const CHANGE_INFO = '/myPage/modifyInfo';
 const CHANGE_NICKNAME = '/myPage/modifyNickname';
 const CHANGE_PASSWORD = '/myPage/modifyPassword';
+const CHANGE_MOBILE = '/myPage/modifyMobile';
+const CHANGE_ADDRESS = '/myPage/modifyCityTown';
 const BASE_URL = 'http://3.35.16.126:8080';
 
 interface SignupRequestBody {
@@ -49,6 +51,11 @@ interface FindPasswordRequestBody {
 	mobile: string;
 	email: string;
 	newPassword: string;
+}
+
+interface ChangeAddressRequestBody {
+	city: string;
+	town: string;
 }
 
 export const authApi = new APIClient(BASE_URL + '/api');
@@ -126,4 +133,20 @@ export const changeInfo = async (body: string): Promise<any> => {
 
 export const changeNickname = async (body: string): Promise<any> => {
 	return await authApi.put(CHANGE_NICKNAME + `?nickname=${body}`);
+};
+
+export const changePassword = async (body: string): Promise<any> => {
+	return await authApi.put(CHANGE_PASSWORD + `?password=${body}`);
+};
+
+export const changeMobile = async (body: string): Promise<any> => {
+	return await authApi.put(CHANGE_MOBILE + `?mobile=${body}`);
+};
+
+export const changeAddress = async (
+	body: ChangeAddressRequestBody,
+): Promise<any> => {
+	return await authApi.put(
+		CHANGE_ADDRESS + `?city=${body.city}&town=${body.town}`,
+	);
 };

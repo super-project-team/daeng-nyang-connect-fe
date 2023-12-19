@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { ChangeEvent, FC, FormEvent, useState } from 'react';
 import {
 	ChangeButton,
 	CloseButton,
@@ -10,6 +10,7 @@ import {
 	TitleDiv,
 } from './AddressChangeModal.style';
 import { useResponsive } from '../../../hooks/useResponsive';
+import { changeAddress } from '../../../api/authApi';
 
 interface AddressChangeModalProps {
 	open: boolean;
@@ -18,6 +19,40 @@ interface AddressChangeModalProps {
 
 const AddressChangeModal: FC<AddressChangeModalProps> = ({ open, onClose }) => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
+
+	const [inputValue, setInputValue] = useState({
+		city: '',
+		town: '',
+	});
+
+	const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setInputValue((prevInputValue) => ({
+			...prevInputValue,
+			[name]: value,
+		}));
+	};
+
+	const addressChange = async (
+		event: FormEvent<HTMLFormElement>,
+	): Promise<void> => {
+		event.preventDefault();
+
+		try {
+			await changeAddress(inputValue);
+			onClose(false);
+		} catch (error) {
+			if (error instanceof TypeError) {
+				// TypeError
+			} else if (error instanceof SyntaxError) {
+				// SyntaxError
+			} else if (typeof error === 'string') {
+				// string
+			} else {
+				// other
+			}
+		}
+	};
 	return (
 		<Overlay>
 			<ModalWrap
@@ -33,8 +68,10 @@ const AddressChangeModal: FC<AddressChangeModalProps> = ({ open, onClose }) => {
 						$isMaxWidth={$isMaxWidth}>
 						주소변경
 					</TitleDiv>
-					<ModalForm>
+					<ModalForm onSubmit={addressChange}>
 						<ModalInput
+							name="city"
+							onChange={inputChangeHandler}
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}
@@ -42,6 +79,8 @@ const AddressChangeModal: FC<AddressChangeModalProps> = ({ open, onClose }) => {
 							type="text"
 							placeholder="변경할 주소를 입력해주세요."></ModalInput>
 						<ModalInput
+							name="town"
+							onChange={inputChangeHandler}
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}
@@ -49,6 +88,7 @@ const AddressChangeModal: FC<AddressChangeModalProps> = ({ open, onClose }) => {
 							type="text"
 							placeholder="상세 주소를 입력해주세요."></ModalInput>
 						<ChangeButton
+							type="submit"
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}

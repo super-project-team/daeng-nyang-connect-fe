@@ -47,8 +47,8 @@ export const UserPhotoDiv = styled.div<ResponsiveProps>`
 	height: ${(props) => (props.$isMobile ? '80px' : '100px')};
 `;
 
-export const UserNameDiv = styled.div`
-	font-size: 20px;
+export const UserNameDiv = styled.div<ResponsiveProps>`
+	font-size: ${(props) => (props.$isMobile ? '16px' : '20px')};
 	font-weight: 500;
 	color: var(--color--deep--blue);
 	height: 33px;
@@ -56,6 +56,8 @@ export const UserNameDiv = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	margin-top: ${(props) => (props.$isMobile ? '20px' : '')};
+	margin-left: ${(props) => (props.$isMobile ? '20px' : '')};
 `;
 
 export const UserItemDiv = styled.div`

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, FormEvent } from 'react';
 import {
 	ChangeButton,
 	CloseButton,
@@ -10,6 +10,7 @@ import {
 	TitleDiv,
 } from './NicknameChangeModal.style';
 import { useResponsive } from '../../../hooks/useResponsive';
+import { changeNickname } from '../../../api/authApi';
 
 interface NicknameChangeModalProps {
 	open: boolean;
@@ -21,6 +22,36 @@ const NicknameChangeModal: FC<NicknameChangeModalProps> = ({
 	onClose,
 }) => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
+
+	const [newNickname, setNewNickname] = useState<string>('');
+
+	const inputValueHandler = (
+		event: React.ChangeEvent<HTMLInputElement>,
+	): void => {
+		setNewNickname(event.target.value);
+	};
+
+	const nicknameChange = async (
+		event: FormEvent<HTMLFormElement>,
+	): Promise<void> => {
+		event.preventDefault();
+
+		try {
+			await changeNickname(newNickname);
+			onClose(false);
+		} catch (error) {
+			if (error instanceof TypeError) {
+				// TypeError
+			} else if (error instanceof SyntaxError) {
+				// SyntaxError
+			} else if (typeof error === 'string') {
+				// string
+			} else {
+				// other
+			}
+		}
+	};
+
 	return (
 		<Overlay>
 			<ModalWrap
@@ -36,19 +67,21 @@ const NicknameChangeModal: FC<NicknameChangeModalProps> = ({
 						$isMaxWidth={$isMaxWidth}>
 						닉네임 변경
 					</TitleDiv>
-					<ModalForm>
+					<ModalForm onSubmit={nicknameChange}>
 						<ModalInput
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}
+							onChange={inputValueHandler}
 							type="text"
 							placeholder="변경할 닉네임을 입력해주세요."></ModalInput>
 						<ChangeButton
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}
-							$isMaxWidth={$isMaxWidth}>
+							$isMaxWidth={$isMaxWidth}
+							type="submit">
 							닉네임 변경
 						</ChangeButton>
 						<CloseButton

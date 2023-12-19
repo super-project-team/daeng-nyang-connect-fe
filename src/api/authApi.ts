@@ -51,14 +51,6 @@ interface FindPasswordRequestBody {
 	newPassword: string;
 }
 
-interface ChangeInfoRequestBody {
-	info: string;
-}
-
-interface ChangeNicknameRequestBody {
-	nickname: string;
-}
-
 export const authApi = new APIClient(BASE_URL + '/api');
 
 export const signupUser = async (body: SignupRequestBody): Promise<any> => {
@@ -128,16 +120,10 @@ export const myPageGet = async (): Promise<any> => {
 	});
 };
 
-export const changeInfo = async (body: ChangeInfoRequestBody): Promise<any> => {
-	return await authApi.put(CHANGE_INFO, {
-		info: body.info,
-	});
+export const changeInfo = async (body: string): Promise<any> => {
+	return await authApi.put(CHANGE_INFO + `?info=${body}`);
 };
 
-export const changeNickname = async (
-	body: ChangeNicknameRequestBody,
-): Promise<any> => {
-	return await authApi.put(CHANGE_NICKNAME, {
-		nickName: body.nickname,
-	});
+export const changeNickname = async (body: string): Promise<any> => {
+	return await authApi.put(CHANGE_NICKNAME + `?nickname=${body}`);
 };

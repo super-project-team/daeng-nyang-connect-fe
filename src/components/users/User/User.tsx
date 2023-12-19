@@ -212,7 +212,18 @@ const User = () => {
 									/>
 								</ProfileImgDiv>
 							</UserPhotoDiv>
-							<UserNameDiv>{userInfo.name}</UserNameDiv>
+							<UserNameDiv
+								$isMobile={$isMobile}
+								$isTablet={$isTablet}
+								$isPc={$isPc}
+								$isMaxWidth={$isMaxWidth}>
+								{userInfo.name}
+								{userInfo.gender === 'man'
+									? '(남자)'
+									: userInfo.gender === 'woman'
+									  ? '(여자)'
+									  : null}
+							</UserNameDiv>
 						</UserNamePhotoDiv>
 						<UserLeftItemDivWrapper
 							$isMobile={$isMobile}
@@ -233,7 +244,28 @@ const User = () => {
 								$isMaxWidth={$isMaxWidth}>
 								{userInfo.email}
 							</UserLeftItemDivEmail>
-							<div></div>
+						</UserLeftItemDivWrapper>
+						<UserLeftItemDivWrapper
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}>
+							<UserItemTitleDiv
+								$isMobile={$isMobile}
+								$isTablet={$isTablet}
+								$isPc={$isPc}
+								$isMaxWidth={$isMaxWidth}>
+								경험
+							</UserItemTitleDiv>
+							<UserLeftItemDivEmail
+								$isMobile={$isMobile}
+								$isTablet={$isTablet}
+								$isPc={$isPc}
+								$isMaxWidth={$isMaxWidth}>
+								{userInfo.experience
+									? '동물을 키워본 적이 있습니다.'
+									: '동물을 키워본 적이 없습니다.'}
+							</UserLeftItemDivEmail>
 						</UserLeftItemDivWrapper>
 						<UserLeftItemDivWrapper
 							$isMobile={$isMobile}
@@ -266,6 +298,7 @@ const User = () => {
 								<NicknameChangeModal
 									open={nicknameIsOpen}
 									onClose={() => {
+										getMyInfo();
 										nicknameSetIsOpen(false);
 									}}
 								/>
@@ -303,6 +336,7 @@ const User = () => {
 								<InfoChangeModal
 									open={infoIsOpen}
 									onClose={() => {
+										getMyInfo();
 										infoSetIsOpen(false);
 									}}
 								/>

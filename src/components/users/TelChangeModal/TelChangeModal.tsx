@@ -1,38 +1,95 @@
-import React, { FC, useState } from 'react';
+import React, { FC, FormEvent, useState } from 'react';
 import {
+	ChangeButton,
 	CloseButton,
 	Contents,
-	DeleteButton,
 	ModalForm,
 	ModalInput,
 	ModalWrap,
 	Overlay,
 	TitleDiv,
 } from './TelChangeModal.style';
+import { useResponsive } from '../../../hooks/useResponsive';
+import { changeMobile } from '../../../api/myPageApi';
 
-interface AddressChangeModalProps {
+interface TelChangeModalProps {
 	open: boolean;
 	onClose: (isClosed: boolean) => void;
 }
 
-const TelChangeModal: FC<AddressChangeModalProps> = ({ open, onClose }) => {
+const TelChangeModal: FC<TelChangeModalProps> = ({ open, onClose }) => {
+	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
+
+	const [newMobile, setNewMobile] = useState<string>('');
+
+	const inputValueHandler = (
+		event: React.ChangeEvent<HTMLInputElement>,
+	): void => {
+		setNewMobile(event.target.value);
+	};
+
+	const mobileChange = async (
+		event: FormEvent<HTMLFormElement>,
+	): Promise<void> => {
+		event.preventDefault();
+
+		try {
+			await changeMobile(newMobile);
+			onClose(false);
+		} catch (error) {
+			if (error instanceof TypeError) {
+				// TypeError
+			} else if (error instanceof SyntaxError) {
+				// SyntaxError
+			} else if (typeof error === 'string') {
+				// string
+			} else {
+				// other
+			}
+		}
+	};
+
 	return (
 		<Overlay>
-			<ModalWrap>
+			<ModalWrap
+				$isMobile={$isMobile}
+				$isTablet={$isTablet}
+				$isPc={$isPc}
+				$isMaxWidth={$isMaxWidth}>
 				<Contents>
-					<TitleDiv>
-						<h1>Phone Number Change</h1>
+					<TitleDiv
+						$isMobile={$isMobile}
+						$isTablet={$isTablet}
+						$isPc={$isPc}
+						$isMaxWidth={$isMaxWidth}>
+						전화번호 변경
 					</TitleDiv>
-					<ModalForm>
+					<ModalForm onSubmit={mobileChange}>
 						<ModalInput
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}
+							onChange={inputValueHandler}
 							type="text"
-							placeholder="변경할 휴대폰 번호를 입력해주세요."></ModalInput>
-						<DeleteButton>Phone Number Change</DeleteButton>
+							placeholder="새 전화번호"></ModalInput>
+						<ChangeButton
+							type="submit"
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}>
+							전화번호 변경
+						</ChangeButton>
 						<CloseButton
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}
 							onClick={() => {
 								onClose(false);
 							}}>
-							Close
+							닫기
 						</CloseButton>
 					</ModalForm>
 				</Contents>

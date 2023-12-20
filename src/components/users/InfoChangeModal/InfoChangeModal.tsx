@@ -8,44 +8,32 @@ import {
 	ModalWrap,
 	Overlay,
 	TitleDiv,
-} from './DeleteModal.style';
+} from './InfoChangeModal.style';
 import { useResponsive } from '../../../hooks/useResponsive';
-import { deleteUser, logoutUser } from '../../../api/authApi';
-import { useNavigate } from 'react-router-dom';
+import { changeInfo } from '../../../api/myPageApi';
 
-interface DeleteModalProps {
+interface InfoChangeModalProps {
 	open: boolean;
 	onClose: (isClosed: boolean) => void;
 }
 
-const DeleteModal: FC<DeleteModalProps> = ({ open, onClose }) => {
-	const navigate = useNavigate();
+const InfoChangeModal: FC<InfoChangeModalProps> = ({ open, onClose }) => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
-	const [inputValue, setInputValue] = useState({
-		email: '',
-		password: '',
-	});
+	const [newInfo, setNewInfo] = useState<string>('');
 
-	const inputValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setInputValue((prevInputValue) => ({
-			...prevInputValue,
-			[name]: value,
-		}));
+	const inputValueHandler = (
+		event: React.ChangeEvent<HTMLInputElement>,
+	): void => {
+		setNewInfo(event.target.value);
 	};
 
-	const deleteUserHandler = async (
+	const infoChange = async (
 		event: FormEvent<HTMLFormElement>,
 	): Promise<void> => {
 		event.preventDefault();
 
 		try {
-			const response = await deleteUser(inputValue);
-			if (!response) {
-				return;
-			}
-			await logoutUser();
-			navigate('/');
+			await changeInfo(newInfo);
 			onClose(false);
 		} catch (error) {
 			if (error instanceof TypeError) {
@@ -73,35 +61,26 @@ const DeleteModal: FC<DeleteModalProps> = ({ open, onClose }) => {
 						$isTablet={$isTablet}
 						$isPc={$isPc}
 						$isMaxWidth={$isMaxWidth}>
-						계정삭제
+						소개글 변경
 					</TitleDiv>
-					<ModalForm onSubmit={deleteUserHandler}>
+					<ModalForm onSubmit={infoChange}>
 						<ModalInput
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}
+							onChange={inputValueHandler}
 							type="text"
-							name="email"
-							onChange={inputValueHandler}
-							placeholder="이메일"></ModalInput>
-						<ModalInput
-							$isMobile={$isMobile}
-							$isTablet={$isTablet}
-							$isPc={$isPc}
-							$isMaxWidth={$isMaxWidth}
-							type="password"
-							name="password"
-							onChange={inputValueHandler}
-							placeholder="비밀번호"></ModalInput>
+							placeholder="변경할 소개글을 입력해주세요."></ModalInput>
 						<ChangeButton
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}>
-							계정삭제
+							소개글 변경
 						</ChangeButton>
 						<CloseButton
+							type="submit"
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}
@@ -118,4 +97,4 @@ const DeleteModal: FC<DeleteModalProps> = ({ open, onClose }) => {
 	);
 };
 
-export default DeleteModal;
+export default InfoChangeModal;

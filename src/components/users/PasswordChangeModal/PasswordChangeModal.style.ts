@@ -41,14 +41,18 @@ export const TitleDiv = styled.div<ResponsiveProps>`
 
 export const Contents = styled.div`
 	margin: 50px 30px;
-	h1 {
-		font-size: 30px;
-		font-weight: 600;
-		margin-bottom: 60px;
-	}
-	img {
-		margin-top: 60px;
-		width: 300px;
+`;
+export const Button = styled.button`
+	font-size: 14px;
+	padding: 10px 20px;
+	border: none;
+	background-color: #ababab;
+	border-radius: 10px;
+	color: white;
+	font-weight: 200;
+	cursor: pointer;
+	&:hover {
+		background-color: #898989;
 	}
 `;
 
@@ -60,32 +64,25 @@ export const ModalForm = styled.form`
 	margin-bottom: 30px;
 `;
 
-export const ModalInput = styled.input`
-	width: 427px;
-	height: 40px;
+export const ModalInput = styled.input<ResponsiveProps>`
+	width: 80%;
+	height: ${(props) => (props.$isMobile ? '32px' : '42px')};
 	margin-bottom: 16px;
-	border: 1px solid #434343;
+	border: none;
 	padding-left: 16px;
-	font-size: 16px;
-`;
-
-export const DeleteButton = styled.button`
-	background-color: #5d2510;
-	color: #ede1d2;
-	border: 1px solid #5d2510;
-	padding: 8px, 52px, 8px, 52px;
-	width: 427px;
-	height: 42px;
-	font-size: 20px;
-	font-weight: 400;
-	margin-bottom: 20px;
-
+	font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
+	box-shadow: 1px 2px 6px 1px rgba(0, 0, 0, 0.3);
+	border-radius: 10px;
 	&:hover {
-		cursor: pointer;
+		box-shadow: 1px 2px 6px 1px rgba(0, 0, 0, 0.5);
+	}
+	&:focus {
+		box-shadow: 1px 2px 6px 1px rgba(0, 0, 0, 0.5);
+		outline: none;
 	}
 `;
 
-export const CloseButton = styled.button<ResponsiveProps>`
+export const ChangeButton = styled.button<ResponsiveProps>`
 	background-color: rgba(227, 155, 166, 0.9);
 	color: white;
 	padding: 8px, 52px, 8px, 52px;
@@ -100,4 +97,32 @@ export const CloseButton = styled.button<ResponsiveProps>`
 		cursor: pointer;
 		background-color: rgba(227, 155, 166, 1);
 	}
+`;
+
+export const CloseButton = styled.button<ResponsiveProps>`
+	background-color: rgba(158, 132, 141, 0.8);
+	color: white;
+	padding: 8px, 52px, 8px, 52px;
+	width: 80%;
+	height: ${(props) => (props.$isMobile ? '32px' : '42px')};
+	font-size: ${(props) => (props.$isMobile ? '14px' : '20px')};
+	font-weight: 400;
+	border-radius: ${(props) => (props.$isMobile ? '8px' : '10px')};
+	box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.25);
+	margin-top: 10px;
+
+	&:hover {
+		cursor: pointer;
+		background-color: rgba(158, 132, 141, 1);
+	}
+`;
+
+export const Paragraph = styled.p<ResponsiveProps>`
+	margin-top: -5px;
+	margin-bottom: 5px;
+	width: 80%;
+	text-align: left;
+	font-size: ${(props) => (props.$isMobile ? '9px' : '12px')};
+	color: var(--color--deep-blue);
+	font-weight: 500;
 `;

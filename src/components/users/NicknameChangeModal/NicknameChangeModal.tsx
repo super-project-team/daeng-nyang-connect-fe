@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, useState } from 'react';
+import React, { FC, useState, FormEvent } from 'react';
 import {
 	ChangeButton,
 	CloseButton,
@@ -8,44 +8,36 @@ import {
 	ModalWrap,
 	Overlay,
 	TitleDiv,
-} from './DeleteModal.style';
+} from './NicknameChangeModal.style';
 import { useResponsive } from '../../../hooks/useResponsive';
-import { deleteUser, logoutUser } from '../../../api/authApi';
-import { useNavigate } from 'react-router-dom';
+import { changeNickname } from '../../../api/myPageApi';
 
-interface DeleteModalProps {
+interface NicknameChangeModalProps {
 	open: boolean;
 	onClose: (isClosed: boolean) => void;
 }
 
-const DeleteModal: FC<DeleteModalProps> = ({ open, onClose }) => {
-	const navigate = useNavigate();
+const NicknameChangeModal: FC<NicknameChangeModalProps> = ({
+	open,
+	onClose,
+}) => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
-	const [inputValue, setInputValue] = useState({
-		email: '',
-		password: '',
-	});
 
-	const inputValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-		const { name, value } = e.target;
-		setInputValue((prevInputValue) => ({
-			...prevInputValue,
-			[name]: value,
-		}));
+	const [newNickname, setNewNickname] = useState<string>('');
+
+	const inputValueHandler = (
+		event: React.ChangeEvent<HTMLInputElement>,
+	): void => {
+		setNewNickname(event.target.value);
 	};
 
-	const deleteUserHandler = async (
+	const nicknameChange = async (
 		event: FormEvent<HTMLFormElement>,
 	): Promise<void> => {
 		event.preventDefault();
 
 		try {
-			const response = await deleteUser(inputValue);
-			if (!response) {
-				return;
-			}
-			await logoutUser();
-			navigate('/');
+			await changeNickname(newNickname);
 			onClose(false);
 		} catch (error) {
 			if (error instanceof TypeError) {
@@ -73,33 +65,24 @@ const DeleteModal: FC<DeleteModalProps> = ({ open, onClose }) => {
 						$isTablet={$isTablet}
 						$isPc={$isPc}
 						$isMaxWidth={$isMaxWidth}>
-						계정삭제
+						닉네임 변경
 					</TitleDiv>
-					<ModalForm onSubmit={deleteUserHandler}>
+					<ModalForm onSubmit={nicknameChange}>
 						<ModalInput
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}
+							onChange={inputValueHandler}
 							type="text"
-							name="email"
-							onChange={inputValueHandler}
-							placeholder="이메일"></ModalInput>
-						<ModalInput
-							$isMobile={$isMobile}
-							$isTablet={$isTablet}
-							$isPc={$isPc}
-							$isMaxWidth={$isMaxWidth}
-							type="password"
-							name="password"
-							onChange={inputValueHandler}
-							placeholder="비밀번호"></ModalInput>
+							placeholder="새 닉네임"></ModalInput>
 						<ChangeButton
 							$isMobile={$isMobile}
 							$isTablet={$isTablet}
 							$isPc={$isPc}
-							$isMaxWidth={$isMaxWidth}>
-							계정삭제
+							$isMaxWidth={$isMaxWidth}
+							type="submit">
+							닉네임 변경
 						</ChangeButton>
 						<CloseButton
 							$isMobile={$isMobile}
@@ -118,4 +101,4 @@ const DeleteModal: FC<DeleteModalProps> = ({ open, onClose }) => {
 	);
 };
 
-export default DeleteModal;
+export default NicknameChangeModal;

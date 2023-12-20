@@ -49,7 +49,7 @@ const Login = () => {
 	const NaverLink =
 		'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=cbVjavYbFKaTxTrJFGaC&scope=name%20email%20profile_image%20nickname%20gender%20mobile&state=r7vh_N5AcCSAjzmUaaIdOxrW_ac_jQSum0FdVRgNTvI%3D&redirect_uri=http://3.35.16.126:8080/naver_redirect';
 
-	const NaverLoginHandler = () => {
+	const NaverLoginHandler: any = () => {
 		window.location.href = NaverLink;
 	};
 

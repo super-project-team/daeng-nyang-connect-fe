@@ -78,6 +78,21 @@ const NaverRegister = () => {
 		}
 	};
 
+	// 서버 응답에서 Set-Cookie 헤더에서 토큰 추출
+	function extractTokenFromSetCookie(
+		setCookieHeader: string,
+		tokenName: string,
+	): string | null {
+		const tokenCookie = setCookieHeader
+			.split(';')
+			.find((cookie) => cookie.trim().startsWith(tokenName));
+		if (tokenCookie) {
+			const tokenValue = tokenCookie.split('=')[1];
+			return tokenValue;
+		}
+		return null;
+	}
+
 	return (
 		<RegisterWrapper
 			$isMobile={$isMobile}

@@ -125,7 +125,7 @@ export const findPassword = async (
 export const kakaoRegister = async (
 	body: KakaoRegisterRequestBody,
 ): Promise<any> => {
-	return await authApi.post(KAKAO_REGISTER, {
+	return await authApi.put(KAKAO_REGISTER, {
 		nickname: body.nickname,
 		city: body.city,
 		town: body.town,
@@ -137,7 +137,7 @@ export const kakaoRegister = async (
 export const naverRegister = async (
 	body: NaverRegisterRequestBody,
 ): Promise<any> => {
-	return await authApi.post(NAVER_REGISTER, {
+	return await authApi.put(NAVER_REGISTER, {
 		city: body.city,
 		town: body.town,
 		experience: body.experience,

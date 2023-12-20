@@ -7,6 +7,8 @@ const CHANGE_NICKNAME = '/modifyNickname';
 const CHANGE_PASSWORD = '/modifyPassword';
 const CHANGE_MOBILE = '/modifyMobile';
 const CHANGE_ADDRESS = '/modifyCityTown';
+const GET_MY_BOARD = '/getMyBoard';
+const GET_MY_LIKED = '/getMyLikeBoard';
 const BASE_URL = 'http://3.35.16.126:8080';
 
 export const authApi = new APIClient(BASE_URL + '/api/myPage');
@@ -53,4 +55,12 @@ export const changeAddress = async (
 	return await authApi.put(
 		CHANGE_ADDRESS + `?city=${body.city}&town=${body.town}`,
 	);
+};
+
+export const getMyBoard = async (): Promise<any> => {
+	return await authApi.get(GET_MY_BOARD);
+};
+
+export const getMyLiked = async (): Promise<any> => {
+	return await authApi.get(GET_MY_LIKED);
 };

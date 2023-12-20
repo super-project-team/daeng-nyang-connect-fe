@@ -17,7 +17,7 @@ import {
 	StyledFaPlus,
 } from './CommunityNav.style';
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import {
 	SET_DISPLAY_LABEL,
 	SET_IS_SEARCH,
@@ -28,7 +28,6 @@ import { useResponsive } from '../../../hooks/useResponsive';
 import labelMappings from '../../../utils/communityLabel';
 import { searchBoard } from '../../../api/communityApi';
 import { useQuery } from 'react-query';
-import { RootState } from '../../../types/BoardTypes';
 
 interface CommunityNavProps {
 	setIsPopUp: React.Dispatch<React.SetStateAction<boolean>>;
@@ -72,9 +71,6 @@ const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
 		dispatch(SET_SUB_CATEGORY(null));
 	};
 
-	const isSearch = useSelector((state: RootState) => state.community.isSearch);
-	console.log(isSearch);
-
 	const moveToTheCategory = (community: string, category: string) => {
 		const currentPath = `/community/${community}`;
 		const currentSearch = `?category=${category}`;
@@ -83,8 +79,6 @@ const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
 		navigate(currentPath + currentSearch);
 		dispatch(SET_SUB_CATEGORY(category));
 	};
-
-	console.log('displayLabel', displayLabel);
 
 	const searchTextChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		setText(e.target.value);

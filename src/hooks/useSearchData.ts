@@ -25,8 +25,6 @@ const useSearchData = () => {
 	const fetchSearchBoard = async () => {
 		const response = await searchBoard(boardType, searchText);
 
-		console.log('response', response);
-
 		return response;
 	};
 

@@ -30,7 +30,6 @@ const LostRoot = () => {
 	);
 
 	const { searchData, isSearch } = useSearchData();
-	console.log('searchData', searchData);
 
 	useEffect(() => {
 		if (Array.isArray(data)) {
@@ -47,8 +46,6 @@ const LostRoot = () => {
 
 	const visibleData = useInfiniteScroll(data, refetch, 6);
 	const visibleFilteredData = useInfiniteScroll(filteredData, refetch, 6);
-
-	console.log('visibleData', visibleData);
 
 	if (isLoading) return <div>로딩 중..</div>;
 

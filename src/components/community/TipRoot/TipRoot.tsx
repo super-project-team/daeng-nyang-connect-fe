@@ -73,7 +73,6 @@ const TipRoot = () => {
 	}, [data, category]);
 
 	const { searchData, isSearch } = useSearchData();
-	console.log('searchData', searchData);
 
 	return (
 		<>

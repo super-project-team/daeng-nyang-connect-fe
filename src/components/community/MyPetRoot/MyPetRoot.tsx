@@ -21,8 +21,6 @@ const MyPetRoot = () => {
 		fetchGetAllMyPetBoard,
 	);
 
-	console.log('data', data);
-
 	const visibleData = useInfiniteScroll(data, refetch, 6);
 
 	const { searchData, isSearch } = useSearchData();

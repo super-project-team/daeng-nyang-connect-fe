@@ -36,7 +36,7 @@ class APIClient {
 
 	put<T>(
 		endpoint: string,
-		body: FormData | Record<string, string | boolean | number>,
+		body?: FormData | Record<string, string | boolean | number>,
 	): Promise<T> {
 		return this.request('put', endpoint, body);
 	}

@@ -102,16 +102,5 @@ export const findPassword = async (
 };
 
 export const myPageGet = async (): Promise<any> => {
-	return await authApi.get(MY_PAGE, {
-		email: '',
-		name: '',
-		nickname: '',
-		mobile: '',
-		city: '',
-		info: '',
-		img: '',
-		gender: '',
-		town: '',
-		experience: '',
-	});
+	return await authApi.get(MY_PAGE);
 };

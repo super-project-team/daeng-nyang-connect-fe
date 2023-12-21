@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 
-export const LoadingWrap = styled.div`
+interface LoadingProps {
+	$isMobile?: boolean;
+}
+
+export const LoadingWrap = styled.div<LoadingProps>`
 	position: absolute;
 	z-index: 500;
 	display: flex;
@@ -10,20 +14,21 @@ export const LoadingWrap = styled.div`
 	height: 100vh;
 	background-color: #fff;
 	img {
-		width: 300px;
+		width: ${(props) => (props.$isMobile ? '200px' : '300px')};
 	}
 `;
-export const LoadingContents = styled.div`
+export const LoadingContents = styled.div<LoadingProps>`
 	position: absolute;
 	top: 30%;
 	left: 50%;
 	transform: translateX(-50%);
 `;
-export const LoadingText = styled.p`
+export const LoadingText = styled.p<LoadingProps>`
 	position: relative;
-	top: 65px;
-	left: 80px;
-	font-size: 36px;
+	top: ${(props) => (props.$isMobile ? '30px' : ' 65px')};
+	left: ${(props) => (props.$isMobile ? '40px' : '80px')};
+	font-size: ${(props) => (props.$isMobile ? '24px' : '36px')};
 	font-weight: 400;
 	color: var(--color-light-salmon);
+	letter-spacing: -0.6px;
 `;

@@ -620,18 +620,57 @@ const NewFamilyDetail = () => {
 							$isTablet={$isTablet}
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}>
-							<p>이름 : {boardIdData?.animalName}</p>
-							<p>나이 : {boardIdData?.age}개월 </p>
-							<p>지역 : {boardIdData?.city}</p>
-							<p>성별 : {boardIdData?.gender}</p>
-							<p>품종 : {boardIdData?.breed}</p>
-							<p>질병 : {boardIdData?.disease}</p>
-							<p>훈련 여부: {boardIdData?.training}</p>
-							<p>중성화 여부 : {boardIdData?.neutering}</p>
-							<p>양육 기간 : {boardIdData?.nurturePeriod}개월</p>
-							<p>검강검진 여부 : {boardIdData?.healthCheck}</p>
-							<p>이별 사유 : {boardIdData?.textReason}</p>
-							<p>그 외 특이사항: {boardIdData?.textEtc}</p>
+							<p>
+								<span>이름</span>
+								{boardIdData?.animalName}
+							</p>
+							<p>
+								<span>나이</span>
+								{boardIdData?.age}개월{' '}
+							</p>
+							<p>
+								<span>지역</span>
+								{boardIdData?.city}
+							</p>
+							<p>
+								<span>성별</span>
+								{boardIdData?.gender}
+							</p>
+							<p>
+								<span>품종</span>
+								{boardIdData?.breed}
+							</p>
+							<p>
+								<span>질병</span>
+								{boardIdData?.disease}
+							</p>
+							<p>
+								<span>훈련 여부</span>
+								{boardIdData?.training}
+							</p>
+							<p>
+								<span>중성화 여부</span>
+								{boardIdData?.neutering === true
+									? '완료'
+									: boardIdData?.neutering === false
+									  ? '미완료'
+									  : ''}
+							</p>
+							<p>
+								<span>양육 기간</span>
+								{boardIdData?.nurturePeriod}개월
+							</p>
+							<p>
+								<span>검강검진 여부</span>
+								{boardIdData?.healthCheck}
+							</p>
+							<p>
+								<span>이별 사유</span> {boardIdData?.textReason}
+							</p>
+							<p>
+								<span>그 외 특이사항</span>
+								{boardIdData?.textEtc}
+							</p>
 						</DetailTextBox>
 						<button onClick={moveToChatHandler}>문의하기</button>
 					</div>

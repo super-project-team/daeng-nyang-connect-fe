@@ -447,6 +447,16 @@ export const DetailTextBox = styled.div<ResponsiveProps>`
 		overflow: hidden;
 		white-space: normal;
 	}
+
+	& span {
+		display: inline-block;
+		width: fit-content;
+		padding: 8px 10px;
+		margin-right: 15px;
+		border-radius: 5px;
+		background: var(--color-peach);
+		font-size: 16px;
+	}
 `;
 
 export const ModifyAnimalInfo = styled.div<ResponsiveProps>`

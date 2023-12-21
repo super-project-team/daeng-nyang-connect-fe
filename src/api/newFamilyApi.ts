@@ -17,14 +17,14 @@ interface RegisterAnimal {
 	textEtc: string;
 }
 
-const POST = '/post';
-const MODIFY = '/modify';
-const SCRAP = '/scrap';
-const COMPLETE = '/complete';
-const KIND = '/kind';
+const POST = 'post';
+const MODIFY = 'modify';
+const SCRAP = 'scrap';
+const COMPLETE = 'complete';
+const KIND = 'kind';
 const CITY = 'city';
-const ADOPTION_STATUS = '/adoptionStatus';
-const GET_ALL = '/getAll';
+const ADOPTION_STATUS = 'adoptionStatus';
+const GET_ALL = 'getAll';
 const DELETE = '/delete';
 const BASE_URL = 'http://3.35.16.126:8080';
 

@@ -77,7 +77,7 @@ const RegisterCommentForm = () => {
 
 	const { data: myPageData } = useQuery('myPage', fetchMyPageData);
 
-	console.log('myPageData', myPageData);
+	// console.log('myPageData', myPageData);
 
 	return (
 		<Form onSubmit={fetchPostComment}>

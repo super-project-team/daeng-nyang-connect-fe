@@ -32,7 +32,9 @@ import LostRoot from './components/community/LostRoot/LostRoot';
 import TipRoot from './components/community/TipRoot/TipRoot';
 import User from './components/users/User/User';
 import { Provider } from 'react-redux';
-import store from './store/store';
+import { store } from './store/store';
+import { PersistGate } from 'redux-persist/integration/react';
+import persistor from './store/store';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import ChatRoom from './components/chat/chatRoom/ChatRoom';
@@ -145,10 +147,12 @@ const root = ReactDOM.createRoot(
 root.render(
 	<React.StrictMode>
 		<Provider store={store}>
-			<QueryClientProvider client={queryClient}>
-				<RouterProvider router={router} />
-				<ReactQueryDevtools />
-			</QueryClientProvider>
+			<PersistGate loading={null} persistor={persistor}>
+				<QueryClientProvider client={queryClient}>
+					<RouterProvider router={router} />
+					<ReactQueryDevtools />
+				</QueryClientProvider>
+			</PersistGate>
 		</Provider>
 	</React.StrictMode>,
 );

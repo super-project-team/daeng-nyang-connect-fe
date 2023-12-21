@@ -34,6 +34,7 @@ import { useResponsive } from '../../../hooks/useResponsive';
 import labelMappings from '../../../utils/communityLabel';
 import { RootUserState } from '../../../slice/userSlice';
 import CheckLogin from '../CheckLogin/CheckLogin';
+import { myPageGet } from '../../../api/authApi';
 
 interface RootState {
 	community: CommunityState;
@@ -159,6 +160,20 @@ const DetailUserNav = () => {
 		return response;
 	};
 
+	const fetchMyPageData = async () => {
+		const response = await myPageGet();
+		console.log(response);
+
+		return response;
+	};
+
+	const { data: myPageData } = useQuery('myPage', fetchMyPageData);
+
+	const checkUser = myPageData?.nickname === data?.nickname;
+
+	console.log('myPageData', myPageData);
+	console.log(myPageData?.nickname === data?.nickname);
+
 	return (
 		<DetailUserWrap>
 			<InfoWrap>
@@ -186,7 +201,7 @@ const DetailUserNav = () => {
 						<LikeCount $isMobile={$isMobile}>{data?.likes?.length}</LikeCount>{' '}
 					</LikeWrap>
 				)}
-				{isLoggedIn && (
+				{checkUser && isLoggedIn && (
 					<KebabWrap onClick={menuButtonClickHandler}>
 						<CiMenuKebab />
 						{menuButtonClick && (

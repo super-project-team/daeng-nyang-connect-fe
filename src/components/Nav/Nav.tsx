@@ -16,7 +16,6 @@ import scrollNav from '../../utils/scrollNav';
 import { useResponsive } from '../../hooks/useResponsive';
 import { useState } from 'react';
 import MobileMenuDrawer from './MobileMenuDrawer/MobileMenuDrawer';
-import localToken from '../../api/LocalToken';
 import { useSelector } from 'react-redux';
 
 interface UserState {

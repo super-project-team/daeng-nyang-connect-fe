@@ -1,25 +1,43 @@
 import APIClient from './ApiClient';
 
-const REGISTER = '/post';
-const MODIFY = '/modify';
-const LIKE = '/like';
-const POST = '/post';
-const GET_ALL = '/getAll';
-const DELETE = '/delete';
-const COMMENT = '/comments/post';
-const COMMENT_DELETE = 'comments/delete';
+const MODIFY = '/review';
+const LIKE = '/review/like';
+const POST = '/review/post';
+const GET_ALL = '/review/getAll';
+const DELETE = '/review/delete';
+const COMMENT = '/review/comments';
+const COMMENT_DELETE = '/review/comments/delete';
 const BASE_URL = 'http://3.35.16.126:8080';
 
+interface ReviewComment {
+	comment: string;
+}
 interface ReviewRequest {
 	textReview: string;
 	files: File[];
 }
-interface ReviewData {
+interface ReviewModify {
+	textReview: string;
+}
+export interface ReviewData {
 	boardId: number;
+	animalId: number;
 	adoptedAnimalName: string;
 	images: string[];
 	textReview: string;
 	age: number;
+	nickname: string;
+	userThumbnail: string;
+}
+
+interface Comments {
+	commentsId: number;
+	nickname: string;
+	adoptedAnimalName: string;
+	textReivew: string;
+	comment: string;
+	createdAt: string;
+	userThumbnail: string;
 }
 
 // const reviewMockApi = new APIClient('/data');
@@ -28,7 +46,7 @@ interface ReviewData {
 // 	return await reviewMockApi.get('review.json');
 // };
 
-export const reviewApi = new APIClient(BASE_URL + '/api/review');
+export const reviewApi = new APIClient(BASE_URL + '/api');
 
 export const getReviews = async (): Promise<ReviewData[]> => {
 	return await reviewApi.get(GET_ALL);
@@ -47,22 +65,47 @@ export const reviewPost = async (body: ReviewRequest, animalId: number) => {
 	return await reviewApi.post(POST + `?animalId=${animalId}`, formData);
 };
 
-export const deleteReview = async (reviewId: number) => {
-	return await reviewApi.delete(DELETE + `/${reviewId}`);
+export const getDetailReview = async (
+	animalId: number,
+): Promise<ReviewData[]> => {
+	return await reviewApi.get(`/review?animalId=${animalId}`);
 };
 
-export const modifyReview = async (reviewId: number) => {
-	return await reviewApi.put(MODIFY + `/${reviewId}`, {});
+export const deleteReview = async (reviewId: number | null) => {
+	return await reviewApi.delete(`review/delete?reviewId=${reviewId}`);
+};
+
+export const modifyReview = async (reviewId: number, body: ReviewModify) => {
+	return await reviewApi.put(`review/modify?reviewId=${reviewId}`, {
+		textReview: body.textReview,
+	});
 };
 
 export const likeReview = async (reviewId: number) => {
-	return await reviewApi.post(LIKE + `/${reviewId}`, {});
+	return await reviewApi.post(`review/like?reviewId=${reviewId}`);
 };
 
-export const postComment = async (reviewId: number) => {
-	return await reviewApi.post(COMMENT + `/${reviewId}`, {});
+export const getAllComments = async (reviewId: number): Promise<Comments[]> => {
+	return await reviewApi.get(`/review/comments?reviewId=${reviewId}`);
+};
+
+export const postComment = async (
+	reviewId: number,
+	body: ReviewComment,
+): Promise<any> => {
+	return await reviewApi.post(COMMENT + `/post?reviewId=${reviewId}`, {
+		comment: body.comment,
+	});
+};
+
+export const modifyComment = async (reviewId: number, body: ReviewComment) => {
+	return await reviewApi.put(COMMENT + `/modify?reviewCommentsId=${reviewId}`, {
+		comment: body.comment,
+	});
 };
 
 export const deleteComment = async (reviewCommentsId: number) => {
-	return await reviewApi.delete(COMMENT_DELETE + `${reviewCommentsId}`);
+	return await reviewApi.delete(
+		COMMENT_DELETE + `?reviewCommentsId=${reviewCommentsId}`,
+	);
 };

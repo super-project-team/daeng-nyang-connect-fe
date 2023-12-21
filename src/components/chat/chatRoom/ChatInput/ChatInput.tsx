@@ -3,27 +3,32 @@ import { useResponsive } from '../../../../hooks/useResponsive';
 import { ChatInputDiv, SendBtn, TextArea } from './ChatInput.style';
 import { FiPlusCircle } from 'react-icons/fi';
 import SockJS from 'sockjs-client';
-import { Client, IMessage } from '@stomp/stompjs';
+import { Client, IMessage, Stomp } from '@stomp/stompjs';
 import { useSelector } from 'react-redux';
 import { ChatState } from './../../../../slice/chatSlice';
 import WebSocket from 'ws';
 import { io } from 'socket.io-client';
 
 interface Message {
-	message: string;
+	username: string;
+	content: string;
 }
+const socketUrl = 'ws://3.35.16.126:8080/websocket';
 
 const ChatInput = () => {
 	const { $isMobile } = useResponsive();
+
 	const [chat, setChat] = useState('');
 	const [chatList, setChatList] = useState<string[]>([]);
 	const [clientData, setClientData] = useState<Client>();
 
-	const socketUrl = 'ws://3.35.16.126:8080/websocket';
-
 	// useEffect(() => {
-	// 	const socket = io(socketUrl);
-
+	// 		const socket = io(socketUrl, {
+	//   transports: ["websocket", "polling"],
+	//   extraHeaders: {
+	//     "Access-Control-Allow-Origin": "*",
+	//   },
+	// });
 	// 	socket.on('connect', () => {
 	// 		console.log('Socket.io 연결이 열렸습니다.');
 	// 	});
@@ -96,9 +101,9 @@ const ChatInput = () => {
 	// 	setChat('');
 	// };
 
-	const textAreaHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-		setChat(e.target.value);
-	};
+	// const textAreaHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
+	// 	setChat(e.target.value);
+	// };
 
 	return (
 		<ChatInputDiv $isMobile={$isMobile}>

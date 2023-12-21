@@ -88,7 +88,7 @@ const router = createBrowserRouter([
 				children: [
 					{ index: true, element: <Reviews /> },
 					{ path: 'review/:reviewId', element: <Review /> },
-					{ path: 'reviewForm', element: <ReviewForm /> },
+					{ path: 'reviewForm/:animalId', element: <ReviewForm /> },
 				],
 			},
 			{

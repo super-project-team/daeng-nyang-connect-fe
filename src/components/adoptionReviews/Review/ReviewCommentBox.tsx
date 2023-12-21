@@ -1,36 +1,59 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import {
 	CommentBox,
 	CommentContainer,
 	CommentInputContainer,
 	CommentList,
+	CommentMoreUl,
 	LikeContainer,
+	ModifyBtnsBox,
+	ModifyInputDiv,
 } from '../Reviews.style';
 import { GoHeartFill } from 'react-icons/go';
+import { RiMore2Line } from 'react-icons/ri';
 import { useResponsive } from '../../../hooks/useResponsive';
+import { useParams } from 'react-router-dom';
+import {
+	deleteComment,
+	getAllComments,
+	modifyComment,
+	postComment,
+} from '../../../api/reviewApi';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
+import formatDateDifferenceFromString from '../../../utils/fomatDateComment';
+import { useSelector } from 'react-redux';
+import { UserState } from '../../../slice/userSlice';
 
-interface Comment {
-	text: string;
-	author: string;
-	time: Date;
-	formattedTime: string;
+interface Comments {
+	commentsId: number;
+	nickname: string;
+	adoptedAnimalName: string;
+	textReivew: string;
+	comment: string;
+	createdAt: string;
+	userThumbnail: string;
+}
+interface CommentsProps {
+	reviewId: number;
 }
 
-const ReviewCommentBox: React.FC = () => {
-	const [clickedLikeMark, setClickedLikeMark] = useState(false);
-	const [commentText, setCommentText] = useState('');
-	const [comments, setComments] = useState<Comment[]>([]);
-	const [currentTime, setCurrentTime] = useState(new Date());
+const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
+	const queryClient = useQueryClient();
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
+	const user = useSelector((state: UserState) => state);
 
-	useEffect(() => {
-		const intervalId = setInterval(() => {
-			const current = new Date();
-			setCurrentTime(current);
-		}, 1000);
+	const [modify, setModify] = useState<{ [key: number]: boolean }>({});
+	const [clickedLikeMark, setClickedLikeMark] = useState(false);
+	const [commentText, setCommentText] = useState({
+		comment: '',
+	});
+	const [commentMore, setCommentMore] = useState<{ [key: number]: boolean }>(
+		{},
+	);
 
-		return () => clearInterval(intervalId);
-	}, []);
+	const { data: comments } = useQuery(['getAllComments', reviewId], () =>
+		getAllComments(reviewId),
+	);
 
 	const clickLikeMarkHandler = () => {
 		setClickedLikeMark((prev) => !prev);
@@ -41,46 +64,69 @@ const ReviewCommentBox: React.FC = () => {
 		return 30;
 	};
 
-	const submitCommentHandler = () => {
-		const newComment = {
-			text: commentText,
-			author: '작성자',
-			time: new Date(),
-			formattedTime: '방금 전',
-		};
-
-		setComments((prevComments) => [
-			...prevComments,
-			{
-				...newComment,
-				formattedTime: calculateElapsedTime(newComment.time, currentTime),
+	const { mutate: commentsData } = useMutation(
+		async () => {
+			return postComment(reviewId, commentText);
+		},
+		{
+			onSuccess: () => {
+				setCommentText({ comment: '' });
+				return queryClient.refetchQueries(['getAllComments', reviewId], {
+					exact: true,
+				});
 			},
-		]);
-		setCommentText('');
+		},
+	);
+
+	const { mutate: deletedComments } = useMutation(
+		async (reviewCommentId: number) => {
+			return deleteComment(reviewCommentId);
+		},
+		{
+			onSuccess: () => {
+				return queryClient.refetchQueries(['getAllComments', reviewId], {
+					exact: true,
+				});
+			},
+		},
+	);
+
+	const { mutate: modifyComments } = useMutation(
+		async (commentsId: number) => {
+			return modifyComment(commentsId, commentText);
+		},
+		{
+			onSuccess: () => {
+				return queryClient.refetchQueries(['getAllComments', reviewId], {
+					exact: true,
+				});
+			},
+		},
+	);
+
+	const submitCommentHandler = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		commentsData();
 	};
 
-	const calculateElapsedTime = (time: Date, current: Date) => {
-		const elapsedTimeInSeconds = Math.floor(
-			(current.getTime() - time.getTime()) / 1000,
-		);
+	const commentInputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+		setCommentText({ comment: e.target.value });
+	};
 
-		if (elapsedTimeInSeconds < 0) {
-			return '방금 전';
-		} else if (elapsedTimeInSeconds < 60) {
-			return `${elapsedTimeInSeconds}초 전`;
-		} else if (elapsedTimeInSeconds < 3600) {
-			const minutes = Math.floor(elapsedTimeInSeconds / 60);
-			return `${minutes}분 전`;
-		} else if (elapsedTimeInSeconds < 86400) {
-			const hours = Math.floor(elapsedTimeInSeconds / 3600);
-			return `${hours}시간 전`;
-		} else {
-			const options: Intl.DateTimeFormatOptions = {
-				month: 'numeric',
-				day: 'numeric',
-			};
-			return time.toLocaleDateString('ko-KR', options);
-		}
+	const commentModifyHandler = (commentId: number) => {
+		setModify((prev) => ({ [commentId]: !prev[commentId] }));
+		setCommentMore((prev) => ({ [commentId]: !prev[commentId] }));
+	};
+
+	const modifyPutHandler = (commentsId: number) => {
+		modifyComments(commentsId);
+		setModify((prev) => ({
+			[commentsId]: !prev[commentsId],
+		}));
+	};
+
+	const deleteCommentHandler = (reviewCommentId: number) => {
+		deletedComments(reviewCommentId);
 	};
 
 	return (
@@ -91,21 +137,71 @@ const ReviewCommentBox: React.FC = () => {
 					$isTablet={$isTablet}
 					$isPc={$isPc}
 					$isMaxWidth={$isMaxWidth}>
-					{comments.map((comment, index) => (
-						<CommentBox
-							key={index}
-							$isMobile={$isMobile}
-							$isTablet={$isTablet}
-							$isPc={$isPc}
-							$isMaxWidth={$isMaxWidth}>
-							<div>
-								<img src="/assets/animal3.jpg" alt="" />
-							</div>
-							<h5>{comment.author}</h5>
-							<p>{comment.text}</p>
-							<span>{comment.formattedTime}</span>
-						</CommentBox>
-					))}
+					{comments && comments.length > 0 ? (
+						comments.map((comment: Comments, index) => (
+							<CommentBox
+								key={index}
+								$isMobile={$isMobile}
+								$isTablet={$isTablet}
+								$isPc={$isPc}
+								$isMaxWidth={$isMaxWidth}>
+								<div>
+									<img src={comment.userThumbnail} alt="" />
+								</div>
+								<h5>{comment.nickname}</h5>
+								<ModifyInputDiv>
+									{modify[comment.commentsId] ? (
+										<div style={{ width: '100%', borderRadius: '0' }}>
+											<input
+												defaultValue={comment.comment}
+												onChange={commentInputChangeHandler}
+											/>
+											<ModifyBtnsBox>
+												<button
+													style={{ marginRight: '4px' }}
+													onClick={() => modifyPutHandler(comment.commentsId)}>
+													전송
+												</button>
+												<button
+													onClick={() =>
+														setModify((prev) => ({
+															[comment.commentsId]: !prev[comment.commentsId],
+														}))
+													}>
+													취소
+												</button>
+											</ModifyBtnsBox>
+										</div>
+									) : (
+										<p>{comment.comment}</p>
+									)}
+								</ModifyInputDiv>
+								<time>{formatDateDifferenceFromString(comment.createdAt)}</time>
+								<span
+									onClick={() =>
+										setCommentMore((prev) => ({
+											[comment.commentsId]: !prev[comment.commentsId],
+										}))
+									}>
+									<RiMore2Line className="more-icon" />
+								</span>
+								{commentMore[comment.commentsId] && (
+									<CommentMoreUl>
+										<li
+											onClick={() => commentModifyHandler(comment.commentsId)}>
+											수정
+										</li>
+										<li
+											onClick={() => deleteCommentHandler(comment.commentsId)}>
+											삭제
+										</li>
+									</CommentMoreUl>
+								)}
+							</CommentBox>
+						))
+					) : (
+						<p>no value</p>
+					)}
 				</CommentList>
 				<LikeContainer
 					$isMobile={$isMobile}
@@ -128,18 +224,16 @@ const ReviewCommentBox: React.FC = () => {
 				$isMobile={$isMobile}
 				$isTablet={$isTablet}
 				$isPc={$isPc}
-				$isMaxWidth={$isMaxWidth}>
+				$isMaxWidth={$isMaxWidth}
+				onSubmit={submitCommentHandler}>
 				<input
 					type="text"
 					name="comment"
 					id=""
 					placeholder="댓글달기"
-					value={commentText}
-					onChange={(e) => setCommentText(e.target.value)}
+					onChange={commentInputChangeHandler}
 				/>
-				<button type="submit" onClick={submitCommentHandler}>
-					게시
-				</button>
+				<button type="submit">게시</button>
 			</CommentInputContainer>
 		</CommentContainer>
 	);

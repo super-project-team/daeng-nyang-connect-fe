@@ -1,10 +1,10 @@
 import { styled } from 'styled-components';
 
 interface ResponsiveProps {
-	$isMobile: boolean;
-	$isTablet: boolean;
-	$isPc: boolean;
-	$isMaxWidth: boolean;
+	$isMobile?: boolean;
+	$isTablet?: boolean;
+	$isPc?: boolean;
+	$isMaxWidth?: boolean;
 }
 
 //Reviews
@@ -18,9 +18,10 @@ export const ReviewsContainer = styled.div<ResponsiveProps>`
 `;
 
 export const ReviewsList = styled.div<ResponsiveProps>`
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
+	display: grid;
+	grid-template-columns: ${(props) =>
+		props.$isPc ? '1fr 1fr 1fr' : '1fr 1fr'};
+	gap: ${(props) => (props.$isPc ? '25px' : '10px')};
 	width: 100%;
 `;
 
@@ -28,12 +29,7 @@ export const ReviewBox = styled.div<ResponsiveProps>`
 	display: flex;
 	flex-direction: column;
 	position: relative;
-	width: ${(props) =>
-		props.$isPc
-			? ' calc((100% - 100px) / 3)'
-			: props.$isTablet
-			  ? ' calc((100% - 30px) / 2)'
-			  : ' calc((100% - 20px) / 2)'};
+	width: 100%;
 	aspect-ratio: ${(props) => (props.$isMobile ? 'unset' : '3 / 4.2')};
 	margin-bottom: ${(props) => (props.$isMobile ? '20px' : '50px')};
 	border: 1px solid var(--color-peach);
@@ -60,6 +56,9 @@ export const ReviewBox = styled.div<ResponsiveProps>`
 
 	& img {
 		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center center;
 		transition: all 0.5s;
 	}
 
@@ -106,6 +105,7 @@ export const ButtonBox = styled.div`
 //Review(Detail)
 
 export const ReviewTextBox = styled.div`
+	position: relative;
 	display: flex;
 	flex-direction: column;
 `;
@@ -120,7 +120,7 @@ export const CommentList = styled.div<ResponsiveProps>`
 	display: flex;
 	flex-direction: column;
 	flex: 1;
-	padding: ${(props) => (props.$isMobile ? '15px 0' : '30px 0')};
+	padding: ${(props) => (props.$isMobile ? '15px 0' : '20px 0 12px')};
 	border: 1px solid var(--color-peach);
 	border-left: none;
 	border-right: none;
@@ -128,9 +128,11 @@ export const CommentList = styled.div<ResponsiveProps>`
 `;
 
 export const CommentBox = styled.div<ResponsiveProps>`
+	position: relative;
 	display: flex;
 	align-items: center;
 	font-size: ${(props) => (props.$isMobile ? '12px' : 'inherit')};
+	margin-bottom: 8px;
 
 	& div:first-child {
 		width: ${(props) => (props.$isMobile ? '30px' : '45px')};
@@ -149,12 +151,60 @@ export const CommentBox = styled.div<ResponsiveProps>`
 		font-weight: 400;
 	}
 
-	& p {
+	p {
 		flex: 1;
 	}
 
 	& span {
 		font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
+	}
+	time {
+		font-size: 14px;
+	}
+	svg {
+		color: var(--color-light-salmon);
+	}
+`;
+
+export const ModifyInputDiv = styled.div`
+	position: relative;
+	flex: 1;
+	input {
+		width: 90%;
+		height: 100%;
+		font-size: 16px;
+		border: 2px solid var(--color-ligth-salmon);
+		&:focus {
+			border: none;
+		}
+	}
+`;
+export const ModifyBtnsBox = styled.div`
+	position: absolute;
+	top: -12px;
+	right: 12%;
+	gap: 4px;
+	button {
+		width: 40px;
+		font-size: 14px;
+	}
+`;
+
+export const CommentMoreUl = styled.ul`
+	position: absolute;
+	z-index: 1;
+	top: 15px;
+	right: 10px;
+	background-color: #fff;
+	border-radius: 3px;
+	text-align: center;
+	font-size: 16px;
+	box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2);
+	li {
+		padding: 10px 20px;
+		&:last-child {
+			background-color: #fff;
+		}
 	}
 `;
 
@@ -168,7 +218,7 @@ export const LikeContainer = styled.div<ResponsiveProps>`
 	}
 `;
 
-export const CommentInputContainer = styled.div<ResponsiveProps>`
+export const CommentInputContainer = styled.form<ResponsiveProps>`
 	display: flex;
 	justify-content: space-between;
 	padding: 20px 0;
@@ -195,5 +245,39 @@ export const CommentInputContainer = styled.div<ResponsiveProps>`
 		background: none;
 		color: var(--color-light-salmon);
 		font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
+	}
+`;
+export const ModifyDiv = styled.div<ResponsiveProps>`
+	position: absolute;
+	z-index: 10;
+	top: 0;
+	left: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 15px;
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+	textarea {
+		position: absolute;
+		bottom: 0px;
+		width: ${(props) =>
+			props.$isMobile ? '70%' : props.$isTablet ? '76%' : '63%'};
+		min-height: 300px;
+		padding: 0;
+		border-color: var(--color-light-salmon);
+		font-size: 16px;
+	}
+`;
+export const ModifyBtnsDiv = styled.div<ResponsiveProps>`
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	display: flex;
+	gap: ${(props) => (props.$isMobile ? '4px' : '10px')};
+	width: ${(props) => (props.$isMobile ? '80px' : '150px')};
+	button {
+		font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
+		margin-top: ${(props) => (props.$isMobile ? '4px' : '20px')};
 	}
 `;

@@ -5,9 +5,10 @@ import {
 	FormText,
 	PetRegistrationForm,
 } from '../../newFamily/NewFamily.style';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { reviewPost } from '../../../api/reviewApi';
+import { useMutation, useQueryClient } from 'react-query';
 
 interface ReviewInfo {
 	files: File[];
@@ -15,11 +16,25 @@ interface ReviewInfo {
 }
 
 const ReviewForm = () => {
+	const params = useParams();
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 	const [reviewInfo, setReviewInfo] = useState<ReviewInfo>({
 		files: [],
 		textReview: '',
+	});
+
+	const mutationFunction = async (): Promise<
+		FormData | Record<string, string | boolean>
+	> => {
+		return await reviewPost(reviewInfo, Number(params.animalId));
+	};
+	const { mutate: postReview } = useMutation(mutationFunction, {
+		onSuccess: () => {
+			queryClient.refetchQueries(['getReviews'], { exact: true });
+			navigate('/adoptionReviews');
+		},
 	});
 
 	const clickCloseBtnHandler = () => {
@@ -43,9 +58,8 @@ const ReviewForm = () => {
 	};
 
 	const reviewRegisterHandler = (e: React.FormEvent) => {
-		const id = 48;
 		e.preventDefault();
-		reviewPost(reviewInfo, id);
+		postReview();
 	};
 
 	return (
@@ -79,7 +93,7 @@ const ReviewForm = () => {
 					</div>
 					<div>
 						<h5>나이</h5>
-						<input type="text" name="age" id="age" required />
+						<input type="text" name="age" id="age" />
 					</div>
 					<div>
 						<h5>이미지 등록</h5>
@@ -97,6 +111,7 @@ const ReviewForm = () => {
 						<textarea
 							name="adoptionReview"
 							id=""
+							required
 							onChange={textAreaHandler}></textarea>
 					</div>
 				</FormText>

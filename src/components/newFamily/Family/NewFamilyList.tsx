@@ -32,7 +32,7 @@ const NewFamilyList: React.FC<ResponsiveProps> = ({
 	const navigate = useNavigate();
 
 	const { data: items } = useQuery<Item[], unknown, Item[]>(
-		['animals'],
+		['getNewFamily'],
 		getNewFamily,
 	);
 

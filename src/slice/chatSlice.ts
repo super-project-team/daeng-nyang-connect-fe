@@ -1,32 +1,53 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export interface ChatAnimalInfo {
+interface ChatAnimalInfo {
 	animalId: number;
 	animalName: string;
 	age: string;
 	breed: string;
+	images: string[];
+}
+interface ChatRoom {
+	roomId: number;
 }
 
-const initialState: ChatAnimalInfo[] = [
-	{
-		animalId: 0,
-		animalName: '',
-		age: '',
-		breed: '',
+export interface ChatState {
+	chatAnimals: ChatAnimalInfo[];
+	chatRoom: ChatRoom;
+}
+
+const initialState: ChatState = {
+	chatAnimals: [],
+	chatRoom: {
+		roomId: 0,
 	},
-];
+};
 
 const chatSlice = createSlice({
 	name: 'chat',
 	initialState,
 	reducers: {
 		MOVE_TO_CHAT(state, action) {
-			const addAnimal = action.payload;
-			return { ...state, addAnimal };
+			const newAnimal = action.payload;
+			const existingAnimal = state.chatAnimals.find(
+				(animal) => animal.animalId === newAnimal.animalId,
+			);
+			if (!existingAnimal) {
+				state.chatAnimals.push({
+					animalId: newAnimal.animalId,
+					animalName: newAnimal.animalName,
+					age: newAnimal.age,
+					breed: newAnimal.breed,
+					images: newAnimal.images,
+				});
+			}
+		},
+		ROOM_ID_CHECK(state, action) {
+			return (state.chatRoom.roomId = action.payload);
 		},
 	},
 });
 
-export const { MOVE_TO_CHAT } = chatSlice.actions;
+export const { MOVE_TO_CHAT, ROOM_ID_CHECK } = chatSlice.actions;
 
 export default chatSlice.reducer;

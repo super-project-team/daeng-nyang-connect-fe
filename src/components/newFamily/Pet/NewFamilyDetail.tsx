@@ -628,7 +628,7 @@ const NewFamilyDetail = () => {
 							<p>질병 : {boardIdData?.disease}</p>
 							<p>훈련 여부: {boardIdData?.training}</p>
 							<p>중성화 여부 : {boardIdData?.neutering}</p>
-							<p>양육 기간 : {boardIdData?.nurturePeriod}</p>
+							<p>양육 기간 : {boardIdData?.nurturePeriod}개월</p>
 							<p>검강검진 여부 : {boardIdData?.healthCheck}</p>
 							<p>이별 사유 : {boardIdData?.textReason}</p>
 							<p>그 외 특이사항: {boardIdData?.textEtc}</p>
@@ -638,7 +638,7 @@ const NewFamilyDetail = () => {
 				</NewFamilyDetailContainer>
 			)}
 
-			{/* {$isPc && <NewFamilySwiper />} */}
+			{$isPc && <NewFamilySwiper />}
 		</div>
 	);
 };

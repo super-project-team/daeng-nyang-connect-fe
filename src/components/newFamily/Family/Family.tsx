@@ -81,12 +81,10 @@ const Family = () => {
 		console.log('Clicked Search Button');
 		console.log('Filters:', filterKind, filterCity, filterAdoptionStatus);
 
-		// Close the filter window only for mobile and tablet
 		if ($isMobile || $isTablet) {
 			setIsFilterVisible(false);
 		}
 
-		// Update the applied filters
 		setAppliedFilters({
 			kind: filterKind,
 			city: filterCity,

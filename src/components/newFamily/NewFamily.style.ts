@@ -503,7 +503,7 @@ export const ModifyAnimalInfo = styled.div<ResponsiveProps>`
 `;
 
 //NewFamilyDetailSwiper
-export const DetailSwiper = styled.div`
+export const DetailSwiper = styled.div<ResponsiveProps>`
 	display: flex;
 	align-items: center;
 	width: 100%;
@@ -531,12 +531,6 @@ export const DetailSwiper = styled.div`
 		width: 100%;
 		aspect-ratio: 4 / 2.5;
 		overflow: hidden;
-
-		& svg {
-			position: absolute;
-			top: 20px;
-			right: 20px;
-		}
 	}
 
 	.swiper-slide div:last-child {
@@ -549,6 +543,27 @@ export const DetailSwiper = styled.div`
 
 	.swiper-slide img {
 		width: 100%;
+		object-fit: cover;
+	}
+
+	.bookmark-icon {
+		position: absolute;
+		top: ${(props) => (props.$isMobile ? '10px' : '20px')};
+		right: ${(props) => (props.$isMobile ? '10px' : '20px')};
+		cursor: pointer;
+	}
+
+	.adoption-status-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		top: ${(props) => (props.$isMobile ? '10px' : '16px')};
+		left: ${(props) => (props.$isMobile ? '10px' : '16px')};
+		width: ${(props) => (props.$isMobile ? '32px' : '40px')};
+		height: ${(props) => (props.$isMobile ? '32px' : '40px')};
+		border: 2px solid var(--color-light-salmon);
+		border-radius: 50%;
 	}
 `;
 

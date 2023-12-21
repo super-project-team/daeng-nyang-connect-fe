@@ -1,5 +1,5 @@
 import { BsBookmarkFill } from 'react-icons/bs';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -8,12 +8,32 @@ import { Autoplay } from 'swiper/modules';
 import SwiperCore from 'swiper';
 import { DetailSwiper } from '../NewFamily.style';
 import { useResponsive } from '../../../hooks/useResponsive';
+import {
+	getNewFamily,
+	getScrappedAnimal,
+	scrapAnimal,
+} from '../../../api/newFamilyApi';
+import { useQuery } from 'react-query';
+import { PiPawPrintFill } from 'react-icons/pi';
 SwiperCore.use([Autoplay]);
 interface Item {
-	id: number;
+	boardId: number;
 	index: number;
-	itemTitle: string;
+	animalName: string;
 	age: string;
+	adoptionStatus: string;
+	images: string[];
+	animalId: number;
+	createdAt: string;
+	kind: string;
+	city: string;
+}
+
+interface ResponsiveProps {
+	$isMobile: boolean;
+	$isTablet: boolean;
+	$isPc: boolean;
+	$isMaxWidth: boolean;
 }
 
 const generateImgUrl = (index: number): string => {
@@ -21,13 +41,6 @@ const generateImgUrl = (index: number): string => {
 	const actualIndex = index <= maxIndex ? index : (index % maxIndex) + 1;
 	return `/assets/animal${actualIndex}.jpg`;
 };
-
-const items: Item[] = Array.from({ length: 10 }, (_, index) => ({
-	id: index + 1,
-	index: index + 1,
-	itemTitle: '냥냥',
-	age: '3년 2개월',
-}));
 
 SwiperCore.use([Autoplay]);
 
@@ -38,14 +51,63 @@ const NewFamilySwiper = () => {
 		[key: number]: boolean;
 	}>({});
 
+	//전체 데이터 조희
+	const { data: items, refetch } = useQuery<Item[], unknown, Item[]>(
+		['animals'],
+		getNewFamily,
+	);
+
+	//북마크된 동물정보 불러오기(-> UI에 반영)
+	useEffect(() => {
+		const fetchScrappedAnimals = async () => {
+			try {
+				const scrappedAnimalsData = await getScrappedAnimal();
+				if (scrappedAnimalsData) {
+					const initialState = scrappedAnimalsData.reduce(
+						(
+							acc: { [key: number]: boolean },
+							animal: { animalId?: number },
+						) => {
+							if (animal.animalId !== undefined) {
+								acc[animal.animalId] = true;
+							}
+							return acc;
+						},
+						{},
+					);
+					setBookmarkState(initialState);
+				} else {
+					console.error('동물데이터가 정의 안 됨');
+				}
+			} catch (error) {
+				console.error('스크랩목록 가져오기 실패:', error);
+			}
+		};
+		fetchScrappedAnimals();
+	}, []);
+
+	//북마크 추가
+	const toggleBookmark = async (boardId: number) => {
+		try {
+			const updatedBookmarkState = { ...bookmarkState };
+
+			if (updatedBookmarkState[boardId]) {
+				delete updatedBookmarkState[boardId];
+			} else {
+				updatedBookmarkState[boardId] = true;
+			}
+			setBookmarkState(updatedBookmarkState);
+			await scrapAnimal(boardId);
+			refetch();
+		} catch (error) {
+			console.error('북마크 오류', error);
+		}
+	};
+
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 
 	const clickBookmarkHandler = (itemId: number) => {
 		setBookmarkState((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
-	};
-
-	const goToDetailPage = (petId: number, imageUrl: string) => {
-		navigate(`/newFamily/pet/${petId}`, { state: { imageUrl } });
 	};
 
 	const initSwiper = (swiper: SwiperCore) => {
@@ -63,8 +125,26 @@ const NewFamilySwiper = () => {
 		}
 	};
 
+	//디테일 페이지 이동
+	const goToDetailPage = (petId: number) => {
+		navigate(`/newFamily/pet/${petId}`);
+	};
+
+	//디바이스에 따른 아이콘 사이즈 조정
+	const getBookmarkSize = () => ($isMobile ? 25 : 30);
+	const getAdoptionStatusSize = () => ($isMobile ? 20 : 30);
+
+	//북마크컬러변경
+	const getBookmarkColor = (boardId: number) => {
+		return bookmarkState[boardId] ? 'var(--color-light-salmon)' : '#ffffff70';
+	};
+
 	return (
 		<DetailSwiper
+			$isMobile={$isMobile}
+			$isTablet={$isTablet}
+			$isPc={$isPc}
+			$isMaxWidth={$isMaxWidth}
 			onMouseEnter={mouseEnterHandler}
 			onMouseLeave={mouseLeaveHandler}>
 			<Swiper
@@ -81,29 +161,34 @@ const NewFamilySwiper = () => {
 				modules={[Autoplay]}
 				onSwiper={initSwiper}
 				className="swiper">
-				{items.map((item: Item) => (
+				{items?.map((animal: Item) => (
 					<SwiperSlide
-						key={item.id}
+						key={animal.boardId}
 						className="swiper-slide"
-						onClick={() => goToDetailPage(item.id, generateImgUrl(item.index))}>
+						onClick={() => goToDetailPage(animal.boardId)}>
 						<div>
-							<img src={generateImgUrl(item.index)} alt="" />
+							<img src={animal.images[0]} alt="{`adoption${animal.boardId}`}" />
+							{animal.adoptionStatus === 'COMPLETED' && (
+								<div className="adoption-status-icon">
+									<PiPawPrintFill
+										size={getAdoptionStatusSize()}
+										color="var(--color-light-salmon)"
+									/>
+								</div>
+							)}
 							<BsBookmarkFill
-								color={
-									bookmarkState[item.id]
-										? 'var(--color-light-salmon)'
-										: '#ffffff70'
-								}
-								size={30}
+								color={getBookmarkColor(animal.boardId)}
+								size={getBookmarkSize()}
 								onClick={(e) => {
 									e.stopPropagation();
-									clickBookmarkHandler(item.id);
+									toggleBookmark(animal.boardId);
 								}}
+								className="bookmark-icon"
 							/>
 						</div>
 						<div>
-							<p>이름 : {item.itemTitle}</p>
-							<p>나이 : {item.age}</p>
+							<p>이름 : {animal.animalName}</p>
+							<p>나이 : {animal.age}개월</p>
 						</div>
 					</SwiperSlide>
 				))}

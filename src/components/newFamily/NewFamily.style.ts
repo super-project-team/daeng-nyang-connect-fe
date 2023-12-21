@@ -455,7 +455,7 @@ export const DetailTextBox = styled.div<ResponsiveProps>`
 		margin-right: 15px;
 		border-radius: 5px;
 		background: var(--color-peach);
-		font-size: 16px;
+		font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
 	}
 `;
 

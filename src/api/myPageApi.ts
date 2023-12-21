@@ -9,7 +9,7 @@ const CHANGE_MOBILE = '/modifyMobile';
 const CHANGE_ADDRESS = '/modifyCityTown';
 const GET_MY_BOARD = '/getMyBoard';
 const GET_MY_LIKED = '/getMyLikeBoard';
-const BASE_URL = 'http://3.35.16.126:8080';
+const BASE_URL = 'http://43.201.83.255:8080';
 
 export const authApi = new APIClient(BASE_URL + '/api/myPage');
 

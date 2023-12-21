@@ -8,7 +8,7 @@ const GET_ALL = '/getAll';
 const DELETE = '/delete';
 const COMMENT = '/comments/post';
 const COMMENT_DELETE = 'comments/delete';
-const BASE_URL = 'http://3.35.16.126:8080';
+const BASE_URL = 'http://43.201.83.255:8080';
 
 interface ReviewRequest {
 	textReview: string;

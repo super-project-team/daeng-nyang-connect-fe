@@ -7,7 +7,7 @@ import {
 	UserThumbnail,
 } from '../../newFamily/NewFamily.style';
 import { RiMore2Line } from 'react-icons/ri';
-import { ReviewTextBox } from '../Reviews.style';
+import { DetailText, ReviewTextBox } from '../Reviews.style';
 import ReviewCommentBox from './ReviewCommentBox';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
@@ -65,7 +65,6 @@ const Review = () => {
 		if (boardId) deleteMutate(boardId);
 		navigate('/adoptionReviews');
 	};
-
 	return (
 		<>
 			{detailReview && detailReview.length > 0 && (
@@ -83,7 +82,7 @@ const Review = () => {
 						<div>
 							<img src={detailReview[0].userThumbnail} alt="" />
 						</div>
-						<h5>iamzipsa</h5>
+						<h5>{detailReview[0].nickname}</h5>
 						{user.nickname === detailReview[0].nickname && (
 							<RiMore2Line
 								color="var(--color-light-salmon)"
@@ -157,7 +156,9 @@ const Review = () => {
 							<p>이름 : {detailReview[0].adoptedAnimalName}</p>
 							<p>나이 : {detailReview[0].age}</p>
 							{/* <p>입양 시기: ??</p> */}
-							<p style={{ minHeight: '300px' }}>{detailReview[0].textReview}</p>
+							<DetailText $isMobile={$isMobile}>
+								{detailReview[0].textReview}
+							</DetailText>
 						</DetailTextBox>
 						{<ReviewCommentBox reviewId={detailReview[0].boardId} />}
 					</ReviewTextBox>

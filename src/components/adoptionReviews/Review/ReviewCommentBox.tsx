@@ -236,7 +236,7 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 							size={getLikeSize()}
 							onClick={clickLikeMarkHandler}
 						/>
-						<p>좋아요 213개</p>
+						<p>좋아요 ?개</p>
 					</LikeContainer>
 				</div>
 				<CommentInputContainer

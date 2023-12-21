@@ -266,7 +266,7 @@ export const ModifyDiv = styled.div<ResponsiveProps>`
 		bottom: 0px;
 		width: ${(props) =>
 			props.$isMobile ? '70%' : props.$isTablet ? '76%' : '63%'};
-		min-height: 300px;
+		min-height: ${(props) => (props.$isMobile ? '40px' : '300px')};
 		padding: 0;
 		border-color: var(--color-light-salmon);
 		font-size: 16px;
@@ -283,4 +283,7 @@ export const ModifyBtnsDiv = styled.div<ResponsiveProps>`
 		font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
 		margin-top: ${(props) => (props.$isMobile ? '4px' : '20px')};
 	}
+`;
+export const DetailText = styled.p<ResponsiveProps>`
+	min-height: ${(props) => (props.$isMobile ? '40px' : '300px')};
 `;

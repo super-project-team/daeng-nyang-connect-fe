@@ -4,6 +4,7 @@ import {
 	ButtonContainer,
 	ButtonWrap,
 	Form,
+	NickNameText,
 	TextArea,
 } from './ModifyCommentForm.style';
 import { modifyComment } from '../../api/communityApi';
@@ -12,6 +13,8 @@ import { BoardComment } from '../../types/BoardTypes';
 
 import labelMappings from '../../utils/communityLabel';
 import { useResponsive } from '../../hooks/useResponsive';
+import { myPageGet } from '../../api/authApi';
+import { useQuery } from 'react-query';
 
 interface RootState {
 	community: CommunityState;
@@ -80,9 +83,23 @@ const ModifyCommentForm = ({
 		setModifyCommentId(0);
 	};
 
+	const fetchMyPageData = async () => {
+		const response = await myPageGet();
+		console.log(response);
+
+		return response;
+	};
+
+	const { data: myPageData } = useQuery('myPage', fetchMyPageData);
+
+	console.log('myPageData', myPageData);
+
 	return (
 		<Form onSubmit={modifyCommentHandler}>
-			<div>user 닉네임</div>
+			<NickNameText $isMobile={$isMobile}>
+				{' '}
+				{myPageData ? myPageData?.nickname : '댕냥 커넥트'}
+			</NickNameText>
 			<TextArea
 				placeholder="댓글쓰기"
 				value={modifyPopUpClick && !isTextAreaTouch ? list.comment : modifyText}

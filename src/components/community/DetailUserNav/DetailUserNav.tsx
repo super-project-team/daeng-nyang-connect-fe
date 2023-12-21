@@ -32,6 +32,8 @@ import { useEffect, useState } from 'react';
 import formatDate from '../../../utils/formatDate';
 import { useResponsive } from '../../../hooks/useResponsive';
 import labelMappings from '../../../utils/communityLabel';
+import { RootUserState } from '../../../slice/userSlice';
+import CheckLogin from '../CheckLogin/CheckLogin';
 
 interface RootState {
 	community: CommunityState;
@@ -41,6 +43,11 @@ const DetailUserNav = () => {
 	const [userButtonClick, setUserButtonClick] = useState(false);
 	const [menuButtonClick, setMenuButtonClick] = useState(false);
 	const [deleteButtonClick, setDeleteButtonClick] = useState(false);
+	const [isCheckLogin, setIsCheckLogin] = useState(false);
+
+	const isLoggedIn = useSelector(
+		(state: RootUserState) => state.user.isLoggedIn,
+	);
 
 	const communityState = useSelector((state: RootState) => state.community);
 	console.log('communityState', communityState);
@@ -82,6 +89,8 @@ const DetailUserNav = () => {
 		fetchGetDetailBoard,
 	);
 
+	console.log('data', data);
+
 	const modifyBoardData = async () => {
 		await refetch();
 		await dispatch(SET_MODIFY_VALUE(data));
@@ -98,11 +107,15 @@ const DetailUserNav = () => {
 	};
 
 	const handleLikeClick = async () => {
-		try {
-			await fetchLikeBoard();
-			refetch();
-		} catch (error) {
-			console.error('Error updating like status:', error);
+		if (isLoggedIn) {
+			try {
+				await fetchLikeBoard();
+				refetch();
+			} catch (error) {
+				console.error('Error updating like status:', error);
+			}
+		} else {
+			setIsCheckLogin(true);
 		}
 	};
 
@@ -173,19 +186,21 @@ const DetailUserNav = () => {
 						<LikeCount $isMobile={$isMobile}>{data?.likes?.length}</LikeCount>{' '}
 					</LikeWrap>
 				)}
-				<KebabWrap onClick={menuButtonClickHandler}>
-					<CiMenuKebab />
-					{menuButtonClick && (
-						<MenuButtonWrap>
-							<ButtonWrap onClick={ModifyPopUpClickHandler}>
-								<button>수정하기</button>
-							</ButtonWrap>
-							<ButtonWrap onClick={deleteButtonClickHandler}>
-								<button>삭제하기</button>
-							</ButtonWrap>
-						</MenuButtonWrap>
-					)}
-				</KebabWrap>
+				{isLoggedIn && (
+					<KebabWrap onClick={menuButtonClickHandler}>
+						<CiMenuKebab />
+						{menuButtonClick && (
+							<MenuButtonWrap>
+								<ButtonWrap onClick={ModifyPopUpClickHandler}>
+									<button>수정하기</button>
+								</ButtonWrap>
+								<ButtonWrap onClick={deleteButtonClickHandler}>
+									<button>삭제하기</button>
+								</ButtonWrap>
+							</MenuButtonWrap>
+						)}
+					</KebabWrap>
+				)}
 			</SubInfoWrap>
 			{deleteButtonClick && (
 				<DeletePopUpWrap $isMobile={$isMobile}>
@@ -201,6 +216,7 @@ const DetailUserNav = () => {
 					</PopUpButtonWrap>
 				</DeletePopUpWrap>
 			)}
+			{isCheckLogin && <CheckLogin setIsCheckLogin={setIsCheckLogin} />}
 		</DetailUserWrap>
 	);
 };

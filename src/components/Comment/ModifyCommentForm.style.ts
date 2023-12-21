@@ -20,6 +20,11 @@ export const Form = styled.form`
 	z-index: 10;
 `;
 
+export const NickNameText = styled.div<NavOptionProps>`
+	font-size: ${(props) => (props.$isMobile ? '14px' : '16px')};
+	font-weight: 400;
+`;
+
 export const TextArea = styled.textarea`
 	width: 100%;
 	height: 60%;

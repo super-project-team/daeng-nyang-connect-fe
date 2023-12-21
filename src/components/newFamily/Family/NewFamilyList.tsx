@@ -16,7 +16,6 @@ import {
 } from '../../../api/newFamilyApi';
 import { BsBookmarkFill } from 'react-icons/bs';
 import { PiPawPrintFill } from 'react-icons/pi';
-import { useSelector } from 'react-redux';
 
 interface Item {
 	boardId: number;
@@ -62,7 +61,7 @@ const NewFamilyList: React.FC<ResponsiveProps> = ({
 	const endIndex = startIndex + itemsPerPage;
 
 	//전체 데이터 조희
-	const { data: items } = useQuery<Item[], unknown, Item[]>(
+	const { data: items, refetch } = useQuery<Item[], unknown, Item[]>(
 		['animals'],
 		getNewFamily,
 	);
@@ -86,7 +85,6 @@ const NewFamilyList: React.FC<ResponsiveProps> = ({
 						{},
 					);
 					setBookmarkState(initialState);
-					console.log();
 				} else {
 					console.error('동물데이터가 정의 안 됨');
 				}
@@ -97,31 +95,29 @@ const NewFamilyList: React.FC<ResponsiveProps> = ({
 		fetchScrappedAnimals();
 	}, []);
 
+	useEffect(() => {
+		setCurrentPage(1);
+	}, [items]);
+
 	//북마크 추가
-	const clickBookmarkHandler = async (boardId: number) => {
+	const toggleBookmark = async (boardId: number) => {
 		try {
-			if (Object.prototype.hasOwnProperty.call(bookmarkState, boardId)) {
-				const updatedBookmarkState = { ...bookmarkState };
+			const updatedBookmarkState = { ...bookmarkState };
+
+			if (updatedBookmarkState[boardId]) {
 				delete updatedBookmarkState[boardId];
-				setBookmarkState(updatedBookmarkState);
-
-				await scrapAnimal(boardId);
 			} else {
-				const updatedBookmarkState = { ...bookmarkState, [boardId]: true };
-				setBookmarkState(updatedBookmarkState);
-
-				console.log('Bookmark added for boardId:', boardId);
-				console.log('Updated State:', updatedBookmarkState);
-
-				await scrapAnimal(boardId);
+				updatedBookmarkState[boardId] = true;
 			}
+			setBookmarkState(updatedBookmarkState);
+			await scrapAnimal(boardId);
+			refetch();
 		} catch (error) {
-			console.error('북마크오류', error);
-			setBookmarkState((prev) => ({ ...prev, [boardId]: !prev[boardId] }));
+			console.error('북마크 오류', error);
 		}
 	};
 
-	const renderAnimalList = () => {
+	const getCurrentPageItems = () => {
 		return items
 			?.filter((animal) => {
 				const isKindMatch = !filterKind || animal.kind === filterKind;
@@ -132,16 +128,17 @@ const NewFamilyList: React.FC<ResponsiveProps> = ({
 				return isKindMatch && isCityMatch && isAdoptionStatusMatch;
 			})
 			?.sort((a, b) => b.boardId - a.boardId)
-			?.slice(startIndex, endIndex);
+			?.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 	};
 
 	const renderPagination = () => {
 		const totalPages = Math.ceil((items?.length ?? 0) / itemsPerPage);
+
 		return (
 			<ListPagination>
 				<button
 					disabled={currentPage === 1}
-					onClick={() => setCurrentPage(currentPage - 1)}>
+					onClick={() => setCurrentPage((prev) => prev - 1)}>
 					&lt;
 				</button>
 				{Array(totalPages)
@@ -163,40 +160,16 @@ const NewFamilyList: React.FC<ResponsiveProps> = ({
 								</PageNumber>
 							);
 						} else if (pageIndex === currentPage + 3) {
-							// Render an ellipsis (...) after the current page if there are more pages
 							return <span key="ellipsis">...</span>;
 						}
 						return null;
 					})}
 				<button
-					disabled={endIndex >= (items?.length ?? 0)}
-					onClick={() => setCurrentPage(currentPage + 1)}>
+					disabled={endIndex === totalPages}
+					onClick={() => setCurrentPage((prev) => prev + 1)}>
 					&gt;
 				</button>
 			</ListPagination>
-		);
-	};
-
-	const renderBookmarkIcon = (boardId: number) => {
-		return (
-			<BsBookmarkFill
-				color={getBookmarkColor(boardId)}
-				size={getBookmarkSize()}
-				onClick={(e) => {
-					e.stopPropagation();
-					clickBookmarkHandler(boardId);
-				}}
-				className="bookmark-icon"
-			/>
-		);
-	};
-
-	const renderAdoptionStatusIcon = (animalId: number) => {
-		return (
-			<PiPawPrintFill
-				size={getAdoptionStatusSize()}
-				color="var(--color-light-salmon)"
-			/>
 		);
 	};
 
@@ -221,7 +194,7 @@ const NewFamilyList: React.FC<ResponsiveProps> = ({
 				$isTablet={$isTablet}
 				$isPc={$isPc}
 				$isMaxWidth={$isMaxWidth}>
-				{renderAnimalList()?.map((animal: Item) => (
+				{getCurrentPageItems()?.map((animal: Item) => (
 					<ItemBox
 						$isMobile={$isMobile}
 						$isTablet={$isTablet}
@@ -233,10 +206,21 @@ const NewFamilyList: React.FC<ResponsiveProps> = ({
 							<img src={animal.images[0]} alt={`adoption${animal.boardId}`} />
 							{animal.adoptionStatus === 'COMPLETED' && (
 								<div className="adoption-status-icon">
-									{renderAdoptionStatusIcon(animal.boardId)}
+									<PiPawPrintFill
+										size={getAdoptionStatusSize()}
+										color="var(--color-light-salmon)"
+									/>
 								</div>
 							)}
-							{renderBookmarkIcon(animal.boardId)}
+							<BsBookmarkFill
+								color={getBookmarkColor(animal.boardId)}
+								size={getBookmarkSize()}
+								onClick={(e) => {
+									e.stopPropagation();
+									toggleBookmark(animal.boardId);
+								}}
+								className="bookmark-icon"
+							/>
 						</div>
 						<div>
 							<p>이름 : {animal.animalName}</p>

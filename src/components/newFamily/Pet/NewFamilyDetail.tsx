@@ -541,11 +541,13 @@ const NewFamilyDetail = () => {
 							/>
 						</div>
 						<h5>{boardIdData?.nickname}</h5>
-						<RiMore2Line
-							color="var(--color-light-salmon"
-							size={getMoreBtnSize()}
-							onClick={toggleDropdown}
-						/>
+						{isLoggedIn && (
+							<RiMore2Line
+								color="var(--color-light-salmon"
+								size={getMoreBtnSize()}
+								onClick={toggleDropdown}
+							/>
+						)}
 						{isDropdownVisible && (
 							<MoreDropdown
 								$isMobile={$isMobile}
@@ -602,7 +604,6 @@ const NewFamilyDetail = () => {
 									onClick={toggleDropdown}
 								/>
 							)}
-
 							{isDropdownVisible && (
 								<MoreDropdown
 									$isMobile={$isMobile}

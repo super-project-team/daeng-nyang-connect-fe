@@ -1,10 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import NewFamilyList from './NewFamilyList';
-import { CategoryTitle, FilterItems, FindFamily } from '../NewFamily.style';
+import {
+	CategoryTitle,
+	FilterItems,
+	FindFamily,
+	LoginStateButtonBox,
+	LoginStatePopup,
+} from '../NewFamily.style';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { IoCloseOutline } from 'react-icons/io5';
 import { useState } from 'react';
 import { FaPlus } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 
 const Family = () => {
 	const navigate = useNavigate();
@@ -20,11 +27,31 @@ const Family = () => {
 		city: null as string | null,
 		adoptionStatus: null as string | null,
 	});
+	const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
+	const [showLoginPopup, setShowLoginPopup] = useState(false);
+
+	const toggleLoginPopup = () => {
+		setShowLoginPopup((prev) => !prev);
+	};
 
 	//등록화면으로 이동
 	const clickRegistrationHandler = () => {
-		const url = '/newFamily/petRegistration';
-		navigate(url);
+		if (!isLoggedIn) {
+			toggleLoginPopup();
+		} else {
+			const url = '/newFamily/petRegistration';
+			navigate(url);
+		}
+	};
+
+	//로그인페이지로 이동
+	const confirmHandler = () => {
+		navigate('/login');
+	};
+
+	//취소창-> 팝업끄기
+	const cancelHandler = () => {
+		toggleLoginPopup();
 	};
 
 	//디바이스에 따른 필터창의 위치조정
@@ -64,6 +91,26 @@ const Family = () => {
 				<button onClick={clickRegistrationHandler} className="register-btn">
 					등록하기
 				</button>
+				{showLoginPopup && (
+					<LoginStatePopup
+						$isMobile={$isMobile}
+						$isTablet={$isTablet}
+						$isPc={$isPc}
+						$isMaxWidth={$isMaxWidth}>
+						<div></div>
+						<div>
+							<div>해당 기능은 로그인이 필요합니다</div>
+							<LoginStateButtonBox
+								$isMobile={$isMobile}
+								$isTablet={$isTablet}
+								$isPc={$isPc}
+								$isMaxWidth={$isMaxWidth}>
+								<button onClick={confirmHandler}>확인</button>
+								<button onClick={cancelHandler}>취소</button>
+							</LoginStateButtonBox>
+						</div>
+					</LoginStatePopup>
+				)}
 				<button onClick={toggleFilterVisibility} className="filter-btn">
 					찾기
 				</button>

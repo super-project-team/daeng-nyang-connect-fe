@@ -1,5 +1,22 @@
 import APIClient from './ApiClient';
 
+interface RegisterAnimal {
+	animalName: string;
+	kind: string;
+	city: string;
+	gender: string;
+	breed: string;
+	age: string;
+	disease: string;
+	training: string;
+	neutering: string;
+	healthCheck: string;
+	nurturePeriod: string;
+	files: File[];
+	textReason: string;
+	textEtc: string;
+}
+
 const POST = '/post';
 const MODIFY = '/modify';
 const SCRAP = '/scrap';
@@ -28,22 +45,6 @@ export const adoptComplete = async (animalId: number, adoptUserId: number) => {
 		COMPLETE + `?animalId=${animalId}&&adoptedUserId=${adoptUserId}`,
 	);
 };
-interface RegisterAnimal {
-	animalName: string;
-	kind: string;
-	city: string;
-	gender: string;
-	breed: string;
-	age: string;
-	disease: string;
-	training: string;
-	neutering: string;
-	healthCheck: string;
-	nurturePeriod: string;
-	files: File[];
-	textReason: string;
-	textEtc: string;
-}
 
 export const registerAnimal = async (data: RegisterAnimal): Promise<any> => {
 	const formData = new FormData();
@@ -62,7 +63,7 @@ export const registerAnimal = async (data: RegisterAnimal): Promise<any> => {
 };
 
 export const modifyAnimal = async (boardId: number) => {
-	return await NewFamilyApi.put(MODIFY + `/${boardId}`, {});
+	return await NewFamilyApi.put(MODIFY + `/${boardId}`);
 };
 
 export const deleteAnimal = async (animalId: number): Promise<Response> => {
@@ -71,11 +72,11 @@ export const deleteAnimal = async (animalId: number): Promise<Response> => {
 };
 
 export const scrapAnimal = async (animalId: number) => {
-	return await NewFamilyApi.post(SCRAP + `/${animalId}`, {});
+	return await NewFamilyApi.post(SCRAP + `/${animalId}`);
 };
 
 export const completeAnimal = async (boardId: number) => {
-	return await NewFamilyApi.put(COMPLETE + `/${boardId}`, {});
+	return await NewFamilyApi.put(COMPLETE + `/${boardId}`);
 };
 
 export const kindAnimal = async (kind: string) => {

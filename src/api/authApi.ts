@@ -122,10 +122,6 @@ export const findPassword = async (
 	});
 };
 
-<<<<<<< HEAD
-export const myPageGet = async (): Promise<any> => {
-	return await authApi.get(MY_PAGE);
-=======
 export const kakaoRegister = async (
 	body: KakaoRegisterRequestBody,
 ): Promise<any> => {
@@ -154,5 +150,4 @@ export const deleteUser = async (body: DeleteUserRequestBody): Promise<any> => {
 		email: body.email,
 		password: body.password,
 	});
->>>>>>> feature/api-user
 };

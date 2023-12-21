@@ -23,8 +23,11 @@ class APIClient {
 		this.api = axios.create({ baseURL, headers });
 	}
 
-	get<T>(endpoint: string): Promise<T> {
-		return this.request('get', endpoint);
+	get<T>(
+		endpoint: string,
+		body?: FormData | Record<string, string | boolean | number>,
+	): Promise<T> {
+		return this.request('get', endpoint, body);
 	}
 
 	post<T>(
@@ -36,14 +39,18 @@ class APIClient {
 
 	put<T>(
 		endpoint: string,
-		body?: FormData | Record<string, string | boolean | string[] | number>,
+		body?:
+			| FormData
+			| Record<string, string | boolean | string[] | number | any>,
 	): Promise<T> {
 		return this.request('put', endpoint, body);
 	}
 
 	delete<T>(
 		endpoint: string,
-		body?: FormData | Record<string, string | boolean | string[] | number>,
+		body?:
+			| FormData
+			| Record<string, string | boolean | string[] | number | any>,
 	): Promise<T> {
 		return this.request('delete', endpoint, body);
 	}

@@ -52,15 +52,15 @@ export const deleteReview = async (reviewId: number) => {
 };
 
 export const modifyReview = async (reviewId: number) => {
-	return await reviewApi.put(MODIFY + `/${reviewId}`, {});
+	return await reviewApi.put(MODIFY + `/${reviewId}`);
 };
 
 export const likeReview = async (reviewId: number) => {
-	return await reviewApi.post(LIKE + `/${reviewId}`, {});
+	return await reviewApi.post(LIKE + `/${reviewId}`);
 };
 
 export const postComment = async (reviewId: number) => {
-	return await reviewApi.post(COMMENT + `/${reviewId}`, {});
+	return await reviewApi.post(COMMENT + `/${reviewId}`);
 };
 
 export const deleteComment = async (reviewCommentsId: number) => {

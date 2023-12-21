@@ -19,10 +19,16 @@ import { useQuery } from 'react-query';
 import { useState } from 'react';
 import formatDate from '../../../../utils/formatDate';
 import formatTime from '../../../../utils/formatTime';
+import { useSelector } from 'react-redux';
+import { RootUserState } from '../../../../slice/userSlice';
 
 const LostDetail = () => {
 	const [modifyPopUpClick, setModifyPopUpClick] = useState(false);
 	const [modifyCommentId, setModifyCommentId] = useState(0);
+
+	const isLoggedIn = useSelector(
+		(state: RootUserState) => state.user.isLoggedIn,
+	);
 
 	const { $isTablet, $isMobile } = useResponsive();
 
@@ -142,7 +148,7 @@ const LostDetail = () => {
 						/>
 					))}
 				</ul>
-				{modifyCommentId === 0 && <RegisterCommentForm />}
+				{modifyCommentId === 0 && isLoggedIn && <RegisterCommentForm />}
 			</CommentWrap>
 		</div>
 	);

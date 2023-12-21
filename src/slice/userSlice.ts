@@ -6,6 +6,10 @@ export interface UserState {
 	id: string;
 }
 
+export interface RootUserState {
+	user: UserState;
+}
+
 const initialState: UserState = {
 	isLoggedIn: false,
 	nickname: '',

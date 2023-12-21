@@ -17,7 +17,7 @@ import {
 	StyledFaPlus,
 } from './CommunityNav.style';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
 	SET_DISPLAY_LABEL,
 	SET_IS_SEARCH,
@@ -28,6 +28,8 @@ import { useResponsive } from '../../../hooks/useResponsive';
 import labelMappings from '../../../utils/communityLabel';
 import { searchBoard } from '../../../api/communityApi';
 import { useQuery } from 'react-query';
+import { RootUserState } from '../../../slice/userSlice';
+import CheckLogin from '../CheckLogin/CheckLogin';
 
 interface CommunityNavProps {
 	setIsPopUp: React.Dispatch<React.SetStateAction<boolean>>;
@@ -36,6 +38,7 @@ interface CommunityNavProps {
 
 const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
 	const [text, setText] = useState<string>('');
+	const [isCheckLogin, setIsCheckLogin] = useState(false);
 
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -58,6 +61,12 @@ const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
 	);
 
 	const displayLabel = currentLabel ? routeLabels[currentLabel] : '나의 댕냥이';
+
+	const isLoggedIn = useSelector(
+		(state: RootUserState) => state.user.isLoggedIn,
+	);
+
+	console.log('isLoggedIn', isLoggedIn);
 
 	useEffect(() => {
 		dispatch(SET_DISPLAY_LABEL(displayLabel));
@@ -106,6 +115,16 @@ const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
 		refetch();
 		setText('');
 		navigate(`/community/${urlType}`);
+	};
+
+	const writeButtonClickHandler = () => {
+		if (!isLoggedIn) {
+			setIsPopUp(false);
+			setIsCheckLogin(true);
+		} else {
+			setIsPopUp(true);
+			setIsCheckLogin(false);
+		}
 	};
 
 	return (
@@ -249,7 +268,7 @@ const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
 					</ButtonWrap>
 					{!$isMobile && (
 						<Button
-							onClick={() => setIsPopUp(true)}
+							onClick={writeButtonClickHandler}
 							$isTablet={$isTablet}
 							$isMobile={$isMobile}>
 							글쓰기
@@ -258,11 +277,14 @@ const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
 				</Nav>
 				{$isMobile && !isPopUp && (
 					<Button
-						onClick={() => setIsPopUp(true)}
+						onClick={writeButtonClickHandler}
 						$isTablet={$isTablet}
 						$isMobile={$isMobile}>
 						<StyledFaPlus />
 					</Button>
+				)}
+				{!isLoggedIn && isCheckLogin && (
+					<CheckLogin setIsCheckLogin={setIsCheckLogin} />
 				)}
 				<Outlet />
 			</Article>

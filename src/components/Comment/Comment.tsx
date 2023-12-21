@@ -21,6 +21,7 @@ import { deleteComment } from '../../api/communityApi';
 import { useSelector } from 'react-redux';
 import labelMappings from '../../utils/communityLabel';
 import ModifyCommentForm from './ModifyCommentForm';
+import { RootUserState } from '../../slice/userSlice';
 
 interface CommentFormProps {
 	list: BoardComment;
@@ -42,6 +43,10 @@ const Comment = ({
 	const [userButtonClick, setUserButtonClick] = useState(false);
 	const [menuButtonClick, setMenuButtonClick] = useState(false);
 	const [deleteButtonClick, setDeleteButtonClick] = useState(false);
+
+	const isLoggedIn = useSelector(
+		(state: RootUserState) => state.user.isLoggedIn,
+	);
 
 	const navigate = useNavigate();
 	const currentUrl = window.location.origin;
@@ -123,19 +128,21 @@ const Comment = ({
 						</UserPageButtonWrap>
 					)}
 				</InfoWrap>
-				<KebabWrap onClick={menuButtonClickHandler}>
-					<CiMenuKebab />
-					{menuButtonClick && (
-						<MenuButtonWrap>
-							<ButtonWrap>
-								<button onClick={modifyPopUpClickHandler}>수정하기</button>
-							</ButtonWrap>
-							<ButtonWrap onClick={deleteButtonClickHandler}>
-								<button>삭제하기</button>
-							</ButtonWrap>
-						</MenuButtonWrap>
-					)}
-				</KebabWrap>
+				{isLoggedIn && (
+					<KebabWrap onClick={menuButtonClickHandler}>
+						<CiMenuKebab />
+						{menuButtonClick && (
+							<MenuButtonWrap>
+								<ButtonWrap>
+									<button onClick={modifyPopUpClickHandler}>수정하기</button>
+								</ButtonWrap>
+								<ButtonWrap onClick={deleteButtonClickHandler}>
+									<button>삭제하기</button>
+								</ButtonWrap>
+							</MenuButtonWrap>
+						)}
+					</KebabWrap>
+				)}
 				{deleteButtonClick && (
 					<DeletePopUpWrap $isMobile={$isMobile}>
 						<PopUpInfoWrap>

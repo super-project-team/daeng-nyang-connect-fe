@@ -7,6 +7,10 @@ interface ResponsiveProps {
 	$isMaxWidth: boolean;
 }
 
+interface PageNumberProps {
+	isActive: boolean;
+}
+
 export const FindFamily = styled.div<ResponsiveProps>`
 	width: ${(props) => (props.$isMaxWidth ? '100%' : '1320px')};
 	padding: ${(props) =>
@@ -147,9 +151,12 @@ export const FilterItems = styled.div<ResponsiveProps>`
 	}
 `;
 
+export const ItemListWrapper = styled.div`
+	flex: 3;
+`;
+
 export const ItemList = styled.div<ResponsiveProps>`
 	display: flex;
-	flex: 3;
 	gap: ${(props) => (props.$isMobile ? '8px' : '25px')};
 	flex-wrap: wrap;
 	/* justify-content: space-between; */
@@ -181,6 +188,7 @@ export const ItemBox = styled.div<ResponsiveProps>`
 
 	& img {
 		width: 100%;
+		object-fit: cover;
 		transition: all 0.5s;
 	}
 
@@ -188,11 +196,24 @@ export const ItemBox = styled.div<ResponsiveProps>`
 		scale: 1.1;
 	}
 
-	& svg {
+	.bookmark-icon {
 		position: absolute;
 		top: ${(props) => (props.$isMobile ? '10px' : '20px')};
 		right: ${(props) => (props.$isMobile ? '10px' : '20px')};
 		cursor: pointer;
+	}
+
+	.adoption-status-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		top: ${(props) => (props.$isMobile ? '10px' : '16px')};
+		left: ${(props) => (props.$isMobile ? '10px' : '16px')};
+		width: ${(props) => (props.$isMobile ? '32px' : '40px')};
+		height: ${(props) => (props.$isMobile ? '32px' : '40px')};
+		border: 2px solid var(--color-light-salmon);
+		border-radius: 50%;
 	}
 
 	& button {
@@ -213,6 +234,68 @@ export const ItemBox = styled.div<ResponsiveProps>`
 	& p {
 		margin-bottom: ${(props) => (props.$isMobile ? '10px' : '15px')};
 		font-size: ${(props) => (props.$isMobile ? '12px' : 'inherit')};
+	}
+`;
+
+export const ListPagination = styled.div`
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
+	text-align: center;
+`;
+
+export const PageNumber = styled.div<PageNumberProps>`
+	margin: 0 5px;
+	font-weight: ${({ isActive }) => (isActive ? '500' : '300')};
+	cursor: pointer;
+`;
+
+export const LoginStatePopup = styled.div<ResponsiveProps>`
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	width: ${(props) => (props.$isMobile ? '320px' : '400px')};
+	height: ${(props) => (props.$isMobile ? '250px' : '150px')};
+	border: 1px solid var(--color-light-salmon);
+	border-radius: 5px;
+	background: #fff;
+	box-shadow: 0.25rem 0.25rem 0.25rem #00000010;
+	z-index: 100;
+	overflow: hidden;
+	font-size: 16px;
+
+	& > div:first-child {
+		width: 100%;
+		height: 30px;
+		background: var(--color-light-salmon);
+	}
+
+	& > div:nth-child(2) {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		justify-content: space-evenly;
+		align-items: center;
+	}
+`;
+
+export const LoginStateButtonBox = styled.div<ResponsiveProps>`
+	display: flex;
+	flex-direction: ${(props) => (props.$isMobile ? 'column' : 'row')};
+	gap: ${(props) => (props.$isMobile ? '10px' : '0')};
+	justify-content: space-evenly;
+	align-items: ${(props) => (props.$isMobile ? 'center' : 'unset')};
+	width: 100%;
+
+	& button {
+		width: ${(props) => (props.$isMobile ? '80%' : '80px')};
+		padding: 4px;
+		border: 1px solid var(--color-light-salmon);
+		border-radius: 5px;
+		font-size: 12px;
 	}
 `;
 
@@ -270,15 +353,31 @@ export const DetailImageBox = styled.div<ResponsiveProps>`
 	overflow: hidden;
 	& img {
 		width: 100%;
+<<<<<<< HEAD
 		height: 100%;
 		object-fit: cover;
 		object-position: center center;
+=======
+		object-fit: cover;
+>>>>>>> 80862cb8200fbfc4275a760bcde3d04d24aab748
 	}
-	& svg {
+	.bookmark-icon {
 		position: absolute;
-		top: 20px;
-		right: 20px;
+		top: ${(props) => (props.$isMobile ? '10px' : '20px')};
+		right: ${(props) => (props.$isMobile ? '10px' : '20px')};
 		cursor: pointer;
+	}
+	.adoption-status-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		top: ${(props) => (props.$isMobile ? '10px' : '16px')};
+		left: ${(props) => (props.$isMobile ? '10px' : '16px')};
+		width: ${(props) => (props.$isMobile ? '32px' : '50px')};
+		height: ${(props) => (props.$isMobile ? '32px' : '50px')};
+		border: 2px solid var(--color-light-salmon);
+		border-radius: 50%;
 	}
 `;
 
@@ -356,10 +455,73 @@ export const DetailTextBox = styled.div<ResponsiveProps>`
 		overflow: hidden;
 		white-space: normal;
 	}
+
+	& span {
+		display: inline-block;
+		width: fit-content;
+		padding: 8px 10px;
+		margin-right: 15px;
+		border-radius: 5px;
+		background: var(--color-peach);
+		font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
+	}
+`;
+
+export const ModifyAnimalInfo = styled.div<ResponsiveProps>`
+	width: ${(props) => (props.$isMaxWidth ? '100%' : '1320px')};
+	padding: ${(props) =>
+		props.$isMobile ? '0 10px' : props.$isMaxWidth ? '0 30px' : '0'};
+	margin: ${(props) => (props.$isPc ? '100px auto 150px auto' : '0 auto')};
+	background: #fff;
+	z-index: 1000;
+
+	& > div:last-child {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	& h5 {
+		width: ${(props) => (props.$isMobile ? '60px' : '80px')};
+		margin-right: ${(props) => (props.$isMobile ? '15px' : '30px')};
+		font-weight: 400;
+		font-size: ${(props) => (props.$isMobile ? '12px' : 'inherit')};
+	}
+	.modify-btn-box {
+		transform: ${(props) =>
+			props.$isMobile
+				? 'unset'
+				: props.$isTablet
+				  ? 'unset'
+				  : 'translateX(55%)'};
+	}
+	.modify-btn {
+		position: unset;
+		transform: none;
+		width: ${(props) => (props.$isMobile ? '80%' : '420px')};
+		padding: 4px;
+		margin: 0 auto;
+		margin-top: ${(props) => (props.$isPc ? '100px' : '0')};
+		border: 1px solid var(--color-light-salmon);
+		border-radius: 5px;
+		background: var(--color-light-salmon);
+		color: #fff;
+		font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
+		cursor: pointer;
+	}
+
+	.register-title {
+		margin: ${(props) => (props.$isPc ? '70px 0 50px 0' : '70px 0 30px 0')};
+	}
+
+	.register-close-btn {
+		display: block;
+		cursor: pointer;
+	}
 `;
 
 //NewFamilyDetailSwiper
-export const DetailSwiper = styled.div`
+export const DetailSwiper = styled.div<ResponsiveProps>`
 	display: flex;
 	align-items: center;
 	width: 100%;
@@ -387,12 +549,6 @@ export const DetailSwiper = styled.div`
 		width: 100%;
 		aspect-ratio: 4 / 2.5;
 		overflow: hidden;
-
-		& svg {
-			position: absolute;
-			top: 20px;
-			right: 20px;
-		}
 	}
 
 	.swiper-slide div:last-child {
@@ -405,6 +561,27 @@ export const DetailSwiper = styled.div`
 
 	.swiper-slide img {
 		width: 100%;
+		object-fit: cover;
+	}
+
+	.bookmark-icon {
+		position: absolute;
+		top: ${(props) => (props.$isMobile ? '10px' : '20px')};
+		right: ${(props) => (props.$isMobile ? '10px' : '20px')};
+		cursor: pointer;
+	}
+
+	.adoption-status-icon {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		top: ${(props) => (props.$isMobile ? '10px' : '16px')};
+		left: ${(props) => (props.$isMobile ? '10px' : '16px')};
+		width: ${(props) => (props.$isMobile ? '32px' : '40px')};
+		height: ${(props) => (props.$isMobile ? '32px' : '40px')};
+		border: 2px solid var(--color-light-salmon);
+		border-radius: 50%;
 	}
 `;
 
@@ -448,7 +625,7 @@ export const PetRegistrationForm = styled.form<ResponsiveProps>`
 	}
 
 	.register-title {
-		margin: ${(props) => (props.$isPc ? '70px 0 50px 0' : '50px 0 30px 0')};
+		margin: ${(props) => (props.$isPc ? '70px 0 50px 0' : '30px 0 30px 0')};
 	}
 
 	.register-close-btn {
@@ -471,9 +648,9 @@ export const FormText = styled.div<ResponsiveProps>`
 
 	& textarea {
 		width: 85%;
-		height: ${(props) => (props.$isMobile ? '60px' : '90px')};
+		height: ${(props) => (props.$isMobile ? '60px' : '30px')};
 		resize: none;
-		padding: 10px;
+		padding: 5px 10px;
 		border: 1px solid var(--color-light-salmon);
 		outline: none;
 		overflow: hidden;

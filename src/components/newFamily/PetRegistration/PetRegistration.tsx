@@ -88,8 +88,7 @@ const PetRegistration = () => {
 			$isMobile={$isMobile}
 			$isTablet={$isTablet}
 			$isPc={$isPc}
-			$isMaxWidth={$isMaxWidth}
-			onSubmit={submitHandler}>
+			$isMaxWidth={$isMaxWidth}>
 			<CategoryTitle
 				$isMobile={$isMobile}
 				$isTablet={$isTablet}
@@ -203,12 +202,13 @@ const PetRegistration = () => {
 							onChange={changeHandler}
 							required
 						/>
-						<h5>/&nbsp;&nbsp;&nbsp;&nbsp;나이</h5>
+						<h5>나이(개월)</h5>
 						<input
 							type="text"
 							name="age"
 							id="age"
 							onChange={changeHandler}
+							placeholder="16"
 							required
 						/>
 					</div>
@@ -280,12 +280,11 @@ const PetRegistration = () => {
 						<label htmlFor="health_no">아니오</label>
 					</div>
 					<div>
-						<h5>양육 기간</h5>
+						<h5>양육 기간(개월)</h5>
 						<input
 							type="number"
 							name="nurturePeriod"
 							id="nurturePeriod"
-							placeholder="5개월"
 							onChange={changeHandler}
 							required
 						/>
@@ -317,7 +316,7 @@ const PetRegistration = () => {
 							onChange={textareaChangeHandler}
 							value={formData.textEtc}></textarea>
 					</div>
-					<button>등록하기</button>
+					<button onClick={submitHandler}>등록하기</button>
 				</FormText>
 			</div>
 		</PetRegistrationForm>

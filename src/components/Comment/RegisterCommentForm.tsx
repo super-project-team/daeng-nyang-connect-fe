@@ -1,6 +1,11 @@
 import { useSelector } from 'react-redux';
 import { CommunityState } from '../../slice/communitySlice';
-import { ButtonWrap, Form, TextArea } from './RegisterCommentForm.style';
+import {
+	ButtonWrap,
+	Form,
+	NickNameText,
+	TextArea,
+} from './RegisterCommentForm.style';
 import { getBoard, postComment } from '../../api/communityApi';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
@@ -8,6 +13,7 @@ import { BoardDetail } from '../../types/BoardTypes';
 import { useQuery } from 'react-query';
 import labelMappings from '../../utils/communityLabel';
 import { useResponsive } from '../../hooks/useResponsive';
+import { myPageGet } from '../../api/authApi';
 
 interface RootState {
 	community: CommunityState;
@@ -62,9 +68,22 @@ const RegisterCommentForm = () => {
 
 	console.log('data', data);
 
+	const fetchMyPageData = async () => {
+		const response = await myPageGet();
+		console.log(response);
+
+		return response;
+	};
+
+	const { data: myPageData } = useQuery('myPage', fetchMyPageData);
+
+	// console.log('myPageData', myPageData);
+
 	return (
 		<Form onSubmit={fetchPostComment}>
-			<div>user 닉네임</div>
+			<NickNameText $isMobile={$isMobile}>
+				{myPageData ? myPageData?.nickname : '댕냥 커넥트'}
+			</NickNameText>
 			<TextArea
 				placeholder="댓글쓰기"
 				value={text}

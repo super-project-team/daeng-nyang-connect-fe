@@ -1,12 +1,13 @@
 import APIClient from './ApiClient';
 
-const MODIFY = '/review';
-const LIKE = '/review/like';
-const POST = '/review/post';
-const GET_ALL = '/review/getAll';
-const DELETE = '/review/delete';
-const COMMENT = '/review/comments';
-const COMMENT_DELETE = '/review/comments/delete';
+
+const MODIFY = '/modify';
+const LIKE = '/like';
+const POST = '/post';
+const GET_ALL = '/getAll';
+const DELETE = '/delete';
+const COMMENT = '/comments/post';
+const COMMENT_DELETE = 'comments/delete';
 const BASE_URL = 'http://3.35.16.126:8080';
 
 interface ReviewComment {
@@ -40,13 +41,8 @@ interface Comments {
 	userThumbnail: string;
 }
 
-// const reviewMockApi = new APIClient('/data');
+export const reviewApi = new APIClient(BASE_URL + '/api/review');
 
-// export const getProductsMock = async () => {
-// 	return await reviewMockApi.get('review.json');
-// };
-
-export const reviewApi = new APIClient(BASE_URL + '/api');
 
 export const getReviews = async (): Promise<ReviewData[]> => {
 	return await reviewApi.get(GET_ALL);

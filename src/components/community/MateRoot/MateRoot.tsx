@@ -34,9 +34,9 @@ const MateRoot = () => {
 	const fetchGetAllBoardSize = async () => {
 		const response = await getSize('mate');
 
-		setTotalBoardSize(response.size);
+		setTotalBoardSize(response?.size);
 
-		return response.size;
+		return response?.size;
 	};
 
 	const { data } = useQuery<Board[]>('mateAllBoard', fetchGetAllMateBoard);

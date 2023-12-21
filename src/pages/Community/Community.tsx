@@ -22,7 +22,9 @@ const Community = () => {
 	const { $isMobile } = useResponsive();
 
 	const scrollToTopHandler = () => {
-		window.scrollTo(0, 0);
+		const elementToScrollTo = document.body;
+
+		elementToScrollTo.scrollIntoView({ behavior: 'smooth' });
 	};
 
 	return (

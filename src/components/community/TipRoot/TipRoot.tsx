@@ -41,9 +41,9 @@ const TipRoot = () => {
 	const fetchGetAllBoardSize = async () => {
 		const response = await getSize('tips');
 
-		setTotalBoardSize(response.size);
+		setTotalBoardSize(response?.size);
 
-		return response.size;
+		return response?.size;
 	};
 
 	const { data, isLoading } = useQuery<Board[]>(

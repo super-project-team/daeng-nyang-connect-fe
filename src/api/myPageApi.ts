@@ -64,3 +64,11 @@ export const getMyBoard = async (): Promise<any> => {
 export const getMyLiked = async (): Promise<any> => {
 	return await authApi.get(GET_MY_LIKED);
 };
+
+const GET_LIKE = '/getMyLikeBoard';
+
+export const myPageApi = new APIClient(BASE_URL + '/api/myPage');
+
+export const getUserLikes = async (): Promise<any> => {
+	return await myPageApi.get(GET_LIKE);
+};

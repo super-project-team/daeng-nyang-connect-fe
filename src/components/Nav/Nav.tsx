@@ -16,7 +16,11 @@ import scrollNav from '../../utils/scrollNav';
 import { useResponsive } from '../../hooks/useResponsive';
 import { useState } from 'react';
 import MobileMenuDrawer from './MobileMenuDrawer/MobileMenuDrawer';
-import localToken from '../../api/LocalToken';
+import { useSelector } from 'react-redux';
+
+interface UserState {
+	user: { isLoggedIn: boolean; nickname: string; id: string };
+}
 
 const Nav = () => {
 	const location = useLocation();
@@ -24,21 +28,22 @@ const Nav = () => {
 	const navigate = useNavigate();
 	const { $isMaxWidth, $isMobile } = useResponsive();
 	const [mMenuIsOpen, setmMenuIsOpen] = useState(false);
+	const user = useSelector((state: UserState) => state.user);
 
 	const scrollProps = scrollNav() ? { $isHome: 'home' } : {};
-
-	const id = 'supercoding@test.com';
 
 	const mMenuClickHandler = () => {
 		setmMenuIsOpen((prev) => !prev);
 	};
 
 	const userIconClickHandler = () => {
-		id ? navigate(`/users/${id}`) : navigate('/login');
+		user.isLoggedIn ? navigate(`/users/${user.id}`) : navigate('/login');
 	};
 
 	const chatIconClickHandler = () => {
-		id ? navigate(`/users/${id}/chatBox`) : navigate('/login');
+		user.isLoggedIn
+			? navigate(`/users/${user.id}/chatBox`)
+			: navigate('/login');
 	};
 
 	const navText = !$isMobile ? 'nav' : 'm-nav';

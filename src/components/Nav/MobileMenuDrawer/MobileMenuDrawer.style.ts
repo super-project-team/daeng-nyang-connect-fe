@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+interface H3Props {
+	margin?: string;
+}
+
 export const MobileDrawerDiv = styled.div`
 	position: relative;
 	left: 30%;
@@ -8,8 +12,8 @@ export const MobileDrawerDiv = styled.div`
 	padding: 60px 30px 0;
 	background-color: #fff;
 `;
-export const MobileDrawerH3 = styled.h3`
-	margin-bottom: 16px;
+export const MobileDrawerH3 = styled.h3<H3Props>`
+	margin-bottom: ${(props) => (props.margin ? props.margin : '16px')};
 	font-weight: 400;
 	img {
 		width: 100px;
@@ -40,6 +44,9 @@ export const MobileDrawerFirstLi = styled.li`
 			font-size: 12px;
 			color: var(--color-teal);
 		}
+	}
+	p {
+		margin-left: 16px;
 	}
 `;
 export const UserImgDiv = styled.div`

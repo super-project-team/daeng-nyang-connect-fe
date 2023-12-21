@@ -12,9 +12,9 @@ import NewFamilySwiper from './NewFamilySwiper';
 import { useEffect, useState } from 'react';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-import { MOVE_TO_CHAT } from '../../../slice/chatSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { getNewFamily } from '../../../api/newFamilyApi';
+import { MOVE_TO_CHAT } from '../../../slice/chatSlice';
 
 interface AnimalData {
 	boardId: number;
@@ -36,7 +36,9 @@ interface AnimalData {
 	nickname: string;
 	userThumbnail: string;
 }
-
+interface UserState {
+	user: { isLoggedIn: boolean; nickname: string; id: string };
+}
 const NewFamilyDetail = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -47,6 +49,7 @@ const NewFamilyDetail = () => {
 	const dispatch = useDispatch();
 
 	const { petId } = useParams();
+	const user = useSelector((state: UserState) => state.user);
 
 	const [boardIdData, setBoardIdData] = useState<AnimalData | null>(null);
 
@@ -80,14 +83,20 @@ const NewFamilyDetail = () => {
 	};
 
 	const moveToChatHandler = () => {
-		const data = {
-			animalId: 6,
-			animalName: '나나',
-			age: '1년',
-			breed: '말티즈',
-		};
-		dispatch(MOVE_TO_CHAT(data));
-		navigate('');
+		if (user.isLoggedIn) {
+			dispatch(
+				MOVE_TO_CHAT({
+					animalId: boardIdData?.boardId,
+					animalName: boardIdData?.animalName,
+					age: boardIdData?.age,
+					breed: boardIdData?.breed,
+					images: boardIdData?.images,
+				}),
+			);
+			navigate(`/users/${user.id}/chatBox`);
+		} else {
+			navigate('/login');
+		}
 	};
 
 	return (

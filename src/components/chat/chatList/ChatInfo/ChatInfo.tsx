@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import { UserImgDiv } from '../../ChatContentsBox.style';
 import {
@@ -7,6 +8,7 @@ import {
 	ChatTime,
 	NoneReadCountEm,
 } from './ChatInfo.style';
+import { ROOM_ID_CHECK } from '../../../../slice/chatSlice';
 
 type BgProps = {
 	className?: string;
@@ -14,8 +16,18 @@ type BgProps = {
 
 const ChatInfo = ({ className }: BgProps) => {
 	const { $isMobile } = useResponsive();
+	const dispatch = useDispatch();
+
+	const changeRoomHandler = (roomId: string) => {
+		console.log(roomId);
+		dispatch(ROOM_ID_CHECK(roomId));
+	};
+
 	return (
-		<ChatListLi className={className} $isMobile={$isMobile}>
+		<ChatListLi
+			className={className}
+			$isMobile={$isMobile}
+			onClick={() => changeRoomHandler('roomId2')}>
 			<UserImgDiv size="36px">
 				<img src="/assets/community1.jpg" alt="" />
 			</UserImgDiv>

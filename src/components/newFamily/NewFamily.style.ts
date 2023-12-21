@@ -59,6 +59,7 @@ export const CategoryTitle = styled.div<ResponsiveProps>`
 		font-size: ${(props) =>
 			props.$isPc ? '28px' : props.$isTablet ? '24px' : '16px'};
 		font-weight: 400;
+		line-height: 34px;
 	}
 	& button {
 		width: ${(props) => (props.$isMobile ? '80px' : '150px')};
@@ -268,7 +269,10 @@ export const DetailImageBox = styled.div<ResponsiveProps>`
 	border-radius: 10px;
 	overflow: hidden;
 	& img {
+		width: 100%;
 		height: 100%;
+		object-fit: cover;
+		object-position: center center;
 	}
 	& svg {
 		position: absolute;
@@ -337,6 +341,7 @@ export const MoreDropdown = styled.ul<ResponsiveProps>`
 `;
 
 export const DetailTextBox = styled.div<ResponsiveProps>`
+	position: relative;
 	display: flex;
 	flex-direction: column;
 	gap: 15px;
@@ -452,7 +457,7 @@ export const PetRegistrationForm = styled.form<ResponsiveProps>`
 	}
 `;
 
-export const FormText = styled.form<ResponsiveProps>`
+export const FormText = styled.div<ResponsiveProps>`
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;

@@ -10,18 +10,20 @@ import {
 import { Link } from 'react-router-dom';
 import { IoCloseOutline } from 'react-icons/io5';
 import MobileMenuMyPage from './MobileMenuMyPage/MobileMenuMyPage';
+import { useSelector } from 'react-redux';
+import { UserState } from '../../../slice/userSlice';
 
 interface MobileDrawerProps {
 	setmMenuIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const MobileMenuDrawer = ({ setmMenuIsOpen }: MobileDrawerProps) => {
-	const token: string | null = localStorage.getItem('key');
+	const user = useSelector((state: UserState) => state);
 
 	return (
 		<MobileMenuBackdrop setmMenuIsOpen={setmMenuIsOpen}>
 			<MobileDrawerDiv>
-				{!token ? (
+				{user.isLoggedIn ? (
 					<ul style={{ marginBottom: '50px' }}>
 						<MobileDrawerH3>
 							<img src="/assets/LOGO(footer).svg" alt="" />

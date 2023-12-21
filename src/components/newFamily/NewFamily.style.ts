@@ -617,7 +617,7 @@ export const PetRegistrationForm = styled.form<ResponsiveProps>`
 	}
 
 	.register-title {
-		margin: ${(props) => (props.$isPc ? '70px 0 50px 0' : '50px 0 30px 0')};
+		margin: ${(props) => (props.$isPc ? '70px 0 50px 0' : '30px 0 30px 0')};
 	}
 
 	.register-close-btn {

@@ -246,6 +246,9 @@ export const CommentInputContainer = styled.form<ResponsiveProps>`
 		color: var(--color-light-salmon);
 		font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
 	}
+	.comment-btn {
+		width: 50px;
+	}
 `;
 export const ModifyDiv = styled.div<ResponsiveProps>`
 	position: absolute;

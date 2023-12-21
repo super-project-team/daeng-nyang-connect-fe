@@ -28,7 +28,7 @@ const AnimalInfo = () => {
 	const navigate = useNavigate();
 
 	const chatAnimalState = useSelector((state: any) => state.chat.chatAnimals);
-	console.log(chatAnimalState);
+
 	const reviewBtnHandler = () => {
 		const animalId = chatAnimalState[1].animalId;
 		navigate(`/adoptionReviews/reviewForm/${animalId}`);

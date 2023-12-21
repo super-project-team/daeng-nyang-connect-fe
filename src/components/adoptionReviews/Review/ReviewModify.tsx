@@ -43,6 +43,7 @@ const ReviewModify = ({
 
 	const modifyReviewHandler = () => {
 		detailReview();
+		setIsOpenModify((prev: boolean) => !prev);
 	};
 
 	return (

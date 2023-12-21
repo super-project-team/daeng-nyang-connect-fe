@@ -27,6 +27,7 @@ const ChatInput = () => {
 	const [clientData, setClientData] = useState<Client>();
 
 	const token = localToken.get();
+
 	// useEffect(() => {
 	// 	const socket = io(socketUrl, {
 	// 		transports: ['websocket', 'polling'],
@@ -58,79 +59,85 @@ const ChatInput = () => {
 	// }, []);
 
 	// Optional callback function to handle connection open event
-	const onConnect = () => {
-		try {
-			console.log('Connected to WebSocket');
-			const stompClient = new Client({
-				brokerURL: socketUrl,
-				debug: function (str) {
-					console.log(str);
-				},
-				onConnect: () => {
-					stompClient.subscribe('/topic', callback);
-				},
-			});
+	// const onConnect = () => {
+	// 	try {
+	// 		const token: any = localToken.get();
+	// 		console.log('Connected to WebSocket');
+	// 		const stompClient = new Client({
+	// 			brokerURL: socketUrl,
+	// 			connectHeaders: {
+	// 				access_token: token,
+	// 				// 다른 필요한 헤더들을 추가할 수 있습니다.
+	// 			},
+	// 			debug: function (str) {
+	// 				console.log(str);
+	// 			},
+	// 		});
+	// 		const headers: any = {
+	// 			access_token: token,
+	// 		};
 
-			const headers: any = {
-				access_token: localToken.get(),
-			};
-			stompClient.onConnect(headers);
-			stompClient.activate();
-			setClientData(stompClient);
-		} catch (err) {
-			console.error(err);
-		}
-	};
+	// 		// STOMP 연결 요청
+	// 		// stompClient.activate();
+	// 		stompClient.onConnect(headers);
+	// 		// stompClient.subscribe('/topic', callback);
+	// 		setClientData(stompClient);
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 	}
+	// };
 
-	const disConnect = () => {
-		if (clientData != null) {
-			if (clientData.connected) clientData.deactivate();
-		}
-	};
+	// const disConnect = () => {
+	// 	if (clientData != null) {
+	// 		if (clientData.connected) clientData.deactivate();
+	// 	}
+	// };
 
-	useEffect(() => {
-		onConnect();
-		return () => disConnect();
-	}, []);
+	// useEffect(() => {
+	// 	onConnect();
+	// }, []);
 
-	const callback = function (message: any) {
-		if (message.body) {
-			const msg = JSON.parse(message.body);
-			setChatList((chats) => [...chats, msg]);
-		}
-	};
+	// const callback = function (message: any) {
+	// 	if (message.body) {
+	// 		const msg = JSON.parse(message.body);
+	// 		setChatList((chats) => [...chats, msg]);
+	// 	}
+	// };
 
-	const sendChat = () => {
-		if (!clientData?.connected) return;
+	// const sendChat = () => {
+	// 	if (!clientData?.connected) return;
 
-		clientData?.publish({
-			destination: '/topic',
-			body: JSON.stringify({
-				type: '',
-				sender: 1,
-				channelId: '1',
-				data: chat,
-			}),
-		});
+	// 	clientData?.publish({
+	// 		destination: '/topic',
+	// 		body: JSON.stringify({
+	// 			type: '',
+	// 			sender: 1,
+	// 			channelId: '1',
+	// 			data: chat,
+	// 		}),
+	// 	});
 
-		setChat('');
-	};
+	// 	setChat('');
+	// };
 
-	const textAreaHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-		setChat(e.target.value);
-	};
+	// const textAreaHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
+	// 	setChat(e.target.value);
+	// };
 
 	return (
 		<ChatInputDiv $isMobile={$isMobile}>
 			<FiPlusCircle className="plus-btn" />
 			<TextArea
 				placeholder="메시지를 입력하세요."
-				onChange={textAreaHandler}
-				onKeyDown={(e) => {
-					if (e.keyCode === 13) sendChat();
-				}}
+				// onChange={textAreaHandler}
+				// onKeyDown={(e) => {
+				// 	if (e.keyCode === 13) sendChat();
+				// }}
 			/>
-			<SendBtn $isMobile={$isMobile} onClick={sendChat}>
+			<SendBtn
+				$isMobile={$isMobile}
+				//  onClick={sendChat}
+			>
 				전송
 			</SendBtn>
 		</ChatInputDiv>

@@ -14,6 +14,8 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { deleteReview, getDetailReview } from '../../../api/reviewApi';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReviewModify from './ReviewModify';
+import { useSelector } from 'react-redux';
+import { UserState } from '../../../slice/userSlice';
 
 const Review = () => {
 	const params = useParams();
@@ -23,6 +25,8 @@ const Review = () => {
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 	const [isOpenModify, setIsOpenModify] = useState(false);
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
+
+	const user = useSelector((state: UserState) => state);
 
 	const { data: detailReview } = useQuery('getDetailReview', () =>
 		getDetailReview(animalId),
@@ -63,99 +67,103 @@ const Review = () => {
 	};
 
 	return (
-		<NewFamilyDetailContainer
-			$isMobile={$isMobile}
-			$isTablet={$isTablet}
-			$isPc={$isPc}
-			$isMaxWidth={$isMaxWidth}>
-			<UserThumbnail
-				$isMobile={$isMobile}
-				$isTablet={$isTablet}
-				$isPc={$isPc}
-				$isMaxWidth={$isMaxWidth}
-				className="user-box-mobile">
-				<div>
-					<img src="/assets/animal2.jpg" alt="" />
-				</div>
-				<h5>iamzipsa</h5>
-				<RiMore2Line
-					color="var(--color-light-salmon)"
-					size={getMoreBtnSize()}
-					onClick={toggleDropdown}
-				/>
-				{isDropdownVisible && (
-					<MoreDropdown
-						$isMobile={$isMobile}
-						$isTablet={$isTablet}
-						$isPc={$isPc}
-						$isMaxWidth={$isMaxWidth}>
-						<li onClick={modifyClickHandler}>수정하기</li>
-						<li onClick={deleteClickHandler}>삭제하기</li>
-					</MoreDropdown>
-				)}
-			</UserThumbnail>
-			<DetailImageBox
-				$isMobile={$isMobile}
-				$isTablet={$isTablet}
-				$isPc={$isPc}
-				$isMaxWidth={$isMaxWidth}>
-				<img src={detailReview && detailReview[0].images[0]} alt="" />
-			</DetailImageBox>
-			<ReviewTextBox>
-				<UserThumbnail
-					$isMobile={$isMobile}
-					$isTablet={$isTablet}
-					$isPc={$isPc}
-					$isMaxWidth={$isMaxWidth}
-					className="user-box-pc">
-					<div>
-						{detailReview && detailReview?.length > 0 ? (
-							<img src={detailReview[0].userThumbnail} alt="" />
-						) : null}
-					</div>
-					<h5>{detailReview && detailReview[0].nickname}</h5>
-					<RiMore2Line
-						color="var(--color-light-salmon"
-						size={30}
-						onClick={toggleDropdown}
-					/>
-					{isDropdownVisible && (
-						<MoreDropdown
-							$isMobile={$isMobile}
-							$isTablet={$isTablet}
-							$isPc={$isPc}
-							$isMaxWidth={$isMaxWidth}>
-							<li onClick={modifyClickHandler}>수정하기</li>
-							<li onClick={deleteClickHandler}>삭제하기</li>
-						</MoreDropdown>
-					)}
-				</UserThumbnail>
-				<DetailTextBox
+		<>
+			{detailReview && detailReview.length > 0 && (
+				<NewFamilyDetailContainer
 					$isMobile={$isMobile}
 					$isTablet={$isTablet}
 					$isPc={$isPc}
 					$isMaxWidth={$isMaxWidth}>
-					{isOpenModify && detailReview && (
-						<ReviewModify
-							setIsOpenModify={setIsOpenModify}
-							adoptedAnimalName={detailReview[0].adoptedAnimalName}
-							age={detailReview[0].age}
-							reviewId={detailReview[0].boardId}
-							images={detailReview[0].images}
-						/>
-					)}
-					<p>이름 : {detailReview && detailReview[0].adoptedAnimalName}</p>
-					<p>나이 : {detailReview && detailReview[0].age}</p>
-					{/* <p>입양 시기: ??</p> */}
-					<p style={{ minHeight: '300px' }}>
-						{detailReview && detailReview[0].textReview}
-					</p>
-				</DetailTextBox>
-				{detailReview && (
-					<ReviewCommentBox reviewId={detailReview[0].boardId} />
-				)}
-			</ReviewTextBox>
-		</NewFamilyDetailContainer>
+					<UserThumbnail
+						$isMobile={$isMobile}
+						$isTablet={$isTablet}
+						$isPc={$isPc}
+						$isMaxWidth={$isMaxWidth}
+						className="user-box-mobile">
+						<div>
+							<img src={detailReview[0].userThumbnail} alt="" />
+						</div>
+						<h5>iamzipsa</h5>
+						{user.nickname === detailReview[0].nickname && (
+							<RiMore2Line
+								color="var(--color-light-salmon)"
+								size={getMoreBtnSize()}
+								onClick={toggleDropdown}
+							/>
+						)}
+						{isDropdownVisible && (
+							<MoreDropdown
+								$isMobile={$isMobile}
+								$isTablet={$isTablet}
+								$isPc={$isPc}
+								$isMaxWidth={$isMaxWidth}>
+								<li onClick={modifyClickHandler}>수정하기</li>
+								<li onClick={deleteClickHandler}>삭제하기</li>
+							</MoreDropdown>
+						)}
+					</UserThumbnail>
+					<DetailImageBox
+						$isMobile={$isMobile}
+						$isTablet={$isTablet}
+						$isPc={$isPc}
+						$isMaxWidth={$isMaxWidth}>
+						<img src={detailReview[0].images[0]} alt="" />
+					</DetailImageBox>
+					<ReviewTextBox>
+						<UserThumbnail
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}
+							className="user-box-pc">
+							<div>
+								{detailReview?.length > 0 ? (
+									<img src={detailReview[0].userThumbnail} alt="" />
+								) : null}
+							</div>
+							<h5>{detailReview[0].nickname}</h5>
+							{user.nickname === detailReview[0].nickname && (
+								<RiMore2Line
+									color="var(--color-light-salmon"
+									size={30}
+									onClick={toggleDropdown}
+								/>
+							)}
+							{isDropdownVisible && (
+								<MoreDropdown
+									$isMobile={$isMobile}
+									$isTablet={$isTablet}
+									$isPc={$isPc}
+									$isMaxWidth={$isMaxWidth}>
+									<li onClick={modifyClickHandler}>수정하기</li>
+									<li onClick={deleteClickHandler}>삭제하기</li>
+								</MoreDropdown>
+							)}
+						</UserThumbnail>
+						<DetailTextBox
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}>
+							{isOpenModify && (
+								<ReviewModify
+									setIsOpenModify={setIsOpenModify}
+									adoptedAnimalName={detailReview[0].adoptedAnimalName}
+									age={detailReview[0].age}
+									reviewId={detailReview[0].boardId}
+									images={detailReview[0].images}
+								/>
+							)}
+							<p>이름 : {detailReview[0].adoptedAnimalName}</p>
+							<p>나이 : {detailReview[0].age}</p>
+							{/* <p>입양 시기: ??</p> */}
+							<p style={{ minHeight: '300px' }}>{detailReview[0].textReview}</p>
+						</DetailTextBox>
+						{<ReviewCommentBox reviewId={detailReview[0].boardId} />}
+					</ReviewTextBox>
+				</NewFamilyDetailContainer>
+			)}
+		</>
 	);
 };
 

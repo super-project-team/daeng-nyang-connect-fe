@@ -269,7 +269,10 @@ export const DetailImageBox = styled.div<ResponsiveProps>`
 	border-radius: 10px;
 	overflow: hidden;
 	& img {
+		width: 100%;
 		height: 100%;
+		object-fit: cover;
+		object-position: center center;
 	}
 	& svg {
 		position: absolute;

@@ -11,9 +11,11 @@ import {
 	useQueryClient,
 } from 'react-query';
 import { getReviews, likeReview } from '../../../api/reviewApi';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { PUSH_REVIEW_ITEM } from '../../../slice/reviewSlice';
 import { getUserLikes } from '../../../api/myPageApi';
+import { UserState } from '../../../slice/userSlice';
+import LoginPopup from '../LoginPopup/LoginPopup';
 
 interface ReviewItem {
 	adoptedAnimalName: string;
@@ -35,6 +37,7 @@ const ReviewList = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const queryClient = useQueryClient();
+	const user = useSelector((state: UserState) => state);
 
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 
@@ -49,6 +52,7 @@ const ReviewList = () => {
 		userLikes.filter((item: LikedItems) => item.boardName === 'Review');
 
 	const [likeState, setLikeState] = useState<{ [key: number]: boolean }>({});
+	const [loginPopup, setLoginPopup] = useState(false);
 
 	useEffect(() => {
 		if (reviewLikes) {
@@ -71,11 +75,14 @@ const ReviewList = () => {
 	);
 
 	const clickLikeHandler = (itemId: number) => {
-		try {
-			setLike(itemId);
-			setLikeState((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
-		} catch (err) {
-			console.error(err);
+		if (!user.isLoggedIn) setLoginPopup((prev) => !prev);
+		else {
+			try {
+				setLike(itemId);
+				setLikeState((prev) => ({ ...prev, [itemId]: !prev[itemId] }));
+			} catch (err) {
+				console.error(err);
+			}
 		}
 	};
 
@@ -83,47 +90,50 @@ const ReviewList = () => {
 		navigate(`/adoptionReviews/review/${animalId}`);
 	};
 	return (
-		<ReviewsList
-			$isMobile={$isMobile}
-			$isTablet={$isTablet}
-			$isPc={$isPc}
-			$isMaxWidth={$isMaxWidth}>
-			{items &&
-				items.map((item) => (
-					<ReviewBox
-						key={item.boardId}
-						$isMobile={$isMobile}
-						$isTablet={$isTablet}
-						$isPc={$isPc}
-						$isMaxWidth={$isMaxWidth}
-						onClick={() => moveToReviewDetailHandler(item.animalId)}>
-						<div>
-							<img src={item.images[0]} alt="" />
-						</div>
-						<div>
+		<>
+			{loginPopup && <LoginPopup setLoginPopup={setLoginPopup} />}
+			<ReviewsList
+				$isMobile={$isMobile}
+				$isTablet={$isTablet}
+				$isPc={$isPc}
+				$isMaxWidth={$isMaxWidth}>
+				{items &&
+					items.map((item) => (
+						<ReviewBox
+							key={item.boardId}
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}
+							onClick={() => moveToReviewDetailHandler(item.animalId)}>
 							<div>
-								<p>이름 : {item.adoptedAnimalName}</p>
-								<p>{item.textReview}</p>
+								<img src={item.images[0]} alt="" />
 							</div>
-							<ButtonBox>
-								<GoHeartFill
-									color={
-										likeState[item.boardId]
-											? 'var(--color-light-salmon)'
-											: 'var(--color-light-blue)'
-									}
-									size={30}
-									onClick={(e) => {
-										e.stopPropagation();
-										clickLikeHandler(item.boardId);
-									}}
-								/>
-								<button>자세히 보기</button>
-							</ButtonBox>
-						</div>
-					</ReviewBox>
-				))}
-		</ReviewsList>
+							<div>
+								<div>
+									<p>이름 : {item.adoptedAnimalName}</p>
+									<p>{item.textReview}</p>
+								</div>
+								<ButtonBox>
+									<GoHeartFill
+										color={
+											likeState[item.boardId]
+												? 'var(--color-light-salmon)'
+												: 'var(--color-light-blue)'
+										}
+										size={30}
+										onClick={(e) => {
+											e.stopPropagation();
+											clickLikeHandler(item.boardId);
+										}}
+									/>
+									<button>자세히 보기</button>
+								</ButtonBox>
+							</div>
+						</ReviewBox>
+					))}
+			</ReviewsList>
+		</>
 	);
 };
 

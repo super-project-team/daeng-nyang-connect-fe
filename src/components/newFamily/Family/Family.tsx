@@ -76,6 +76,24 @@ const Family = () => {
 		);
 	};
 
+	//필터적용핸들러
+	const clickSearchButtonHandler = () => {
+		console.log('Clicked Search Button');
+		console.log('Filters:', filterKind, filterCity, filterAdoptionStatus);
+
+		// Close the filter window only for mobile and tablet
+		if ($isMobile || $isTablet) {
+			setIsFilterVisible(false);
+		}
+
+		// Update the applied filters
+		setAppliedFilters({
+			kind: filterKind,
+			city: filterCity,
+			adoptionStatus: filterAdoptionStatus,
+		});
+	};
+
 	return (
 		<FindFamily
 			$isMobile={$isMobile}
@@ -218,23 +236,7 @@ const Family = () => {
 									<option value="제주">제주</option>
 								</select>
 							</div>
-							<button
-								onClick={() => {
-									console.log('Clicked Search Button');
-									console.log(
-										'Filters:',
-										filterKind,
-										filterCity,
-										filterAdoptionStatus,
-									);
-									setAppliedFilters({
-										kind: filterKind,
-										city: filterCity,
-										adoptionStatus: filterAdoptionStatus,
-									});
-								}}>
-								검색하기
-							</button>
+							<button onClick={clickSearchButtonHandler}>검색하기</button>
 						</div>
 					</FilterItems>
 				)}

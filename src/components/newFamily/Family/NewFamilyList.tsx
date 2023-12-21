@@ -54,7 +54,6 @@ const NewFamilyList: React.FC<ResponsiveProps> = ({
 	const [bookmarkState, setBookmarkState] = useState<{
 		[key: number]: boolean;
 	}>({});
-	const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
 	const [currentPage, setCurrentPage] = useState(1);
 
 	const itemsPerPage = 12;

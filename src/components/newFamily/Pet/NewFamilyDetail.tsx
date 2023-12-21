@@ -15,7 +15,7 @@ import NewFamilySwiper from './NewFamilySwiper';
 import { useEffect, useState } from 'react';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { MOVE_TO_CHAT } from '../../../slice/chatSlice';
 import {
 	deleteAnimal,
@@ -78,6 +78,7 @@ const NewFamilyDetail = () => {
 	const [bookmarkState, setBookmarkState] = useState<{
 		[key: number]: boolean;
 	}>({});
+	const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
 
 	//디테일정보불러오기(해당하는 item만)
 	useEffect(() => {
@@ -594,11 +595,14 @@ const NewFamilyDetail = () => {
 								/>
 							</div>
 							<h5>{boardIdData?.nickname}</h5>
-							<RiMore2Line
-								color="var(--color-light-salmon"
-								size={30}
-								onClick={toggleDropdown}
-							/>
+							{isLoggedIn && (
+								<RiMore2Line
+									color="var(--color-light-salmon"
+									size={30}
+									onClick={toggleDropdown}
+								/>
+							)}
+
 							{isDropdownVisible && (
 								<MoreDropdown
 									$isMobile={$isMobile}

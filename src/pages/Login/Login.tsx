@@ -13,6 +13,7 @@ import {
 	LoginTitleDiv,
 	LoginWrapper,
 	Logo,
+	NaverLoginButton,
 	Paragraph,
 	ParagraphLogin,
 	SignUpButton,
@@ -211,6 +212,14 @@ const Login = () => {
 							이메일 또는 비밀번호가 일치하지 않습니다.
 						</ParagraphLogin>
 					)}
+					<NaverLoginButton
+						onClick={NaverLoginHandler}
+						$isMobile={$isMobile}
+						$isTablet={$isTablet}
+						$isPc={$isPc}
+						$isMaxWidth={$isMaxWidth}>
+						네이버 로그인
+					</NaverLoginButton>
 				</LoginForm>
 				<SignUpDiv>
 					<SignUpButton onClick={onIdFindClick}>아이디 찾기</SignUpButton>
@@ -219,26 +228,6 @@ const Login = () => {
 					</SignUpButton>
 					<SignUpButton onClick={onRegisterClick}>회원가입</SignUpButton>
 				</SignUpDiv>
-
-				<ButtonWrapper>
-					<Button>
-						<Image
-							src="/assets/icons/icon-kakao.png"
-							alt="kakao-icon"
-							onClick={kakaoLoginHandler}
-						/>
-					</Button>
-					<Button>
-						<Image
-							src="/assets/icons/icon-naver.png"
-							alt="twitter-icon"
-							onClick={NaverLoginHandler}
-						/>
-					</Button>
-					<Button>
-						<Image src="/assets/icons/icon-google.svg" alt="google-icon" />
-					</Button>
-				</ButtonWrapper>
 			</LoginDiv>
 		</LoginWrapper>
 	);

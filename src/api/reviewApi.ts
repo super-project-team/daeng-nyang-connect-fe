@@ -1,6 +1,5 @@
 import APIClient from './ApiClient';
 
-const REGISTER = '/post';
 const MODIFY = '/modify';
 const LIKE = '/like';
 const POST = '/post';
@@ -21,12 +20,6 @@ interface ReviewData {
 	textReview: string;
 	age: number;
 }
-
-// const reviewMockApi = new APIClient('/data');
-
-// export const getProductsMock = async () => {
-// 	return await reviewMockApi.get('review.json');
-// };
 
 export const reviewApi = new APIClient(BASE_URL + '/api/review');
 

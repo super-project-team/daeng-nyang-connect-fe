@@ -98,10 +98,6 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 
 	const navigate = useNavigate();
 
-	useEffect(() => {
-		console.log('communityState', communityState);
-	}, []);
-
 	const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
 		let updatedValue = value;
@@ -181,8 +177,6 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 		};
 		const response = await postBoard(boardType, postData);
 
-		console.log('postData', postData);
-
 		navigate(`/community/${urlType}`);
 
 		dispatch(SET_GET_ALL_BOARD(data));
@@ -226,9 +220,6 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 	const itemsPerPage = displayLabel === '댕냥 꿀팁' ? 20 : 12;
 	const { currentPage } = usePagination(totalBoardSize, itemsPerPage);
 
-	console.log('data', data);
-	console.log('inputValue', inputValue);
-
 	const fetchGetDetailBoard = async (): Promise<BoardDetail> => {
 		const response = await getBoard(boardType, id);
 
@@ -270,8 +261,6 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 		detailRefetch();
 		document.body.style.overflow = 'visible';
 	};
-
-	console.log('detailData', detailData);
 
 	useEffect(() => {
 		fetchGetAllBoardSize();

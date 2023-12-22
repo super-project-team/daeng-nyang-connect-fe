@@ -19,7 +19,7 @@ export interface CommunityState {
 	subCategory: string;
 	isSearch: boolean;
 	searchText: string;
-
+	isLoading: boolean;
 	boardAll: Board[];
 	isModifyPopUp: boolean;
 }
@@ -42,7 +42,7 @@ const initialState: CommunityState = {
 	subCategory: '',
 	isSearch: false,
 	searchText: '',
-
+	isLoading: false,
 	boardAll: [],
 	isModifyPopUp: false,
 };
@@ -111,6 +111,9 @@ const communitySlice = createSlice({
 		SET_IS_SEARCH(state, action) {
 			state.isSearch = action.payload;
 		},
+		SET_IS_LOADING(state, action) {
+			state.isLoading = action.payload;
+		},
 	},
 });
 
@@ -127,6 +130,7 @@ export const {
 	SET_MODIFY_POPUP,
 	SET_SEARCH_TEXT,
 	SET_IS_SEARCH,
+	SET_IS_LOADING,
 } = communitySlice.actions;
 
 export default communitySlice.reducer;

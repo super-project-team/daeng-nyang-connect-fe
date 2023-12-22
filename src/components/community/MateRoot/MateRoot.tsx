@@ -7,8 +7,8 @@ import { getAllBoard, getSize } from '../../../api/communityApi';
 import { Board } from '../../../types/BoardTypes';
 import { useQuery } from 'react-query';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { CommunityState } from '../../../slice/communitySlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { CommunityState, SET_IS_LOADING } from '../../../slice/communitySlice';
 import useSearchData from '../../../hooks/useSearchData';
 
 interface RootState {
@@ -18,6 +18,8 @@ interface RootState {
 const MateRoot = () => {
 	const [filteredData, setFilteredData] = useState<Board[]>([]);
 	const [totalBoardSize, setTotalBoardSize] = useState(0);
+
+	const dispatch = useDispatch();
 
 	const category = useSelector(
 		(state: RootState) => state.community.subCategory,
@@ -39,7 +41,10 @@ const MateRoot = () => {
 		return response?.size;
 	};
 
-	const { data } = useQuery<Board[]>('mateAllBoard', fetchGetAllMateBoard);
+	const { data, isLoading } = useQuery<Board[]>(
+		'mateAllBoard',
+		fetchGetAllMateBoard,
+	);
 
 	const itemsPerPage = 12;
 	const { currentPage, pageRange, handlePageClick, handlePrevNextClick } =
@@ -63,6 +68,10 @@ const MateRoot = () => {
 	}, [data, category]);
 
 	const { searchData, isSearch } = useSearchData();
+
+	useEffect(() => {
+		dispatch(SET_IS_LOADING(isLoading));
+	}, [isLoading]);
 
 	return (
 		<>

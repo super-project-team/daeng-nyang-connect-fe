@@ -33,6 +33,13 @@ export const myPageGet = async (): Promise<any> => {
 	});
 };
 
+export const changeImg = async (body: File): Promise<any> => {
+	const formData = new FormData();
+	formData.append('multipartFile', body);
+
+	return await authApi.put(CHANGE_IMG, formData);
+};
+
 export const changeInfo = async (body: string): Promise<any> => {
 	return await authApi.put(CHANGE_INFO + `?info=${body}`);
 };

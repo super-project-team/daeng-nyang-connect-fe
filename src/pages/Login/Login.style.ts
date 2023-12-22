@@ -72,10 +72,28 @@ export const LoginButton = styled.button<ResponsiveProps>`
 	font-weight: 400;
 	border-radius: 10px;
 	box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.25);
+	margin-bottom: 10px;
 
 	&:hover {
 		cursor: pointer;
 		background-color: rgba(227, 155, 166, 1);
+	}
+`;
+
+export const NaverLoginButton = styled.button<ResponsiveProps>`
+	background-color: rgba(0, 199, 60, 0.7);
+	color: white;
+	padding: 8px, 52px, 8px, 52px;
+	width: ${(props) => (props.$isMobile ? '70%' : '100%')};
+	height: 42px;
+	font-size: ${(props) => (props.$isMobile ? '16px' : '20px')};
+	font-weight: 400;
+	border-radius: 10px;
+	box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.25);
+
+	&:hover {
+		cursor: pointer;
+		background-color: rgba(0, 199, 60, 0.8);
 	}
 `;
 

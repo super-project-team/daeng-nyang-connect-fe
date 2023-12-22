@@ -30,7 +30,7 @@ import { useResponsive } from '../../../hooks/useResponsive';
 import InfoChangeModal from '../InfoChangeModal/InfoChangeModal';
 import NicknameChangeModal from '../NicknameChangeModal/NicknameChangeModal';
 import PasswordChangeModal from '../PasswordChangeModal/PasswordChangeModal';
-import { myPageGet } from '../../../api/myPageApi';
+import { changeImg, myPageGet } from '../../../api/myPageApi';
 
 const UserInfo = () => {
 	interface AddressChangeModalProps {
@@ -143,41 +143,33 @@ const UserInfo = () => {
 		}
 	};
 
-	// const saveImgFile = async () => {
-	// 	try {
-	// 		const selectedFile = imgRef.current?.files?.[0];
-	// 		if (!selectedFile) {
-	// 			console.log('파일이 선택되지 않았습니다.');
-	// 			return; // 파일이 선택되지 않은 경우 함수 종료
-	// 		}
+	const saveImgFile = async () => {
+		try {
+			const selectedFile = imgRef.current?.files?.[0];
+			if (!selectedFile) {
+				console.log('파일이 선택되지 않았습니다.');
+				return; // 파일이 선택되지 않은 경우 함수 종료
+			}
 
-	// 		if (!(selectedFile instanceof Blob)) {
-	// 			console.error('선택된 파일이 유효한 파일 또는 Blob 객체가 아닙니다.');
-	// 			return; // 유효하지 않은 파일인 경우 함수 종료
-	// 		}
-	// 		const formData = new FormData();
-	// 		formData.append('file', selectedFile);
-	// 		const response = await uploadUser(formData);
-	// 		console.log('이미지 업로드 후 반환되는 URl값:', response);
+			if (!(selectedFile instanceof Blob)) {
+				console.error('선택된 파일이 유효한 파일 또는 Blob 객체가 아닙니다.');
+				return; // 유효하지 않은 파일인 경우 함수 종료
+			}
 
-	// 		setUserInfo((prevUserInfo) => ({
-	// 			...prevUserInfo,
-	// 			profileImg: response,
-	// 		}));
+			// 서버로 이미지 업로드 요청을 보냄
+			const response = await changeImg(selectedFile);
+			console.log(response); // 업로드 성공 시 서버 응답을 출력
 
-	// 		console.log('유저 스테이트에 이미지 url 업로드 되는지 체크:', userInfo);
-	// 		const putResponse = await putMyInfo(userInfo);
-	// 		if (!response) return;
-
-	// 		const reader = new FileReader();
-	// 		reader.readAsDataURL(selectedFile);
-	// 		reader.onloadend = () => {
-	// 			setImgFile(reader.result);
-	// 		};
-	// 	} catch (error) {
-	// 		console.error('이미지 업로드 중 오류 발생:', error.message);
-	// 	}
-	// };
+			// 성공적으로 이미지를 업로드했으면 사용자 정보를 다시 가져와서 화면을 갱신
+			getMyInfo();
+		} catch (error) {
+			if (error instanceof Error) {
+				console.error('이미지 업로드 중 오류 발생:', error.message);
+			} else {
+				console.error('이미지 업로드 중 알 수 없는 오류 발생');
+			}
+		}
+	};
 
 	return (
 		<UserWrapper>
@@ -202,7 +194,7 @@ const UserInfo = () => {
 										type="file"
 										accept="image/jpg,image/png,image/jpeg"
 										id="profileImg"
-										// onChange={saveImgFile}
+										onChange={saveImgFile}
 										ref={imgRef as React.RefObject<HTMLInputElement>}
 									/>
 								</ProfileImgDiv>

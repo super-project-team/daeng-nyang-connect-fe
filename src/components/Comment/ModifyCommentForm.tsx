@@ -13,8 +13,8 @@ import { BoardComment } from '../../types/BoardTypes';
 
 import labelMappings from '../../utils/communityLabel';
 import { useResponsive } from '../../hooks/useResponsive';
-import { myPageGet } from '../../api/authApi';
 import { useQuery } from 'react-query';
+import { myPageGet } from '../../api/myPageApi';
 
 interface RootState {
 	community: CommunityState;

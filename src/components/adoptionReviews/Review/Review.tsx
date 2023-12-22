@@ -27,11 +27,9 @@ const Review = () => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 
 	const user = useSelector((state: UserState) => state);
-
 	const { data: detailReview } = useQuery('getDetailReview', () =>
 		getDetailReview(animalId),
 	);
-
 	const { mutate: deleteMutate } = useMutation(
 		async (boardId: number) => {
 			return deleteReview(boardId);
@@ -42,7 +40,7 @@ const Review = () => {
 			},
 		},
 	);
-
+	console.log(user.nickname);
 	// console.log(detailReview[0].boardId);
 
 	const toggleDropdown = () => {

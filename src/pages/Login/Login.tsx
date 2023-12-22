@@ -106,7 +106,6 @@ const Login = () => {
 				}
 
 				const { access_token, nickname, id } = response;
-
 				const saveToken = (token: string) => {
 					localToken.save(token);
 				};

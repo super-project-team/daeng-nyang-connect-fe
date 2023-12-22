@@ -50,15 +50,12 @@ const NewFamilyList: React.FC<ResponsiveProps> = ({
 	filterAdoptionStatus,
 }) => {
 	const navigate = useNavigate();
-<<<<<<< HEAD
 
-	const { data: items } = useQuery<Item[], unknown, Item[]>(
+	const { data: items, refetch } = useQuery<Item[], unknown, Item[]>(
 		['getNewFamily'],
 		getNewFamily,
 	);
 
-=======
->>>>>>> 80862cb8200fbfc4275a760bcde3d04d24aab748
 	const [bookmarkState, setBookmarkState] = useState<{
 		[key: number]: boolean;
 	}>({});
@@ -68,12 +65,6 @@ const NewFamilyList: React.FC<ResponsiveProps> = ({
 	const itemsPerPage = 12;
 	const startIndex = (currentPage - 1) * itemsPerPage;
 	const endIndex = startIndex + itemsPerPage;
-
-	//전체 데이터 조희
-	const { data: items, refetch } = useQuery<Item[], unknown, Item[]>(
-		['animals'],
-		getNewFamily,
-	);
 
 	//북마크된 동물정보 불러오기(-> UI에 반영)
 	useEffect(() => {

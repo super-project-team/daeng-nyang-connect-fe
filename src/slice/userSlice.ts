@@ -25,6 +25,7 @@ const userSlice = createSlice({
 			state.isLoggedIn = isLoggedIn;
 			state.nickname = nickname;
 			state.id = id;
+			return state;
 		},
 		LOGOUT_USER(state) {
 			state.isLoggedIn = false;

@@ -16,10 +16,6 @@ import { useEffect, useState } from 'react';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-<<<<<<< HEAD
-import { getNewFamily } from '../../../api/newFamilyApi';
-import { MOVE_TO_CHAT } from '../../../slice/chatSlice';
-=======
 import { MOVE_TO_CHAT } from '../../../slice/chatSlice';
 import {
 	deleteAnimal,
@@ -30,7 +26,6 @@ import {
 } from '../../../api/newFamilyApi';
 import { IoCloseOutline } from 'react-icons/io5';
 import { PiPawPrintFill } from 'react-icons/pi';
->>>>>>> 80862cb8200fbfc4275a760bcde3d04d24aab748
 
 interface AnimalData {
 	boardId: number;
@@ -64,9 +59,7 @@ const NewFamilyDetail = () => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 	const dispatch = useDispatch();
 	const { petId } = useParams();
-<<<<<<< HEAD
 	const user = useSelector((state: UserState) => state.user);
-=======
 	const [formData, setFormData] = useState({
 		animalName: '',
 		kind: '',
@@ -83,7 +76,6 @@ const NewFamilyDetail = () => {
 		textReason: '',
 		textEtc: '',
 	});
->>>>>>> 80862cb8200fbfc4275a760bcde3d04d24aab748
 
 	const [boardIdData, setBoardIdData] = useState<AnimalData | null>(null);
 	const [bookmarkState, setBookmarkState] = useState<{

@@ -38,9 +38,10 @@ const Liked: React.FC = () => {
 			<ListWrapper>
 				{loading ? (
 					<p>Loading...</p>
-				) : likedItems.length === 0 ? (
+				) : likedItems && likedItems.length === 0 ? (
 					<p>좋아요한 개시물이 없습니다.</p>
 				) : (
+					likedItems &&
 					likedItems.map((item) => (
 						<ListDiv
 							key={item.boardId || item.tipsBoardId || item.myPetBoardId}

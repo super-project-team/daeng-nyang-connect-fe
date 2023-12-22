@@ -19,18 +19,7 @@ interface ChangeAddressRequestBody {
 }
 
 export const myPageGet = async (): Promise<any> => {
-	return await authApi.get(MY_PAGE, {
-		email: '',
-		name: '',
-		nickname: '',
-		mobile: '',
-		city: '',
-		info: '',
-		img: '',
-		gender: '',
-		town: '',
-		experience: '',
-	});
+	return await authApi.get(MY_PAGE);
 };
 
 export const changeImg = async (body: File): Promise<any> => {

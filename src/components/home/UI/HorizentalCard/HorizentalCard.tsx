@@ -11,6 +11,7 @@ import {
 type HorizentalCardProps = {
 	$isMobile?: boolean;
 	review: {
+		animalId: number;
 		boardId: number;
 		adoptedAnimalName: string;
 		images: string[];
@@ -23,7 +24,7 @@ const HorizentalCard = ({ $isMobile, review }: HorizentalCardProps) => {
 	const navigate = useNavigate();
 
 	const moveToDetailHandler = () => {
-		navigate(`/adoptionReviews/review/${review.boardId}`);
+		navigate(`/adoptionReviews/review/${review.animalId}`);
 	};
 
 	return (

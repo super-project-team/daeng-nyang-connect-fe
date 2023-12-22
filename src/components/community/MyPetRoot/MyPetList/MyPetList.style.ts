@@ -15,6 +15,9 @@ export const MyPetLi = styled.li<NavOptionProps>`
 
 	& img {
 		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center center;
 		border-radius: 8px;
 		transition: transform 0.7s ease;
 		cursor: pointer;

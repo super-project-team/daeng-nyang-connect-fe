@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
 	DetailImageBox,
 	DetailTextBox,
@@ -16,6 +16,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ReviewModify from './ReviewModify';
 import { useSelector } from 'react-redux';
 import { UserState } from '../../../slice/userSlice';
+import { myPageGet } from '../../../api/myPageApi';
 
 const Review = () => {
 	const params = useParams();
@@ -26,10 +27,11 @@ const Review = () => {
 	const [isOpenModify, setIsOpenModify] = useState(false);
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 
-	const user = useSelector((state: UserState) => state);
 	const { data: detailReview } = useQuery('getDetailReview', () =>
 		getDetailReview(animalId),
 	);
+	const user = useSelector((state: any) => state.user);
+
 	const { mutate: deleteMutate } = useMutation(
 		async (boardId: number) => {
 			return deleteReview(boardId);
@@ -40,7 +42,7 @@ const Review = () => {
 			},
 		},
 	);
-	console.log(user.nickname);
+
 	// console.log(detailReview[0].boardId);
 
 	const toggleDropdown = () => {
@@ -57,7 +59,6 @@ const Review = () => {
 		setIsOpenModify((prev) => !prev);
 		setIsDropdownVisible((prev) => !prev);
 	};
-
 	const deleteClickHandler = () => {
 		const boardId = detailReview ? detailReview[0].boardId : null;
 		if (boardId) deleteMutate(boardId);
@@ -81,7 +82,7 @@ const Review = () => {
 							<img src={detailReview[0].userThumbnail} alt="" />
 						</div>
 						<h5>{detailReview[0].nickname}</h5>
-						{user.nickname === detailReview[0].nickname && (
+						{user && user.nickname === detailReview[0].nickname && (
 							<RiMore2Line
 								color="var(--color-light-salmon)"
 								size={getMoreBtnSize()}
@@ -119,7 +120,7 @@ const Review = () => {
 								) : null}
 							</div>
 							<h5>{detailReview[0].nickname}</h5>
-							{user.nickname === detailReview[0].nickname && (
+							{user && user.nickname === detailReview[0].nickname && (
 								<RiMore2Line
 									color="var(--color-light-salmon"
 									size={30}

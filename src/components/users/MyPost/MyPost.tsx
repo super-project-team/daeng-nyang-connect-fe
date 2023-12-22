@@ -20,7 +20,7 @@ const MyPost: React.FC = () => {
 		getMyPost();
 	}, []);
 
-	return <Wrapper></Wrapper>;
+	return <Wrapper>내가 쓴 글</Wrapper>;
 };
 
 export default MyPost;

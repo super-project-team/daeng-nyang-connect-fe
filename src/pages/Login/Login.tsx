@@ -41,14 +41,14 @@ const Login = () => {
 
 	const REST_API_KEY = '6fc9a85c166f286a6359b9c663ebcfbd';
 	const REDIRECT_URI = 'http://3.35.16.126:8080/kakao_redirect';
-	const kakaoLink = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+	const kakaoLink = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=9a6d4d310426b352391b42b2cb0d0f93&scope=profile_nickname%20profile_image&state=imDR6apbGH24izXzRz6EdvTiicMnNt6rUzM3c_zoMH8%3D&redirect_uri=http://localhost:8080/kakao_redirect`;
 
 	const kakaoLoginHandler = () => {
 		window.location.href = kakaoLink;
 	};
 
 	const NaverLink =
-		'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=cbVjavYbFKaTxTrJFGaC&scope=name%20email%20profile_image%20nickname%20gender%20mobile&state=r7vh_N5AcCSAjzmUaaIdOxrW_ac_jQSum0FdVRgNTvI%3D&redirect_uri=http://3.35.16.126:8080/naver_redirect';
+		'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=E6A9JK080EcQ6AeJLJTf&scope=name%20email%20profile_image%20nickname%20gender%20mobile&state=wRRwsVwQNglwTdCE-uj3TZRmx6wfbI1q50HKX2xKsGQ%3D&redirect_uri=http://localhost:8080/naver_redirect';
 
 	const NaverLoginHandler = () => {
 		window.location.href = NaverLink;
@@ -212,14 +212,6 @@ const Login = () => {
 							이메일 또는 비밀번호가 일치하지 않습니다.
 						</ParagraphLogin>
 					)}
-					<NaverLoginButton
-						onClick={NaverLoginHandler}
-						$isMobile={$isMobile}
-						$isTablet={$isTablet}
-						$isPc={$isPc}
-						$isMaxWidth={$isMaxWidth}>
-						네이버 로그인
-					</NaverLoginButton>
 				</LoginForm>
 				<SignUpDiv>
 					<SignUpButton onClick={onIdFindClick}>아이디 찾기</SignUpButton>
@@ -228,6 +220,25 @@ const Login = () => {
 					</SignUpButton>
 					<SignUpButton onClick={onRegisterClick}>회원가입</SignUpButton>
 				</SignUpDiv>
+				<ButtonWrapper>
+					<Button>
+						<Image
+							src="/assets/icons/icon-kakao.png"
+							alt="kakao-icon"
+							onClick={kakaoLoginHandler}
+						/>
+					</Button>
+					<Button>
+						<Image
+							src="/assets/icons/icon-naver.png"
+							alt="twitter-icon"
+							onClick={NaverLoginHandler}
+						/>
+					</Button>
+					<Button>
+						<Image src="/assets/icons/icon-google.svg" alt="google-icon" />
+					</Button>
+				</ButtonWrapper>
 			</LoginDiv>
 		</LoginWrapper>
 	);

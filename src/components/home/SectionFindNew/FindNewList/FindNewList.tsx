@@ -5,30 +5,21 @@ import VerticalCard from '../../UI/VerticalCard/VerticalCard';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import { useEffect, useState } from 'react';
 import { getNewFamily } from '../../../../api/newFamilyApi';
+import { useQuery } from 'react-query';
 
 interface AnimalType {
 	boardId: number;
 	animalName: string;
 	age: string;
 	images: string[];
+	adoptionStatus: string;
 }
 
 const FindNewList = () => {
 	const { $isMaxWidth, $isMobile, $isTablet } = useResponsive();
 	const sildePerView = $isMobile ? 1 : $isTablet ? 2 : $isMaxWidth ? 3 : 5;
-	const [newFamilyData, setNewFamilyData] = useState<AnimalType[]>([]);
 
-	const fetchNewFamily = async () => {
-		try {
-			const response = await getNewFamily();
-			setNewFamilyData(response as AnimalType[]);
-		} catch (err) {
-			console.error('error', err);
-		}
-	};
-	useEffect(() => {
-		fetchNewFamily();
-	}, []);
+	const { data: newFamilyData } = useQuery('getNewFamily', getNewFamily);
 
 	return (
 		<Swiper
@@ -43,8 +34,8 @@ const FindNewList = () => {
 			speed={2000}
 			className="mySwiper">
 			{newFamilyData &&
-				newFamilyData.map((data: AnimalType, index) => (
-					<SwiperSlide key={index}>
+				newFamilyData.map((data: AnimalType) => (
+					<SwiperSlide key={newFamilyData.boardId}>
 						<VerticalCard data={data} $isMobile={$isMobile} />
 					</SwiperSlide>
 				))}

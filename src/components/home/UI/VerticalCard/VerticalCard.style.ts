@@ -14,12 +14,31 @@ export const CardDiv = styled.div<VerticalCardProps>`
 	cursor: pointer;
 `;
 export const CardImgDiv = styled.div`
+	position: relative;
 	width: 100%;
 	height: 70%;
 	img {
-		position: relative;
-		left: -20%;
+		width: 100%;
 		height: 100%;
+		object-fit: cover;
+		object-position: center center;
+	}
+	.complete-icon {
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 50px;
+		height: 50px;
+		border: 3px solid var(--color-light-salmon);
+		border-radius: 50%;
+		svg {
+			width: 60%;
+			height: 60%;
+			color: var(--color-light-salmon);
+		}
 	}
 `;
 export const CardTextDiv = styled.div`

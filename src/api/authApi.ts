@@ -7,9 +7,12 @@ const ID_CHECK = '/IdCheck';
 const NICKNAME_CHECK = '/NicknameCheck';
 const FIND_ID = '/findId';
 const FIND_PASSWORD = '/findPassword';
-const MY_PAGE = '/myPage/get';
-const BASE_URL = 'http://3.35.16.126:8080';
+const KAKAO_REGISTER = '/addKakaoInfo';
+const NAVER_REGISTER = '/addNaverInfo';
+const DELETE_USER = '/deleteUser';
 
+const BASE_URL = 'http://3.35.16.126:8080';
+export const authApi = new APIClient(BASE_URL + '/api');
 interface SignupRequestBody {
 	email: string;
 	password: string;
@@ -47,7 +50,25 @@ interface FindPasswordRequestBody {
 	newPassword: string;
 }
 
-export const authApi = new APIClient(BASE_URL + '/api');
+interface KakaoRegisterRequestBody {
+	nickname: string;
+	city: string;
+	town: string;
+	experience: boolean;
+	gender: string;
+}
+
+interface NaverRegisterRequestBody {
+	city: string;
+	town: string;
+	experience: boolean;
+	gender: string;
+}
+
+interface DeleteUserRequestBody {
+	email: string;
+	password: string;
+}
 
 export const signupUser = async (body: SignupRequestBody): Promise<any> => {
 	return await authApi.post(SIGNUP, {
@@ -101,6 +122,32 @@ export const findPassword = async (
 	});
 };
 
-export const myPageGet = async (): Promise<any> => {
-	return await authApi.get(MY_PAGE);
+export const kakaoRegister = async (
+	body: KakaoRegisterRequestBody,
+): Promise<any> => {
+	return await authApi.put(KAKAO_REGISTER, {
+		nickname: body.nickname,
+		city: body.city,
+		town: body.town,
+		experience: body.experience,
+		gender: body.gender,
+	});
+};
+
+export const naverRegister = async (
+	body: NaverRegisterRequestBody,
+): Promise<any> => {
+	return await authApi.put(NAVER_REGISTER, {
+		city: body.city,
+		town: body.town,
+		experience: body.experience,
+		gender: body.gender,
+	});
+};
+
+export const deleteUser = async (body: DeleteUserRequestBody): Promise<any> => {
+	return await authApi.delete(DELETE_USER, {
+		email: body.email,
+		password: body.password,
+	});
 };

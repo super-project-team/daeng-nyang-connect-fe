@@ -13,6 +13,7 @@ import {
 	LoginTitleDiv,
 	LoginWrapper,
 	Logo,
+	NaverLoginButton,
 	Paragraph,
 	ParagraphLogin,
 	SignUpButton,
@@ -38,16 +39,16 @@ const Login = () => {
 		password: '',
 	});
 
-	const REST_API_KEY = '백엔드한테 달라하자1';
-	const REDIRECT_URI = '백엔드한테 달라하자2';
-	const kakaoLink = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+	const REST_API_KEY = '6fc9a85c166f286a6359b9c663ebcfbd';
+	const REDIRECT_URI = 'http://3.35.16.126:8080/kakao_redirect';
+	const kakaoLink = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=9a6d4d310426b352391b42b2cb0d0f93&scope=profile_nickname%20profile_image&state=imDR6apbGH24izXzRz6EdvTiicMnNt6rUzM3c_zoMH8%3D&redirect_uri=http://localhost:8080/kakao_redirect`;
 
 	const kakaoLoginHandler = () => {
 		window.location.href = kakaoLink;
 	};
 
 	const NaverLink =
-		'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=cbVjavYbFKaTxTrJFGaC&scope=name%20email%20profile_image%20nickname%20gender%20mobile&state=r7vh_N5AcCSAjzmUaaIdOxrW_ac_jQSum0FdVRgNTvI%3D&redirect_uri=http://3.35.16.126:8080/login/oauth2/code/naver';
+		'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=E6A9JK080EcQ6AeJLJTf&scope=name%20email%20profile_image%20nickname%20gender%20mobile&state=wRRwsVwQNglwTdCE-uj3TZRmx6wfbI1q50HKX2xKsGQ%3D&redirect_uri=http://localhost:8080/naver_redirect';
 
 	const NaverLoginHandler = () => {
 		window.location.href = NaverLink;
@@ -106,7 +107,6 @@ const Login = () => {
 				}
 
 				const { access_token, nickname, id } = response;
-
 				const saveToken = (token: string) => {
 					localToken.save(token);
 				};
@@ -219,7 +219,6 @@ const Login = () => {
 					</SignUpButton>
 					<SignUpButton onClick={onRegisterClick}>회원가입</SignUpButton>
 				</SignUpDiv>
-
 				<ButtonWrapper>
 					<Button>
 						<Image

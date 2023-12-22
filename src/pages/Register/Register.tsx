@@ -303,6 +303,22 @@ const Register = () => {
 		setNicknameIsDuplicated(false);
 	};
 
+	const genderSelectHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+		const { name, value } = e.target;
+		setInputValue((prevInputValue) => ({
+			...prevInputValue,
+			[name]: value,
+		}));
+	};
+
+	const experienceSelectHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+		const { name, value } = e.target;
+		setInputValue((prevInputValue) => ({
+			...prevInputValue,
+			[name]: value === 'true', // convert value to a boolean
+		}));
+	};
+
 	const nameNameInputIsInValid = !nameIsValid && nameIsTouched;
 	const nameMobileInputIsInvalid = !mobileIsValid && mobileIsTouched;
 	const nameEmailInputIsInValid = !emailIsValid && emailIsTouched;
@@ -540,6 +556,7 @@ const Register = () => {
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}
 							name="gender"
+							onChange={genderSelectHandler}
 							required>
 							<Option value="" disabled selected>
 								성별
@@ -554,6 +571,7 @@ const Register = () => {
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}
 							name="experience"
+							onChange={experienceSelectHandler}
 							required>
 							<Option value="" disabled selected>
 								키워본 경험

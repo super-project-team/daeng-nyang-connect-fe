@@ -43,6 +43,8 @@ import NewFamilyDetail from './components/newFamily/Pet/NewFamilyDetail';
 import ReviewForm from './components/adoptionReviews/ReviewForm/ReviewForm';
 import IdFind from './pages/AuthFind/IdFind/IdFind';
 import PasswordFind from './pages/AuthFind/PasswordFind/PasswordFind';
+import KaKaoRegister from './pages/OauthRegister/KaKaoRegister/KaKaoRegister';
+import NaverRegister from './pages/OauthRegister/NaverRegister/NaverRegister';
 
 const router = createBrowserRouter([
 	{
@@ -65,6 +67,14 @@ const router = createBrowserRouter([
 			{
 				path: 'register',
 				element: <Register />,
+			},
+			{
+				path: 'kakaoRegister',
+				element: <KaKaoRegister />,
+			},
+			{
+				path: 'naverRegister',
+				element: <NaverRegister />,
 			},
 			{
 				path: 'users/:id',
@@ -90,7 +100,7 @@ const router = createBrowserRouter([
 				children: [
 					{ index: true, element: <Reviews /> },
 					{ path: 'review/:reviewId', element: <Review /> },
-					{ path: 'reviewForm', element: <ReviewForm /> },
+					{ path: 'reviewForm/:animalId', element: <ReviewForm /> },
 				],
 			},
 			{

@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface UserState {
+export interface UserState {
 	isLoggedIn: boolean;
 	nickname: string;
 	id: string;
@@ -25,6 +25,7 @@ const userSlice = createSlice({
 			state.isLoggedIn = isLoggedIn;
 			state.nickname = nickname;
 			state.id = id;
+			return state;
 		},
 		LOGOUT_USER(state) {
 			state.isLoggedIn = false;

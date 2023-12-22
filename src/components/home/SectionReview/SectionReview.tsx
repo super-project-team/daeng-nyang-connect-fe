@@ -8,6 +8,7 @@ import { useQuery } from 'react-query';
 import { getReviews } from '../../../api/reviewApi';
 
 interface ReviewData {
+	animalId: number;
 	boardId: number;
 	adoptedAnimalName: string;
 	images: string[];

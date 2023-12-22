@@ -14,28 +14,33 @@ import { useState } from 'react';
 interface CompleteResponse {
 	status: number;
 }
+export interface ChatAnimalInfo {
+	animalId: number;
+	animalName: string;
+	age: string;
+	breed: string;
+	images: string[];
+}
 
 const AnimalInfo = () => {
 	const [isCompleted, setIsCompleted] = useState(false);
 	const { $isMobile } = useResponsive();
 	const navigate = useNavigate();
 
-	const chatAnimalState = useSelector((state: any) => state.chat);
+	const chatAnimalState = useSelector((state: any) => state.chat.chatAnimals);
 
 	const reviewBtnHandler = () => {
-		navigate('/adoptionReviews/reviewForm');
+		const animalId = chatAnimalState[1].animalId;
+		navigate(`/adoptionReviews/reviewForm/${animalId}`);
 	};
-
 	const adoptCompleteHandler = async () => {
-		const animalId = 80;
-		const adoptUserId = 28;
+		const animalId = chatAnimalState[1].animalId;
+		const adoptUserId = 39;
 
 		try {
 			const complete: any = await adoptComplete(animalId, adoptUserId);
-			if (complete && complete.status === 200) {
+			if (complete) {
 				setIsCompleted(true);
-			} else {
-				setIsCompleted(false);
 			}
 		} catch (error) {
 			console.error('Error in adoptCompleteHandler:', error);

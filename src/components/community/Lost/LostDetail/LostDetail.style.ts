@@ -33,6 +33,8 @@ export const ImageWrap = styled.div<NavOptionProps>`
 		width: 100%;
 		height: ${(props) => (props.$isMobile ? '300px' : '480px')};
 		max-width: 100%;
+		object-fit: cover;
+		object-position: center center;
 	}
 `;
 

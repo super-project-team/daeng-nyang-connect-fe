@@ -1,63 +1,116 @@
-import React, { FC, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ChangeEvent, FC, FormEvent, useState } from 'react';
 import {
+	ChangeButton,
 	CloseButton,
 	Contents,
-	DeleteButton,
 	ModalForm,
 	ModalInput,
 	ModalWrap,
 	Overlay,
 	TitleDiv,
 } from './AddressChangeModal.style';
+import { useResponsive } from '../../../hooks/useResponsive';
+import { changeAddress } from '../../../api/myPageApi';
 
 interface AddressChangeModalProps {
 	open: boolean;
 	onClose: (isClosed: boolean) => void;
 }
 
-const AddressChangeModal: FC<AddressChangeModalProps> = ({ onClose, open }) => {
-	const [address, setAddress] = useState('');
-	const [detailAddress, setDetailAddress] = useState('');
+const AddressChangeModal: FC<AddressChangeModalProps> = ({ open, onClose }) => {
+	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 
-	const handleAddressChange = () => {
-		// Implement the logic to handle address change
-		// You can use 'address' and 'detailAddress' state values here
+	const [inputValue, setInputValue] = useState({
+		city: '',
+		town: '',
+	});
+
+	const inputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setInputValue((prevInputValue) => ({
+			...prevInputValue,
+			[name]: value,
+		}));
+	};
+
+	const addressChange = async (
+		event: FormEvent<HTMLFormElement>,
+	): Promise<void> => {
+		event.preventDefault();
+
+		try {
+			await changeAddress(inputValue);
+			onClose(false);
+		} catch (error) {
+			if (error instanceof TypeError) {
+				// TypeError
+			} else if (error instanceof SyntaxError) {
+				// SyntaxError
+			} else if (typeof error === 'string') {
+				// string
+			} else {
+				// other
+			}
+		}
 	};
 
 	return (
 		<Overlay>
-			<ModalWrap>
+			<ModalWrap
+				$isMobile={$isMobile}
+				$isTablet={$isTablet}
+				$isPc={$isPc}
+				$isMaxWidth={$isMaxWidth}>
 				<Contents>
-					<TitleDiv>
-						<h1>Address Change</h1>
+					<TitleDiv
+						$isMobile={$isMobile}
+						$isTablet={$isTablet}
+						$isPc={$isPc}
+						$isMaxWidth={$isMaxWidth}>
+						주소변경
 					</TitleDiv>
-					<ModalForm>
+					<ModalForm onSubmit={addressChange}>
 						<ModalInput
+							name="city"
+							onChange={inputChangeHandler}
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}
 							type="text"
-							placeholder="변경할 주소를 입력해주세요."
-							value={address}
-							onChange={(e) => setAddress(e.target.value)}
-						/>
+							placeholder="변경할 주소를 입력해주세요."></ModalInput>
 						<ModalInput
+							name="town"
+							onChange={inputChangeHandler}
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}
 							type="text"
-							placeholder="상세 주소를 입력해주세요."
-							value={detailAddress}
-							onChange={(e) => setDetailAddress(e.target.value)}
-						/>
-						<DeleteButton onClick={handleAddressChange}>
-							Address Change
-						</DeleteButton>
-						<CloseButton onClick={() => onClose(false)}>Close</CloseButton>
+							placeholder="상세 주소를 입력해주세요."></ModalInput>
+						<ChangeButton
+							type="submit"
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}>
+							주소 변경
+						</ChangeButton>
+						<CloseButton
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}
+							onClick={() => {
+								onClose(false);
+							}}>
+							닫기
+						</CloseButton>
 					</ModalForm>
 				</Contents>
 			</ModalWrap>
 		</Overlay>
 	);
-};
-
-AddressChangeModal.propTypes = {
-	onClose: PropTypes.func.isRequired,
 };
 
 export default AddressChangeModal;

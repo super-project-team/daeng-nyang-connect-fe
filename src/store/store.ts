@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import userReducer from '../slice/userSlice';
 import communityReducer from '../slice/communitySlice';
 import chatReducer from '../slice/chatSlice';
+import reviewReducer from '../slice/reviewSlice';
 
 const persistConfig = {
 	key: 'root',
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
 	user: userReducer,
 	community: communityReducer,
 	chat: chatReducer,
+	reviews: reviewReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

@@ -13,7 +13,7 @@ import { BoardDetail } from '../../types/BoardTypes';
 import { useQuery } from 'react-query';
 import labelMappings from '../../utils/communityLabel';
 import { useResponsive } from '../../hooks/useResponsive';
-import { myPageGet } from '../../api/authApi';
+import { myPageGet } from '../../api/myPageApi';
 
 interface RootState {
 	community: CommunityState;

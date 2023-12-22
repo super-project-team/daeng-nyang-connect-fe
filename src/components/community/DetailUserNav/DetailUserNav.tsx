@@ -34,7 +34,7 @@ import { useResponsive } from '../../../hooks/useResponsive';
 import labelMappings from '../../../utils/communityLabel';
 import { RootUserState } from '../../../slice/userSlice';
 import CheckLogin from '../CheckLogin/CheckLogin';
-import { myPageGet } from '../../../api/authApi';
+import { myPageGet } from '../../../api/myPageApi';
 
 interface RootState {
 	community: CommunityState;

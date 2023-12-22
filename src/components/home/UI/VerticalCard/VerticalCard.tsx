@@ -5,6 +5,8 @@ import {
 	CardImgDiv,
 	CardTextDiv,
 } from './VerticalCard.style';
+import { useState } from 'react';
+import { IoPaw } from 'react-icons/io5';
 
 type FindNewProps = {
 	$isMobile?: boolean;
@@ -13,18 +15,26 @@ type FindNewProps = {
 		animalName: string;
 		age: string;
 		images: string[];
+		adoptionStatus: string;
 	};
 };
 
 const VerticalCard = ({ $isMobile, data }: FindNewProps) => {
 	const navigate = useNavigate();
+
 	const moveToDetailHandler = () => {
 		navigate(`/newFamily/pet/${data.boardId}`);
 	};
+
 	return (
 		<CardDiv $isMobile={$isMobile} onClick={moveToDetailHandler}>
 			<CardImgDiv>
 				<img src={data.images?.[0]} alt="" />
+				{data.adoptionStatus === 'COMPLETED' ? (
+					<div className="complete-icon">
+						<IoPaw />
+					</div>
+				) : null}
 			</CardImgDiv>
 			<CardTextDiv>
 				<div>

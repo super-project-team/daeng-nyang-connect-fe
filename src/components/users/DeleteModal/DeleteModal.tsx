@@ -1,92 +1,115 @@
-import React, { ChangeEvent, useState, FC } from 'react';
+import React, { FC, FormEvent, useState } from 'react';
 import {
+	ChangeButton,
 	CloseButton,
 	Contents,
-	DeleteButton,
 	ModalForm,
 	ModalInput,
 	ModalWrap,
 	Overlay,
 	TitleDiv,
 } from './DeleteModal.style';
-// import { signoutUser } from '../../../api/authApi';
-// import localToken from '../../../api/LocalToken';
+import { useResponsive } from '../../../hooks/useResponsive';
+import { deleteUser, logoutUser } from '../../../api/authApi';
+import { useNavigate } from 'react-router-dom';
 
-interface AddressChangeModalProps {
+interface DeleteModalProps {
 	open: boolean;
 	onClose: (isClosed: boolean) => void;
 }
 
-const DeleteModal: FC<AddressChangeModalProps> = ({ onClose, open }) => {
-	const [enteredMobile, setEnteredMobile] = useState('');
-	const [enteredEmail, setEnteredEmail] = useState('');
-	const [enteredPassword, setEnteredPassword] = useState('');
-
-	const mobileInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-		setEnteredMobile(event.target.value);
-	};
-
-	const emailInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-		setEnteredEmail(event.target.value);
-	};
-
-	const passwordInputChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
-		setEnteredPassword(event.target.value);
-	};
-
+const DeleteModal: FC<DeleteModalProps> = ({ open, onClose }) => {
+	const navigate = useNavigate();
+	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 	const [inputValue, setInputValue] = useState({
-		mobile: '',
 		email: '',
 		password: '',
 	});
 
-	// const signoutHandler = async (e: ChangeEvent<HTMLInputElement>) => {
-	// e.preventDefault();
-	// //이 부분에 유효성 검사 로직 추가해서 유효성이 검증된 경우에만 아래 코드 실행하도록 변경하기
-	// setInputValue({
-	// 	mobile: enteredMobile,
-	// 	email: enteredEmail,
-	// 	password: enteredPassword,
-	// });
-	// try {
-	// 	const response = await signoutUser(inputValue);
-	// 	if (!response) return;
-	// 	localToken.remove();
-	// 	// navigate('/');
-	// } catch (error) {
-	// 	if (error.response.status === '403') {
-	// 		console.error(error.message);
-	// 	}
-	// 	console.error(error.message);
-	// }
-	// };
+	const inputValueHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const { name, value } = e.target;
+		setInputValue((prevInputValue) => ({
+			...prevInputValue,
+			[name]: value,
+		}));
+	};
+
+	const deleteUserHandler = async (
+		event: FormEvent<HTMLFormElement>,
+	): Promise<void> => {
+		event.preventDefault();
+
+		try {
+			const response = await deleteUser(inputValue);
+			if (!response) {
+				return;
+			}
+			await logoutUser();
+			navigate('/');
+			onClose(false);
+		} catch (error) {
+			if (error instanceof TypeError) {
+				// TypeError
+			} else if (error instanceof SyntaxError) {
+				// SyntaxError
+			} else if (typeof error === 'string') {
+				// string
+			} else {
+				// other
+			}
+		}
+	};
 
 	return (
 		<Overlay>
-			<ModalWrap>
+			<ModalWrap
+				$isMobile={$isMobile}
+				$isTablet={$isTablet}
+				$isPc={$isPc}
+				$isMaxWidth={$isMaxWidth}>
 				<Contents>
-					<TitleDiv>
-						<h1>Delete Account</h1>
+					<TitleDiv
+						$isMobile={$isMobile}
+						$isTablet={$isTablet}
+						$isPc={$isPc}
+						$isMaxWidth={$isMaxWidth}>
+						계정삭제
 					</TitleDiv>
-					<ModalForm>
+					<ModalForm onSubmit={deleteUserHandler}>
 						<ModalInput
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}
 							type="text"
-							placeholder="mobile"
-							onChange={mobileInputChangeHandler}></ModalInput>
+							name="email"
+							onChange={inputValueHandler}
+							placeholder="이메일"></ModalInput>
 						<ModalInput
-							type="email"
-							placeholder="e-mail"
-							onChange={emailInputChangeHandler}></ModalInput>
-						<ModalInput
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}
 							type="password"
-							placeholder="password"
-							onChange={passwordInputChangeHandler}></ModalInput>
-						<DeleteButton type="submit">Delete My Account</DeleteButton>
+							name="password"
+							onChange={inputValueHandler}
+							placeholder="비밀번호"></ModalInput>
+						<ChangeButton
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}>
+							계정삭제
+						</ChangeButton>
 						<CloseButton
+							$isMobile={$isMobile}
+							$isTablet={$isTablet}
+							$isPc={$isPc}
+							$isMaxWidth={$isMaxWidth}
 							onClick={() => {
 								onClose(false);
 							}}>
-							Close
+							닫기
 						</CloseButton>
 					</ModalForm>
 				</Contents>

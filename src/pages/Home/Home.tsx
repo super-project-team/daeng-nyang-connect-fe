@@ -6,6 +6,8 @@ import SectionReview from '../../components/home/SectionReview/SectionReview';
 import { getReviews } from '../../api/reviewApi';
 import { getNewFamily } from '../../api/newFamilyApi';
 import Loading from '../Loading/Loading';
+import { useEffect } from 'react';
+import localToken from '../../api/LocalToken';
 
 const Home = () => {
 	const results = useQueries([
@@ -18,6 +20,20 @@ const Home = () => {
 	if (loading) {
 		return <Loading />;
 	}
+
+	useEffect(() => {
+		if (document.cookie.includes('access')) {
+			const cookie = document.cookie;
+			const accessTokenMatch = cookie.match(/access_token=([^;]*)/);
+			const accessToken = accessTokenMatch ? accessTokenMatch[1] : null;
+
+			const refreshTokenMatch = cookie.match(/refresh_token=([^;]*)/);
+			const refreshToken = refreshTokenMatch ? refreshTokenMatch[1] : null;
+			if (accessToken) localStorage.setItem('access_token', accessToken);
+			if (refreshToken) localStorage.setItem('refresh_token', refreshToken);
+		}
+	}, []);
+
 	return (
 		<>
 			<Banner />

@@ -90,8 +90,6 @@ const DetailUserNav = () => {
 		fetchGetDetailBoard,
 	);
 
-	console.log('data', data);
-
 	const modifyBoardData = async () => {
 		await refetch();
 		await dispatch(SET_MODIFY_VALUE(data));
@@ -162,7 +160,6 @@ const DetailUserNav = () => {
 
 	const fetchMyPageData = async () => {
 		const response = await myPageGet();
-		console.log(response);
 
 		return response;
 	};
@@ -170,9 +167,6 @@ const DetailUserNav = () => {
 	const { data: myPageData } = useQuery('myPage', fetchMyPageData);
 
 	const checkUser = myPageData?.nickname === data?.nickname;
-
-	console.log('myPageData', myPageData);
-	console.log(myPageData?.nickname === data?.nickname);
 
 	return (
 		<DetailUserWrap>

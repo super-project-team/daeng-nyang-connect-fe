@@ -353,13 +353,10 @@ export const DetailImageBox = styled.div<ResponsiveProps>`
 	overflow: hidden;
 	& img {
 		width: 100%;
-<<<<<<< HEAD
 		height: 100%;
 		object-fit: cover;
 		object-position: center center;
-=======
 		object-fit: cover;
->>>>>>> 80862cb8200fbfc4275a760bcde3d04d24aab748
 	}
 	.bookmark-icon {
 		position: absolute;

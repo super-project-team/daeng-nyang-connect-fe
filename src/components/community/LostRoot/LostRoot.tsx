@@ -4,13 +4,15 @@ import { useResponsive } from '../../../hooks/useResponsive';
 import { Board, RootState } from '../../../types/BoardTypes';
 import LostList from './LostList/LostList';
 import { LostLists } from './LostRoot.style';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import useInfiniteScroll from '../../../hooks/useInfiniteScroll';
 import useSearchData from '../../../hooks/useSearchData';
+import { SET_IS_LOADING } from '../../../slice/communitySlice';
 
 const LostRoot = () => {
 	const { $isTablet, $isMobile } = useResponsive();
+	const dispatch = useDispatch();
 
 	const category = useSelector(
 		(state: RootState) => state.community.subCategory,
@@ -47,7 +49,9 @@ const LostRoot = () => {
 	const visibleData = useInfiniteScroll(data, refetch, 6);
 	const visibleFilteredData = useInfiniteScroll(filteredData, refetch, 6);
 
-	if (isLoading) return <div>로딩 중..</div>;
+	useEffect(() => {
+		dispatch(SET_IS_LOADING(isLoading));
+	}, [isLoading]);
 
 	return (
 		<LostLists $isMobile={$isMobile} $isTablet={$isTablet}>

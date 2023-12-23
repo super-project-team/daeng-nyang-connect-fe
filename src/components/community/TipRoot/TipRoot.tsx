@@ -7,8 +7,8 @@ import { getAllBoard, getSize } from '../../../api/communityApi';
 import { useQuery } from 'react-query';
 import { Board } from '../../../types/BoardTypes';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { CommunityState } from '../../../slice/communitySlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { CommunityState, SET_IS_LOADING } from '../../../slice/communitySlice';
 import useSearchData from '../../../hooks/useSearchData';
 
 export interface MyTip {
@@ -25,6 +25,7 @@ interface RootState {
 const TipRoot = () => {
 	const { $isMobile } = useResponsive();
 	const [totalBoardSize, setTotalBoardSize] = useState(0);
+	const dispatch = useDispatch();
 
 	const category = useSelector(
 		(state: RootState) => state.community.subCategory,
@@ -74,9 +75,12 @@ const TipRoot = () => {
 
 	const { searchData, isSearch } = useSearchData();
 
+	useEffect(() => {
+		dispatch(SET_IS_LOADING(isLoading));
+	}, [isLoading]);
+
 	return (
 		<>
-			{isLoading && <section>로딩 중..</section>}
 			<Article $isMobile={$isMobile}>
 				<TipsNav $isMobile={$isMobile}>
 					<div>제목</div>

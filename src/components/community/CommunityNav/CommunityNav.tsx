@@ -66,8 +66,6 @@ const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
 		(state: RootUserState) => state.user.isLoggedIn,
 	);
 
-	console.log('isLoggedIn', isLoggedIn);
-
 	useEffect(() => {
 		dispatch(SET_DISPLAY_LABEL(displayLabel));
 	}, [displayLabel]);

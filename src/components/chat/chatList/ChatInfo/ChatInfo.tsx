@@ -8,7 +8,6 @@ import {
 	ChatTime,
 	NoneReadCountEm,
 } from './ChatInfo.style';
-import { ROOM_ID_CHECK } from '../../../../slice/chatSlice';
 
 type BgProps = {
 	className?: string;
@@ -20,7 +19,6 @@ const ChatInfo = ({ className }: BgProps) => {
 
 	const changeRoomHandler = (roomId: string) => {
 		console.log(roomId);
-		dispatch(ROOM_ID_CHECK(roomId));
 	};
 
 	return (

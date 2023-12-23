@@ -1,9 +1,9 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { modifyReview } from '../../../api/reviewApi';
+import { getAllComments, modifyReview } from '../../../api/reviewApi';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { DetailTextBox } from '../../newFamily/NewFamily.style';
 import { ModifyBtnsDiv, ModifyDiv } from '../Reviews.style';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 interface FormData {
 	textReview: string;
@@ -22,6 +22,11 @@ const ReviewModify = ({
 		textReview: '',
 	});
 
+	const { data: comments, refetch } = useQuery(
+		['getAllComments', reviewId],
+		() => getAllComments(reviewId),
+	);
+
 	const { mutate: detailReview } = useMutation(
 		async () => {
 			return modifyReview(reviewId, formData);
@@ -38,12 +43,12 @@ const ReviewModify = ({
 	}, []);
 	const textChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
 		setFormData({ textReview: e.target.value });
-		console.log(formData);
 	};
 
 	const modifyReviewHandler = () => {
 		detailReview();
 		setIsOpenModify((prev: boolean) => !prev);
+		refetch();
 	};
 
 	return (

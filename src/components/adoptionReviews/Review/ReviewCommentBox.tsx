@@ -39,10 +39,8 @@ interface CommentsProps {
 }
 
 const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
-	const queryClient = useQueryClient();
-	const navigate = useNavigate();
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
-	const user = useSelector((state: UserState) => state);
+	const user = useSelector((state: any) => state.user);
 
 	const [modify, setModify] = useState<{ [key: number]: boolean }>({});
 	const [clickedLikeMark, setClickedLikeMark] = useState(false);
@@ -54,8 +52,9 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 	);
 	const [loginPopup, setLoginPopup] = useState(false);
 
-	const { data: comments } = useQuery(['getAllComments', reviewId], () =>
-		getAllComments(reviewId),
+	const { data: comments, refetch } = useQuery(
+		['getAllComments', reviewId],
+		() => getAllComments(reviewId),
 	);
 
 	const clickLikeMarkHandler = () => {
@@ -71,49 +70,14 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 		return 30;
 	};
 
-	const { mutate: commentsData } = useMutation(
-		async () => {
-			return postComment(reviewId, commentText);
-		},
-		{
-			onSuccess: () => {
-				setCommentText({ comment: '' });
-				return queryClient.refetchQueries(['getAllComments', reviewId], {
-					exact: true,
-				});
-			},
-		},
-	);
-
-	const { mutate: deletedComments } = useMutation(
-		async (reviewCommentId: number) => {
-			return deleteComment(reviewCommentId);
-		},
-		{
-			onSuccess: () => {
-				return queryClient.refetchQueries(['getAllComments', reviewId], {
-					exact: true,
-				});
-			},
-		},
-	);
-
-	const { mutate: modifyComments } = useMutation(
-		async (commentsId: number) => {
-			return modifyComment(commentsId, commentText);
-		},
-		{
-			onSuccess: () => {
-				return queryClient.refetchQueries(['getAllComments', reviewId], {
-					exact: true,
-				});
-			},
-		},
-	);
-
 	const submitCommentHandler = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		!user.isLoggedIn ? setLoginPopup((prev) => !prev) : commentsData();
+		if (!user.isLoggedIn) {
+			setLoginPopup((prev) => !prev);
+		} else {
+			postComment(reviewId, commentText);
+			refetch();
+		}
 	};
 
 	const commentInputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -126,14 +90,16 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 	};
 
 	const modifyPutHandler = (commentsId: number) => {
-		modifyComments(commentsId);
+		modifyComment(commentsId, commentText);
 		setModify((prev) => ({
 			[commentsId]: !prev[commentsId],
 		}));
+		refetch();
 	};
 
 	const deleteCommentHandler = (reviewCommentId: number) => {
-		deletedComments(reviewCommentId);
+		deleteComment(reviewCommentId);
+		refetch();
 	};
 
 	return (

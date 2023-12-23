@@ -11,12 +11,17 @@ import { DetailText, ReviewTextBox } from '../Reviews.style';
 import ReviewCommentBox from './ReviewCommentBox';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { deleteReview, getDetailReview } from '../../../api/reviewApi';
+import {
+	deleteReview,
+	getDetailReview,
+	modifyReview,
+} from '../../../api/reviewApi';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReviewModify from './ReviewModify';
 import { useSelector } from 'react-redux';
 import { UserState } from '../../../slice/userSlice';
 import { myPageGet } from '../../../api/myPageApi';
+import Loading from '../../../pages/Loading/Loading';
 
 const Review = () => {
 	const params = useParams();
@@ -27,9 +32,11 @@ const Review = () => {
 	const [isOpenModify, setIsOpenModify] = useState(false);
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 
-	const { data: detailReview } = useQuery('getDetailReview', () =>
-		getDetailReview(animalId),
-	);
+	const {
+		data: detailReview,
+		isLoading,
+		refetch,
+	} = useQuery('getDetailReview', () => getDetailReview(animalId));
 	const user = useSelector((state: any) => state.user);
 
 	const { mutate: deleteMutate } = useMutation(
@@ -64,6 +71,9 @@ const Review = () => {
 		if (boardId) deleteMutate(boardId);
 		navigate('/adoptionReviews');
 	};
+
+	if (isLoading) return <Loading />;
+
 	return (
 		<>
 			{detailReview && detailReview.length > 0 && (

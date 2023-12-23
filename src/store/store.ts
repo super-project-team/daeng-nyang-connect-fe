@@ -4,7 +4,7 @@ import storage from 'redux-persist/lib/storage'; // defaults to localStorage for
 import userReducer from '../slice/userSlice';
 import communityReducer from '../slice/communitySlice';
 import chatReducer from '../slice/chatSlice';
-import reviewReducer from '../slice/reviewSlice';
+import reviewReducer from '../slice/ReviewSlice';
 
 const persistConfig = {
 	key: 'root',

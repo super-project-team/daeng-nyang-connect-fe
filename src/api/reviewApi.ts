@@ -87,15 +87,18 @@ export const postComment = async (
 	reviewId: number,
 	body: ReviewComment,
 ): Promise<any> => {
-	return await reviewApi.post(COMMENT + `/post?reviewId=${reviewId}`, {
+	return await reviewApi.post(COMMENT + `?reviewId=${reviewId}`, {
 		comment: body.comment,
 	});
 };
 
 export const modifyComment = async (reviewId: number, body: ReviewComment) => {
-	return await reviewApi.put(COMMENT + `/modify?reviewCommentsId=${reviewId}`, {
-		comment: body.comment,
-	});
+	return await reviewApi.put(
+		`/review/comments/modify?reviewCommentsId=${reviewId}`,
+		{
+			comment: body.comment,
+		},
+	);
 };
 
 export const deleteComment = async (reviewCommentsId: number) => {

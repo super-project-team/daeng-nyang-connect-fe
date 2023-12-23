@@ -84,6 +84,22 @@ const Register = () => {
 		onClose: () => void;
 	}
 
+	// const genderSelectHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+	// 	const { name, value } = e.target;
+	// 	setInputValue((prevInputValue) => ({
+	// 		...prevInputValue,
+	// 		[name]: value,
+	// 	}));
+	// };
+
+	// const experienceSelectHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+	// 	const { name, value } = e.target;
+	// 	setInputValue((prevInputValue) => ({
+	// 		...prevInputValue,
+	// 		[name]: value === 'true', // convert value to a boolean
+	// 	}));
+	// };
+
 	const isPasswordValid = (password: string) => {
 		if (password.length < 6) {
 			return false;
@@ -258,6 +274,7 @@ const Register = () => {
 			try {
 				console.log('test');
 				const { pwdck, ...dataToSend } = inputValue;
+				console.log(dataToSend);
 				const response = await signupUser(dataToSend);
 				if (!response) return;
 				setConfirmModalIsOpen(true);
@@ -301,22 +318,6 @@ const Register = () => {
 
 	const nickNameOnFocusHandler = () => {
 		setNicknameIsDuplicated(false);
-	};
-
-	const genderSelectHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-		const { name, value } = e.target;
-		setInputValue((prevInputValue) => ({
-			...prevInputValue,
-			[name]: value,
-		}));
-	};
-
-	const experienceSelectHandler = (e: ChangeEvent<HTMLSelectElement>) => {
-		const { name, value } = e.target;
-		setInputValue((prevInputValue) => ({
-			...prevInputValue,
-			[name]: value === 'true', // convert value to a boolean
-		}));
 	};
 
 	const nameNameInputIsInValid = !nameIsValid && nameIsTouched;
@@ -556,7 +557,7 @@ const Register = () => {
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}
 							name="gender"
-							onChange={genderSelectHandler}
+							// onChange={genderSelectHandler}
 							required>
 							<Option value="" disabled selected>
 								성별
@@ -571,7 +572,7 @@ const Register = () => {
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}
 							name="experience"
-							onChange={experienceSelectHandler}
+							// onChange={experienceSelectHandler}
 							required>
 							<Option value="" disabled selected>
 								키워본 경험

@@ -59,7 +59,6 @@ const NewFamilyDetail = () => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 	const dispatch = useDispatch();
 	const { petId } = useParams();
-	const user = useSelector((state: UserState) => state.user);
 	const [formData, setFormData] = useState({
 		animalName: '',
 		kind: '',
@@ -81,6 +80,7 @@ const NewFamilyDetail = () => {
 	const [bookmarkState, setBookmarkState] = useState<{
 		[key: number]: boolean;
 	}>({});
+	const user = useSelector((state: UserState) => state.user);
 	const isLoggedIn = useSelector((state: any) => state.user.isLoggedIn);
 
 	//디테일정보불러오기(해당하는 item만)
@@ -198,7 +198,7 @@ const NewFamilyDetail = () => {
 
 	//채팅창으로 이동
 	const moveToChatHandler = () => {
-		if (user.isLoggedIn) {
+		if (isLoggedIn) {
 			dispatch(
 				MOVE_TO_CHAT({
 					animalId: boardIdData?.boardId,

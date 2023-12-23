@@ -231,7 +231,9 @@ const Login = () => {
 						<Image
 							src="/assets/icons/icon-naver.png"
 							alt="twitter-icon"
-							onClick={NaverLoginHandler}
+							onClick={async () => {
+								NaverLoginHandler;
+							}}
 						/>
 					</Button>
 					<Button>

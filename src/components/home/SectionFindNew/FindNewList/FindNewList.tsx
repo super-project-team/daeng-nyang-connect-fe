@@ -35,7 +35,7 @@ const FindNewList = () => {
 			className="mySwiper">
 			{newFamilyData &&
 				newFamilyData.map((data: AnimalType) => (
-					<SwiperSlide key={newFamilyData.boardId}>
+					<SwiperSlide key={data.boardId}>
 						<VerticalCard data={data} $isMobile={$isMobile} />
 					</SwiperSlide>
 				))}

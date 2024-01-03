@@ -23,47 +23,63 @@ class APIClient {
 		this.api = axios.create({ baseURL, headers });
 	}
 
-	get<T>(
-		endpoint: string,
-		body?: FormData | Record<string, string | boolean | number>,
-	): Promise<T> {
+	get<T, U>(endpoint: string, body?: FormData | Record<string, U>): Promise<T> {
 		return this.request('get', endpoint, body);
 	}
 
-	post<T>(
+	post<T, U>(
 		endpoint: string,
-		body?: FormData | Record<string, string | boolean | number>,
+		body?: FormData | Record<string, U>,
 	): Promise<T> {
 		return this.request('post', endpoint, body);
 	}
 
-	put<T>(
-		endpoint: string,
-		body?:
-			| FormData
-			| Record<string, string | boolean | string[] | number | any>,
-	): Promise<T> {
+	put<T, U>(endpoint: string, body?: FormData | Record<string, U>): Promise<T> {
 		return this.request('put', endpoint, body);
 	}
 
-	delete<T>(
+	delete<T, U>(
 		endpoint: string,
-		body?:
-			| FormData
-			| Record<string, string | boolean | string[] | number | any>,
+		body?: FormData | Record<string, U>,
 	): Promise<T> {
 		return this.request('delete', endpoint, body);
 	}
 
-	private request<T>(
+	private async refreshAccessToken(): Promise<string | undefined> {
+		const refreshToken = localToken.get(true);
+		if (!refreshToken) {
+			console.error('No refresh token available');
+			return undefined;
+		}
+
+		try {
+			const response = await axios.post(`${this.baseURL}/api/refresh`, {
+				refreshToken,
+			});
+			const { accessToken } = response.data;
+			localToken.save(accessToken);
+			return accessToken;
+		} catch (error) {
+			console.error('Error refreshing access token:', error);
+			return undefined;
+		}
+	}
+
+	private async request<T, U>(
 		method: Method,
 		url: string,
-		data: FormData | Record<string, string | boolean | number> = {},
+		data: FormData | Record<string, U> = {},
 		config?: AxiosRequestConfig,
 	): Promise<T> {
+		let accessToken = localToken.get();
+
+		if (localToken.isTokenExpired()) {
+			accessToken = (await this.refreshAccessToken()) || null;
+		}
+
 		const headers = {
 			...this.headers,
-			access_token: `${localToken.get()}`,
+			access_token: `${accessToken}`,
 		};
 
 		if (!(data instanceof FormData)) {

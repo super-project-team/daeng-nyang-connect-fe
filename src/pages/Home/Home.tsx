@@ -17,10 +17,6 @@ const Home = () => {
 
 	const loading = results.some((result) => result.isLoading);
 
-	if (loading) {
-		return <Loading />;
-	}
-
 	useEffect(() => {
 		if (document.cookie.includes('access')) {
 			const cookie = document.cookie;
@@ -34,6 +30,9 @@ const Home = () => {
 		}
 	}, []);
 
+	if (loading) {
+		return <Loading />;
+	}
 	return (
 		<>
 			<Banner />

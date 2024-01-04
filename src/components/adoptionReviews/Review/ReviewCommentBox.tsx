@@ -68,9 +68,7 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 		{ queryKey: 'getUserLikes', queryFn: getUserLikes },
 	]);
 	const comments = allComments.data;
-	const reviewLikes =
-		userLikes &&
-		userLikes.data.filter((item: LikedItems) => item.boardName === 'Review');
+	const reviewLikes = userLikes.data;
 
 	const { mutate: modifyCommentMutate } = useMutation(
 		async (commentsId: number) => {

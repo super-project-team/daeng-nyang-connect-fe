@@ -34,7 +34,6 @@ interface LikedItems {
 
 const ReviewList = () => {
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
 	const queryClient = useQueryClient();
 	const user = useSelector((state: any) => state.user);
 

@@ -15,40 +15,21 @@ const ReviewModify = ({
 	age,
 	reviewId,
 	images,
+	refetch,
 }: any) => {
 	const queryClient = useQueryClient();
 	const { $isMobile, $isTablet, $isPc } = useResponsive();
-	const [formData, setFormData] = useState<FormData>({
-		textReview: '',
-	});
+	const [modifyText, setModifyText] = useState('');
 
-	const { data: comments, refetch } = useQuery(
-		['getAllComments', reviewId],
-		() => getAllComments(reviewId),
-	);
-
-	const { mutate: detailReview } = useMutation(
-		async () => {
-			return modifyReview(reviewId, formData);
-		},
-		{
-			onSuccess: () => {
-				queryClient.refetchQueries(['getDetailReview'], { exact: true });
-			},
-		},
-	);
-
-	useEffect(() => {
-		setFormData((prev) => ({ ...prev, files: images }));
-	}, []);
 	const textChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-		setFormData({ textReview: e.target.value });
+		setModifyText(e.target.value);
 	};
 
-	const modifyReviewHandler = () => {
-		detailReview();
-		setIsOpenModify((prev: boolean) => !prev);
+	const modifyReviewHandler = async () => {
+		const response = await modifyReview(reviewId, modifyText);
+		console.log(response);
 		refetch();
+		setIsOpenModify((prev: boolean) => !prev);
 	};
 
 	return (

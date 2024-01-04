@@ -19,11 +19,12 @@ import {
 	modifyComment,
 	postComment,
 } from '../../../api/reviewApi';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
+import { useMutation, useQueries, useQuery, useQueryClient } from 'react-query';
 import formatDateDifferenceFromString from '../../../utils/fomatDateComment';
 import { useSelector } from 'react-redux';
 import { UserState } from '../../../slice/userSlice';
 import LoginPopup from '../LoginPopup/LoginPopup';
+import { getUserLikes } from '../../../api/myPageApi';
 
 interface Comments {
 	commentsId: number;
@@ -38,8 +39,14 @@ interface CommentsProps {
 	reviewId: number;
 }
 
+interface LikedItems {
+	boardId: number;
+	boardName: string;
+}
+
 const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
+	const queryClient = useQueryClient();
 	const user = useSelector((state: any) => state.user);
 
 	const [modify, setModify] = useState<{ [key: number]: boolean }>({});
@@ -47,14 +54,35 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 	const [commentText, setCommentText] = useState({
 		comment: '',
 	});
+	const [modifyCommentText, setModifyCommentText] = useState('');
 	const [commentMore, setCommentMore] = useState<{ [key: number]: boolean }>(
 		{},
 	);
 	const [loginPopup, setLoginPopup] = useState(false);
 
-	const { data: comments, refetch } = useQuery(
-		['getAllComments', reviewId],
-		() => getAllComments(reviewId),
+	const [allComments, userLikes] = useQueries([
+		{
+			queryKey: ['getAllComments', reviewId],
+			queryFn: () => getAllComments(reviewId),
+		},
+		{ queryKey: 'getUserLikes', queryFn: getUserLikes },
+	]);
+	const comments = allComments.data;
+	const reviewLikes =
+		userLikes &&
+		userLikes.data.filter((item: LikedItems) => item.boardName === 'Review');
+
+	const { mutate: modifyCommentMutate } = useMutation(
+		async (commentsId: number) => {
+			return modifyComment(commentsId, modifyCommentText);
+		},
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries(['getAllComments', reviewId], {
+					exact: true,
+				});
+			},
+		},
 	);
 
 	const clickLikeMarkHandler = () => {
@@ -70,18 +98,23 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 		return 30;
 	};
 
-	const submitCommentHandler = (e: FormEvent<HTMLFormElement>) => {
+	const submitCommentHandler = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		if (!user.isLoggedIn) {
 			setLoginPopup((prev) => !prev);
 		} else {
-			postComment(reviewId, commentText);
-			refetch();
+			await postComment(reviewId, commentText);
+			allComments.refetch();
 		}
+		setCommentText({ comment: '' });
 	};
 
 	const commentInputChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
 		setCommentText({ comment: e.target.value });
+	};
+
+	const commentModifyChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+		setModifyCommentText(e.target.value);
 	};
 
 	const commentModifyHandler = (commentId: number) => {
@@ -90,17 +123,23 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 	};
 
 	const modifyPutHandler = (commentsId: number) => {
-		modifyComment(commentsId, commentText);
+		modifyCommentMutate(commentsId);
 		setModify((prev) => ({
 			[commentsId]: !prev[commentsId],
 		}));
-		refetch();
 	};
 
-	const deleteCommentHandler = (reviewCommentId: number) => {
-		deleteComment(reviewCommentId);
-		refetch();
+	const deleteCommentHandler = async (reviewCommentId: number) => {
+		await deleteComment(reviewCommentId);
+		allComments.refetch();
 	};
+
+	useEffect(() => {
+		if (reviewLikes)
+			reviewLikes.some((item: any) => item.boardId === reviewId)
+				? setClickedLikeMark(true)
+				: setClickedLikeMark(false);
+	}, [reviewLikes, userLikes]);
 
 	return (
 		<>
@@ -129,14 +168,15 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 											<div style={{ width: '100%', borderRadius: '0' }}>
 												<input
 													defaultValue={comment.comment}
-													onChange={commentInputChangeHandler}
+													onChange={commentModifyChangeHandler}
 												/>
 												<ModifyBtnsBox>
 													<button
 														style={{ marginRight: '4px' }}
-														onClick={() =>
-															modifyPutHandler(comment.commentsId)
-														}>
+														onClick={async () => {
+															modifyPutHandler(comment.commentsId);
+															allComments.refetch();
+														}}>
 														전송
 													</button>
 													<button
@@ -167,15 +207,15 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 									{commentMore[comment.commentsId] && (
 										<CommentMoreUl>
 											<li
-												onClick={() =>
-													commentModifyHandler(comment.commentsId)
-												}>
+												onClick={() => {
+													commentModifyHandler(comment.commentsId);
+												}}>
 												수정
 											</li>
 											<li
-												onClick={() =>
-													deleteCommentHandler(comment.commentsId)
-												}>
+												onClick={() => {
+													deleteCommentHandler(comment.commentsId);
+												}}>
 												삭제
 											</li>
 										</CommentMoreUl>
@@ -215,6 +255,7 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 						type="text"
 						name="comment"
 						id=""
+						value={commentText.comment}
 						placeholder="댓글달기"
 						onChange={commentInputChangeHandler}
 					/>

@@ -26,6 +26,7 @@ export interface ReviewData {
 	age: number;
 	nickname: string;
 	userThumbnail: string;
+	reviewLike: number;
 }
 
 interface Comments {

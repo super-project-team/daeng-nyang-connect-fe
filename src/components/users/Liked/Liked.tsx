@@ -21,6 +21,7 @@ const Liked: React.FC = () => {
 	const getLiked = async () => {
 		try {
 			const response = await getMyLiked();
+			console.log(response);
 			setLikedItems(response);
 		} catch (error) {
 			// 에러 처리

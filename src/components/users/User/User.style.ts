@@ -19,7 +19,7 @@ export const TitleDiv = styled.div<ResponsiveProps>`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	margin-top: 60px;
+	margin-top: 80px;
 	font-size: ${(props) => (props.$isMobile ? '20px' : '25px')};
 	font-weight: 500;
 	padding-bottom: 30px;

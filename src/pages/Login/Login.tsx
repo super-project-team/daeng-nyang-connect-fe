@@ -48,11 +48,11 @@ const Login = () => {
 	};
 
 	const NaverLink =
-		'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=E6A9JK080EcQ6AeJLJTf&scope=name%20email%20profile_image%20nickname%20gender%20mobile&state=wRRwsVwQNglwTdCE-uj3TZRmx6wfbI1q50HKX2xKsGQ%3D&redirect_uri=http://localhost:8080/naver_redirect';
+		'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=cbVjavYbFKaTxTrJFGaC&scope=name%20email%20profile_image%20nickname%20gender%20mobile&state=wRRwsVwQNglwTdCE-uj3TZRmx6wfbI1q50HKX2xKsGQ%3D&redirect_uri=http://52.79.108.20:8080/naver_redirect';
 
 	const NaverLoginHandler = () => {
-		console.log(10);
 		window.location.href = NaverLink;
+		dispatch(LOGIN_USER({ isLoggedIn: true }));
 	};
 
 	const onRegisterClick = () => {

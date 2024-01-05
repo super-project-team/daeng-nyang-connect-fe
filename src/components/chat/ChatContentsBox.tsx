@@ -6,6 +6,7 @@ import ChatRoom from './chatRoom/ChatRoom';
 
 const ChatContentsBox = () => {
 	const { $isMobile } = useResponsive();
+
 	return (
 		<>
 			<ChatInnerLeftDiv $isMobile={$isMobile}>

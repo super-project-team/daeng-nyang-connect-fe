@@ -24,7 +24,7 @@ class LocalToken {
 		try {
 			const payload = JSON.parse(atob(token.split('.')[1]));
 			const now = Date.now() / 1000;
-			console.log('payload.exp', payload.exp);
+
 			return now > payload.exp;
 		} catch (e) {
 			console.error('Error checking token expiration:', e);

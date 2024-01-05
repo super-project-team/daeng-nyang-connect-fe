@@ -20,7 +20,7 @@ class APIClient {
 	) {
 		this.baseURL = baseURL;
 		this.headers = headers;
-		this.api = axios.create({ baseURL, headers });
+		this.api = axios.create({ baseURL, headers, withCredentials: true });
 	}
 
 	get<T, U>(endpoint: string, body?: FormData | Record<string, U>): Promise<T> {
@@ -53,12 +53,24 @@ class APIClient {
 		}
 
 		try {
-			const response = await axios.post(`${this.baseURL}/api/refresh`, {
-				refreshToken,
-			});
-			const { accessToken } = response.data;
-			localToken.save(accessToken);
-			return accessToken;
+			console.log('refreshToken', refreshToken);
+			const response = await axios.post(
+				`http://52.79.108.20:8080/api/refresh`,
+				{
+					refreshToken,
+				},
+				{
+					headers: {
+						refresh_token: refreshToken,
+					},
+					withCredentials: true,
+				},
+			);
+
+			const { access_token } = response.data;
+
+			localToken.save(access_token);
+			return access_token;
 		} catch (error) {
 			console.error('Error refreshing access token:', error);
 			return undefined;

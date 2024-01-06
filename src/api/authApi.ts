@@ -11,7 +11,7 @@ const KAKAO_REGISTER = '/addKakaoInfo';
 const NAVER_REGISTER = '/addNaverInfo';
 const DELETE_USER = '/deleteUser';
 
-const BASE_URL = 'http://52.79.108.20:8080';
+const BASE_URL = 'http://localhost:8080';
 export const authApi = new APIClient(BASE_URL + '/api');
 interface SignupRequestBody {
 	email: string;

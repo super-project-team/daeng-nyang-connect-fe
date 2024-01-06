@@ -68,7 +68,7 @@ const ReviewCommentBox = ({ reviewId, reviewLike }: CommentsProps) => {
 			queryKey: ['getAllComments', reviewId],
 			queryFn: () => getAllComments(reviewId),
 		},
-		{ queryKey: 'getUserLikes', queryFn: getUserLikes },
+		{ queryKey: ['getUserLikes', user], queryFn: getUserLikes },
 	]);
 	const comments = allComments.data;
 	const reviewLikes = userLikes.data?.filter(

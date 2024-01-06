@@ -26,6 +26,9 @@ import {
 } from '../../../api/newFamilyApi';
 import { IoCloseOutline } from 'react-icons/io5';
 import { PiPawPrintFill } from 'react-icons/pi';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
+import localToken from '../../../api/LocalToken';
 
 interface AnimalData {
 	boardId: number;
@@ -196,8 +199,10 @@ const NewFamilyDetail = () => {
 		}
 	};
 
+	const token = localToken.get();
+
 	//채팅창으로 이동
-	const moveToChatHandler = () => {
+	const moveToChatHandler = (receiverUsername: string) => {
 		if (isLoggedIn) {
 			dispatch(
 				MOVE_TO_CHAT({
@@ -208,11 +213,42 @@ const NewFamilyDetail = () => {
 					images: boardIdData?.images,
 				}),
 			);
+			if (stompClient) {
+				const headers = {
+					access_token: token,
+				};
+
+				const request = {
+					receiverUsername: receiverUsername,
+				};
+
+				stompClient.send(
+					'/app/sendChatRequest',
+					headers,
+					JSON.stringify(request),
+				);
+			}
 			navigate(`/users/${user.id}/chatBox`);
 		} else {
 			navigate('/login');
 		}
 	};
+
+	const [stompClient, setStompClient] = useState<any>(null);
+	useEffect(() => {
+		const socket = new SockJS('http://52.79.108.20:8080/websocket');
+		const stomp = Stomp.over(socket);
+		stomp.connect({}, () => {
+			setStompClient(stomp);
+			console.log('연결');
+		});
+
+		return () => {
+			if (stompClient) {
+				stompClient.disconnect();
+			}
+		};
+	}, []);
 
 	useEffect(() => {
 		const fetchScrappedAnimals = async () => {
@@ -681,7 +717,9 @@ const NewFamilyDetail = () => {
 								{boardIdData?.textEtc}
 							</p>
 						</DetailTextBox>
-						<button onClick={moveToChatHandler}>문의하기</button>
+						<button onClick={() => moveToChatHandler(user.nickname)}>
+							문의하기
+						</button>
 					</div>
 				</NewFamilyDetailContainer>
 			)}

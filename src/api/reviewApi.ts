@@ -7,7 +7,7 @@ const GET_ALL = '/review/getAll';
 const DELETE = '/review/delete';
 const COMMENT = '/review/comments/post';
 const COMMENT_DELETE = '/review/comments/delete';
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://52.79.108.20:8080';
 
 interface ReviewComment {
 	comment: string;

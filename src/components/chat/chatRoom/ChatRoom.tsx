@@ -18,12 +18,13 @@ const ChatRoom = () => {
 
 	const token = localToken.get();
 
-	// 첫번째 방법
-
 	useEffect(() => {
 		const socket = new SockJS('http://52.79.108.20:8080/websocket');
 		const stomp = Stomp.over(socket);
-		stomp.connect({}, () => {
+		const headers = {
+			access_token: token,
+		};
+		stomp.connect(headers, () => {
 			setStompClient(stomp);
 			console.log('연결');
 		});
@@ -35,30 +36,11 @@ const ChatRoom = () => {
 		};
 	}, []);
 
-	const acceptChatRequest = (receiverUsername: string) => {
-		if (stompClient) {
-			const headers = {
-				access_token: 'your-access-token',
-			};
-
-			const request = {
-				receiverUsername: receiverUsername,
-			};
-
-			stompClient.send(
-				'/app/acceptChatRequest',
-				headers,
-				JSON.stringify(request),
-			);
-		}
-	};
-
 	return (
 		<ChatRoomDiv $isMobile={$isMobile}>
 			<ChatRoomHeader />
 			<AnimalInfo />
 			<ChatInput stompClient={stompClient} setMessages={setMessages} />
-			<button onClick={() => acceptChatRequest(user.nickname)}>수락</button>
 		</ChatRoomDiv>
 	);
 };

@@ -19,6 +19,7 @@ interface CustomIFrame extends IFrame {
 	access_token: string | null;
 }
 const socketUrl = 'ws://52.79.108.20:8080/websocket';
+const token = localToken.get();
 
 const ChatInput = ({ stompClient, setMessages }: any) => {
 	const { $isMobile } = useResponsive();
@@ -27,7 +28,7 @@ const ChatInput = ({ stompClient, setMessages }: any) => {
 	const sendMessage = () => {
 		if (stompClient && messageInput) {
 			const headers = {
-				access_token: 'your-access-token',
+				access_token: token,
 			};
 
 			const message = {

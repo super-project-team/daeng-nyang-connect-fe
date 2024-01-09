@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { MOVE_TO_CHAT } from '../../../slice/chatSlice';
+import { GET_ANIMAL_ID, MOVE_TO_CHAT } from '../../../slice/chatSlice';
 import {
 	deleteAnimal,
 	getNewFamily,
@@ -29,6 +29,7 @@ import { PiPawPrintFill } from 'react-icons/pi';
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import localToken from '../../../api/LocalToken';
+import { makeChatRoom } from '../../../api/chatApi';
 
 interface AnimalData {
 	boardId: number;
@@ -198,57 +199,17 @@ const NewFamilyDetail = () => {
 			console.error('수정 오류:', error);
 		}
 	};
-
-	const token = localToken.get();
-
 	//채팅창으로 이동
-	const moveToChatHandler = (receiverUsername: string) => {
+	const moveToChatHandler = () => {
 		if (isLoggedIn) {
-			dispatch(
-				MOVE_TO_CHAT({
-					animalId: boardIdData?.boardId,
-					animalName: boardIdData?.animalName,
-					age: boardIdData?.age,
-					breed: boardIdData?.breed,
-					images: boardIdData?.images,
-				}),
-			);
-			if (stompClient) {
-				const headers = {
-					access_token: token,
-				};
-
-				const request = {
-					receiverUsername: receiverUsername,
-				};
-
-				stompClient.send(
-					'/app/sendChatRequest',
-					headers,
-					JSON.stringify(request),
-				);
-			}
+			dispatch(GET_ANIMAL_ID(boardIdData?.boardId));
+			makeChatRoom(boardIdData?.boardId);
+			if ($isMobile) navigate(`/users/${user.id}/chatRoom`);
 			navigate(`/users/${user.id}/chatBox`);
 		} else {
 			navigate('/login');
 		}
 	};
-
-	const [stompClient, setStompClient] = useState<any>(null);
-	useEffect(() => {
-		const socket = new SockJS('http://52.79.108.20:8080/websocket');
-		const stomp = Stomp.over(socket);
-		stomp.connect({}, () => {
-			setStompClient(stomp);
-			console.log('연결');
-		});
-
-		return () => {
-			if (stompClient) {
-				stompClient.disconnect();
-			}
-		};
-	}, []);
 
 	useEffect(() => {
 		const fetchScrappedAnimals = async () => {
@@ -717,9 +678,7 @@ const NewFamilyDetail = () => {
 								{boardIdData?.textEtc}
 							</p>
 						</DetailTextBox>
-						<button onClick={() => moveToChatHandler(user.nickname)}>
-							문의하기
-						</button>
+						<button onClick={() => moveToChatHandler()}>문의하기</button>
 					</div>
 				</NewFamilyDetailContainer>
 			)}

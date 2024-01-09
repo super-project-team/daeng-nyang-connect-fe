@@ -12,6 +12,13 @@ const NAVER_REGISTER = '/addNaverInfo';
 const DELETE_USER = '/deleteUser';
 
 const BASE_URL = 'http://localhost:8080';
+
+export const oauthApi = new APIClient(BASE_URL + '/oauth');
+
+export const oauthLoginCheck = async (token: string): Promise<any> => {
+	return await oauthApi.post('/login');
+};
+
 export const authApi = new APIClient(BASE_URL + '/api');
 interface SignupRequestBody {
 	email: string;

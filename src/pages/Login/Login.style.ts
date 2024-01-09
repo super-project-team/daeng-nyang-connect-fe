@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 interface ResponsiveProps {
-	$isMobile: boolean;
-	$isTablet: boolean;
-	$isPc: boolean;
-	$isMaxWidth: boolean;
+	$isMobile?: boolean;
+	$isTablet?: boolean;
+	$isPc?: boolean;
+	$isMaxWidth?: boolean;
 }
 
 export const LoginWrapper = styled.div`

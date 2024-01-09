@@ -106,8 +106,6 @@ export const RegisterSelectBoxLeft = styled.select<ResponsiveProps>`
 	}
 `;
 
-export const Option = styled.option``;
-
 export const RegisterInputSmall = styled(RegisterInput)`
 	width: 48%;
 `;

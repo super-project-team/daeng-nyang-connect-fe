@@ -1,8 +1,7 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import {
 	ExParagraph,
 	Logo,
-	Option,
 	Paragraph,
 	RegisterButton,
 	RegisterDiv,
@@ -24,6 +23,7 @@ interface SignupRequestBody {
 	town: string;
 	experience: boolean;
 	gender: string;
+	nickname: string;
 }
 
 const NaverRegister = () => {
@@ -41,7 +41,8 @@ const NaverRegister = () => {
 		city: '',
 		town: '',
 		experience: false,
-		gender: 'X',
+		gender: '',
+		nickname: '',
 	});
 
 	interface ConfirmModalProps {
@@ -49,12 +50,34 @@ const NaverRegister = () => {
 		onClose: () => void;
 	}
 
+	useEffect(() => {
+		if (document.cookie.includes('access')) {
+			const cookie = document.cookie;
+			const accessTokenMatch = cookie.match(/access_token=([^;]*)/);
+			const accessToken = accessTokenMatch ? accessTokenMatch[1] : null;
+
+			const refreshTokenMatch = cookie.match(/refresh_token=([^;]*)/);
+			const refreshToken = refreshTokenMatch ? refreshTokenMatch[1] : null;
+			if (accessToken) localStorage.setItem('access_token', accessToken);
+			if (refreshToken) localStorage.setItem('refresh_token', refreshToken);
+		}
+	}, []);
+
 	const inputValueHandler = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		const processedValue = name === 'experience' ? value === 'true' : value;
 		setInputValue((prevInputValue) => ({
 			...prevInputValue,
-			[name]: processedValue,
+			[name]: value,
+		}));
+		setTextIsTouched(true);
+	};
+
+	const inputSelectHandler = (e: ChangeEvent<HTMLSelectElement>) => {
+		const { name, value } = e.target;
+		const setValue = name === 'experience' ? JSON.parse(value) : value;
+		setInputValue((prevInputValue) => ({
+			...prevInputValue,
+			[name]: setValue,
 		}));
 		setTextIsTouched(true);
 	};
@@ -133,12 +156,13 @@ const NaverRegister = () => {
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}
 							name="gender"
+							onChange={inputSelectHandler}
 							required>
-							<Option value="" disabled selected>
+							<option value="" disabled selected>
 								성별
-							</Option>
-							<Option value="man">남성</Option>
-							<Option value="woman">여성</Option>
+							</option>
+							<option value="man">남성</option>
+							<option value="woman">여성</option>
 						</RegisterSelectBox>
 
 						<RegisterSelectBoxLeft
@@ -147,12 +171,13 @@ const NaverRegister = () => {
 							$isPc={$isPc}
 							$isMaxWidth={$isMaxWidth}
 							name="experience"
+							onChange={inputSelectHandler}
 							required>
-							<Option value="" disabled selected>
+							<option value="" disabled selected>
 								키워본 경험
-							</Option>
-							<Option value="true">있음</Option>
-							<Option value="false">없음</Option>
+							</option>
+							<option value="true">있음</option>
+							<option value="false">없음</option>
 						</RegisterSelectBoxLeft>
 					</RegisterDoubleDiv>
 					<RegisterInput placeholder="닉네임"></RegisterInput>

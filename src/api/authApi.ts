@@ -70,6 +70,7 @@ interface NaverRegisterRequestBody {
 	town: string;
 	experience: boolean;
 	gender: string;
+	nickname: string;
 }
 
 interface DeleteUserRequestBody {
@@ -145,6 +146,7 @@ export const naverRegister = async (
 	body: NaverRegisterRequestBody,
 ): Promise<any> => {
 	return await authApi.put(NAVER_REGISTER, {
+		nickname: body.nickname,
 		city: body.city,
 		town: body.town,
 		experience: body.experience,

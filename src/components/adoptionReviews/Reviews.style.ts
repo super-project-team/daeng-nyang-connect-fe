@@ -143,7 +143,10 @@ export const CommentBox = styled.div<ResponsiveProps>`
 	}
 
 	& img {
+		width: 100%;
 		height: 100%;
+		object-fit: cover;
+		object-position: center center;
 	}
 
 	& h5 {
@@ -166,27 +169,36 @@ export const CommentBox = styled.div<ResponsiveProps>`
 	}
 `;
 
-export const ModifyInputDiv = styled.div`
+export const CommentP = styled.p<ResponsiveProps>`
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
+	time {
+		font-size: ${(props) => (props.$isMobile ? '10px' : '14px')};
+	}
+`;
+export const ModifyInputDiv = styled.div<ResponsiveProps>`
 	position: relative;
 	flex: 1;
 	input {
-		width: 90%;
+		width: 100%;
 		height: 100%;
-		font-size: 16px;
-		border: 2px solid var(--color-ligth-salmon);
-		&:focus {
-			border: none;
-		}
+		border: 1px solid var(--color-peach);
+		border-radius: 3px;
+		font-size: ${(props) => (props.$isMobile ? '12px' : '16px')};
+		outline-color: var(--color-light-salmon);
 	}
 `;
-export const ModifyBtnsBox = styled.div`
+export const ModifyBtnsBox = styled.div<ResponsiveProps>`
 	position: absolute;
-	top: -12px;
-	right: 12%;
+	top: 50%;
+	transform: translateY(-50%);
+	right: 5px;
 	gap: 4px;
 	button {
-		width: 40px;
-		font-size: 14px;
+		width: ${(props) => (props.$isMobile ? '35px' : '40px')};
+		margin-top: 0;
+		font-size: ${(props) => (props.$isMobile ? '12px' : '14px')};
 	}
 `;
 

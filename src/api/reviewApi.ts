@@ -16,9 +16,7 @@ interface ReviewRequest {
 	textReview: string;
 	files: File[];
 }
-interface ReviewModify {
-	textReview: string;
-}
+
 export interface ReviewData {
 	boardId: number;
 	animalId: number;
@@ -28,6 +26,7 @@ export interface ReviewData {
 	age: number;
 	nickname: string;
 	userThumbnail: string;
+	reviewLike: number;
 }
 
 interface Comments {
@@ -69,9 +68,9 @@ export const deleteReview = async (reviewId: number | null) => {
 	return await reviewApi.delete(`review/delete?reviewId=${reviewId}`);
 };
 
-export const modifyReview = async (reviewId: number, body: ReviewModify) => {
+export const modifyReview = async (reviewId: number, body: string) => {
 	return await reviewApi.put(`review/modify?reviewId=${reviewId}`, {
-		textReview: body.textReview,
+		textReview: body,
 	});
 };
 
@@ -92,11 +91,11 @@ export const postComment = async (
 	});
 };
 
-export const modifyComment = async (reviewId: number, body: ReviewComment) => {
+export const modifyComment = async (reviewId: number, body: string) => {
 	return await reviewApi.put(
 		`/review/comments/modify?reviewCommentsId=${reviewId}`,
 		{
-			comment: body.comment,
+			comment: body,
 		},
 	);
 };

@@ -33,6 +33,9 @@ const Home = () => {
 		return <Loading />;
 	}
 
+	if (loading) {
+		return <Loading />;
+	}
 	return (
 		<>
 			<Banner />

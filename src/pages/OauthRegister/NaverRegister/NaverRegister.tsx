@@ -65,6 +65,7 @@ const NaverRegister = () => {
 			const response = await naverRegister(inputValue);
 			if (!response) return;
 			setConfirmModalIsOpen(true);
+			navigate('/socialLogin');
 		} catch (error) {
 			if (e instanceof TypeError) {
 				// TypeError
@@ -154,7 +155,7 @@ const NaverRegister = () => {
 							<Option value="false">없음</Option>
 						</RegisterSelectBoxLeft>
 					</RegisterDoubleDiv>
-
+					<RegisterInput placeholder="닉네임"></RegisterInput>
 					<RegisterButton
 						type="submit"
 						$isMobile={$isMobile}

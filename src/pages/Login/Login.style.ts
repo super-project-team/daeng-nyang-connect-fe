@@ -73,10 +73,23 @@ export const LoginButton = styled.button<ResponsiveProps>`
 	border-radius: 10px;
 	box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.25);
 	margin-bottom: 10px;
+	transition: background 0.3s ease-in-out;
 
 	&:hover {
 		cursor: pointer;
 		background-color: rgba(227, 155, 166, 1);
+	}
+	&.social {
+		height: auto;
+		padding: 10px 80px;
+		margin-bottom: 30px;
+	}
+	&.cancel {
+		background-color: #eee;
+		color: #000;
+		&:hover {
+			background-color: #ddd;
+		}
 	}
 `;
 

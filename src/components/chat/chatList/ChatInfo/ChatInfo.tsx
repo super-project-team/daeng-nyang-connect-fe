@@ -8,31 +8,46 @@ import {
 	ChatTime,
 	NoneReadCountEm,
 } from './ChatInfo.style';
+import { useParams } from 'react-router-dom';
+import { getChatDetails, getChatLists } from '../../../../api/chatApi';
+import { useQuery } from 'react-query';
+import { MOVE_ROOM, MOVE_TO_CHAT } from '../../../../slice/chatSlice';
+import { useState } from 'react';
 
-type BgProps = {
-	className?: string;
-};
-
-const ChatInfo = ({ className }: BgProps) => {
+const ChatInfo = ({ chatinfo }: any) => {
 	const { $isMobile } = useResponsive();
 	const dispatch = useDispatch();
+	const params = useParams();
 
-	const changeRoomHandler = (roomId: string) => {
-		console.log(roomId);
+	const [isClicked, setIsClicked] = useState(false);
+
+	const currentUser = Number(params.id);
+	const counterUser = chatinfo?.userList.find(
+		(users: any) => users.userId !== currentUser,
+	);
+
+	const changeRoomHandler = async (roomId: number) => {
+		// console.log(roomId);
+		dispatch(MOVE_ROOM(roomId));
+		setIsClicked((prev: any) => !prev);
+		const response = await getChatDetails(roomId);
+		if (response) dispatch(MOVE_TO_CHAT(response));
 	};
+
+	const classChange = isClicked ? 'active' : '';
 
 	return (
 		<ChatListLi
-			className={className}
+			className={classChange}
 			$isMobile={$isMobile}
-			onClick={() => changeRoomHandler('roomId2')}>
+			onClick={() => changeRoomHandler(chatinfo.chatRoomId)}>
 			<UserImgDiv size="36px">
-				<img src="/assets/community1.jpg" alt="" />
+				<img src={counterUser?.userThumbnail} alt="" />
 			</UserImgDiv>
 			<ChatInfoDiv>
 				<ChatInfoEachDiv className="first-box">
-					<p>유저닉네임</p>
-					<ChatTime $isMobile={$isMobile}>30분 전</ChatTime>
+					<p>{counterUser?.nickname}</p>
+					{/* <ChatTime $isMobile={$isMobile}>30분 전</ChatTime> */}
 				</ChatInfoEachDiv>
 				<ChatInfoEachDiv>
 					<p>메시지 미리보기</p>

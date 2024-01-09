@@ -5,6 +5,7 @@ import {
 	CommentInputContainer,
 	CommentList,
 	CommentMoreUl,
+	CommentP,
 	LikeContainer,
 	ModifyBtnsBox,
 	ModifyInputDiv,
@@ -16,6 +17,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
 	deleteComment,
 	getAllComments,
+	likeReview,
 	modifyComment,
 	postComment,
 } from '../../../api/reviewApi';
@@ -37,6 +39,7 @@ interface Comments {
 }
 interface CommentsProps {
 	reviewId: number;
+	reviewLike: number;
 }
 
 interface LikedItems {
@@ -44,7 +47,7 @@ interface LikedItems {
 	boardName: string;
 }
 
-const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
+const ReviewCommentBox = ({ reviewId, reviewLike }: CommentsProps) => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
 	const queryClient = useQueryClient();
 	const user = useSelector((state: any) => state.user);
@@ -65,10 +68,12 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 			queryKey: ['getAllComments', reviewId],
 			queryFn: () => getAllComments(reviewId),
 		},
-		{ queryKey: 'getUserLikes', queryFn: getUserLikes },
+		{ queryKey: ['getUserLikes', user], queryFn: getUserLikes },
 	]);
 	const comments = allComments.data;
-	const reviewLikes = userLikes.data;
+	const reviewLikes = userLikes.data?.filter(
+		(item: any) => item.boardName === 'Review',
+	);
 
 	const { mutate: modifyCommentMutate } = useMutation(
 		async (commentsId: number) => {
@@ -83,11 +88,12 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 		},
 	);
 
-	const clickLikeMarkHandler = () => {
+	const clickLikeMarkHandler = async () => {
 		if (!user.isLoggedIn) {
 			setLoginPopup((prev) => !prev);
 		} else {
-			setClickedLikeMark((prev) => !prev);
+			await likeReview(reviewId);
+			userLikes.refetch();
 		}
 	};
 
@@ -161,14 +167,14 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 										<img src={comment.userThumbnail} alt="" />
 									</div>
 									<h5>{comment.nickname}</h5>
-									<ModifyInputDiv>
+									<ModifyInputDiv $isMobile={$isMobile}>
 										{modify[comment.commentsId] ? (
 											<div style={{ width: '100%', borderRadius: '0' }}>
 												<input
 													defaultValue={comment.comment}
 													onChange={commentModifyChangeHandler}
 												/>
-												<ModifyBtnsBox>
+												<ModifyBtnsBox $isMobile={$isMobile}>
 													<button
 														style={{ marginRight: '4px' }}
 														onClick={async () => {
@@ -188,19 +194,23 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 												</ModifyBtnsBox>
 											</div>
 										) : (
-											<p>{comment.comment}</p>
+											<CommentP $isMobile={$isMobile}>
+												<p>{comment.comment}</p>
+												<time>
+													{formatDateDifferenceFromString(comment.createdAt)}
+												</time>
+											</CommentP>
 										)}
 									</ModifyInputDiv>
-									<time>
-										{formatDateDifferenceFromString(comment.createdAt)}
-									</time>
 									<span
 										onClick={() =>
 											setCommentMore((prev) => ({
 												[comment.commentsId]: !prev[comment.commentsId],
 											}))
 										}>
-										{user.isLoggedIn && <RiMore2Line className="more-icon" />}
+										{user.isLoggedIn && comment.nickname == user.nickname && (
+											<RiMore2Line className="more-icon" />
+										)}
 									</span>
 									{commentMore[comment.commentsId] && (
 										<CommentMoreUl>
@@ -240,7 +250,7 @@ const ReviewCommentBox = ({ reviewId }: CommentsProps) => {
 							size={getLikeSize()}
 							onClick={clickLikeMarkHandler}
 						/>
-						<p>좋아요 ?개</p>
+						<p>좋아요 {reviewLike}개</p>
 					</LikeContainer>
 				</div>
 				<CommentInputContainer

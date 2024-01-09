@@ -35,9 +35,9 @@ export const CommunityImgDiv = styled.div<Props>`
 		}
 	}
 	img {
-		position: relative;
-		left: -55px;
+		width: 100%;
 		height: 100%;
+		object-fit: cover;
 		transition: all 0.2s ease-in;
 	}
 `;

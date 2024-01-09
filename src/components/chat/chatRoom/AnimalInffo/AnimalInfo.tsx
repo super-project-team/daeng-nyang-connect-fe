@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import {
 	AnimalInfoDiv,
@@ -22,20 +22,24 @@ export interface ChatAnimalInfo {
 	images: string[];
 }
 
-const AnimalInfo = () => {
+const AnimalInfo = ({ chatLists }: any) => {
 	const [isCompleted, setIsCompleted] = useState(false);
 	const { $isMobile } = useResponsive();
 	const navigate = useNavigate();
+	const params = useParams();
 
 	const chatAnimalState = useSelector((state: any) => state.chat.chatAnimals);
-	console.log(chatAnimalState);
+	const animalId = chatAnimalState.animalId;
+	const currentUser = Number(params.id);
+	const counterUser = chatLists?.userList.find(
+		(users: any) => users.userId !== currentUser,
+	);
+
 	const reviewBtnHandler = () => {
-		const animalId = chatAnimalState[1].animalId;
 		navigate(`/adoptionReviews/reviewForm/${animalId}`);
 	};
 	const adoptCompleteHandler = async () => {
-		const animalId = chatAnimalState[1].animalId;
-		const adoptUserId = 39;
+		const adoptUserId = counterUser;
 
 		try {
 			const complete: any = await adoptComplete(animalId, adoptUserId);
@@ -49,27 +53,31 @@ const AnimalInfo = () => {
 	};
 
 	return (
-		<AnimalInfoDiv $isMobile={$isMobile}>
-			<AnimalInfoImgDiv $isMobile={$isMobile}>
-				<img src={chatAnimalState[2].images} alt="" />
-			</AnimalInfoImgDiv>
-			<AnimalInfoTextDiv>
-				<p>이름: {chatAnimalState[2].animalName}</p>
-				<p>나이: {chatAnimalState[2].age}</p>
-				<p>품종: {chatAnimalState[2].breed}</p>
-			</AnimalInfoTextDiv>
-			<BtnDiv>
-				{!isCompleted ? (
-					<CompleteBtn $isMobile={$isMobile} onClick={reviewBtnHandler}>
-						후기 쓰기
-					</CompleteBtn>
-				) : (
-					<CompleteBtn $isMobile={$isMobile} onClick={adoptCompleteHandler}>
-						입양 신청
-					</CompleteBtn>
-				)}
-			</BtnDiv>
-		</AnimalInfoDiv>
+		<>
+			{chatAnimalState.length > 0 && (
+				<AnimalInfoDiv $isMobile={$isMobile}>
+					<AnimalInfoImgDiv $isMobile={$isMobile}>
+						<img src={chatAnimalState.animalImage} alt="" />
+					</AnimalInfoImgDiv>
+					<AnimalInfoTextDiv>
+						<p>이름: {chatAnimalState.animalName}</p>
+						<p>나이: {chatAnimalState.animalAge}</p>
+						<p>품종: {chatAnimalState.breed}</p>
+					</AnimalInfoTextDiv>
+					<BtnDiv>
+						{isCompleted ? (
+							<CompleteBtn $isMobile={$isMobile} onClick={reviewBtnHandler}>
+								후기 쓰기
+							</CompleteBtn>
+						) : (
+							<CompleteBtn $isMobile={$isMobile} onClick={adoptCompleteHandler}>
+								입양 신청
+							</CompleteBtn>
+						)}
+					</BtnDiv>
+				</AnimalInfoDiv>
+			)}
+		</>
 	);
 };
 

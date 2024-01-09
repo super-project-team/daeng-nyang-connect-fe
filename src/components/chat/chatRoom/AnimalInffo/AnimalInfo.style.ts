@@ -23,7 +23,10 @@ export const AnimalInfoImgDiv = styled.div<AnimalInfoProps>`
 	margin-right: 10px;
 	overflow: hidden;
 	img {
+		width: 100%;
 		height: 100%;
+		object-fit: cover;
+		object-position: center center;
 	}
 `;
 export const AnimalInfoTextDiv = styled.div`

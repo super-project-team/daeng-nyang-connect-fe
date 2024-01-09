@@ -9,18 +9,14 @@ import { useSelector } from 'react-redux';
 import { UserState } from '../../../../slice/userSlice';
 
 const MobileMenuMyPage = () => {
-	const user = useSelector((state: UserState) => state);
+	const user = useSelector((state: any) => state.user);
 	return (
 		<>
-			<ul
-				style={{ marginBottom: '20px', display: 'flex', alignItems: 'center' }}>
+			<ul>
 				<MobileDrawerFirstLi>
-					<UserImgDiv>
-						<img src="/assets/community2.jpg" alt="" />
-					</UserImgDiv>
-				</MobileDrawerFirstLi>
-				<MobileDrawerFirstLi style={{ marginBottom: '8px' }}>
-					<p>{user.nickname}</p>
+					<MobileDrawerH3>
+						<img src="/assets/LOGO(footer).svg" alt="" />
+					</MobileDrawerH3>
 				</MobileDrawerFirstLi>
 			</ul>
 			<Link to={`users/${user.id}`}>

@@ -86,4 +86,8 @@ export const UtilDd = styled.dd<NavProps>`
 		height: 100%;
 		stroke-width: ${(props) => (props.$isMobile ? '1.4' : '1.6')};
 	}
+
+	.alarm-icon {
+		stroke-width: 0.1;
+	}
 `;

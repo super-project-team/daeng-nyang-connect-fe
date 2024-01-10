@@ -45,6 +45,7 @@ import IdFind from './pages/AuthFind/IdFind/IdFind';
 import PasswordFind from './pages/AuthFind/PasswordFind/PasswordFind';
 import KaKaoRegister from './pages/OauthRegister/KaKaoRegister/KaKaoRegister';
 import NaverRegister from './pages/OauthRegister/NaverRegister/NaverRegister';
+import AlarmBox from './components/alarm/AlarmBox';
 
 const router = createBrowserRouter([
 	{
@@ -83,6 +84,7 @@ const router = createBrowserRouter([
 					{ index: true, element: <User /> },
 					{ path: 'chatBox', element: <ChatBox /> },
 					{ path: 'chatRoom', element: <ChatRoom /> },
+					{ path: 'alarmBox', element: <AlarmBox /> },
 				],
 			},
 			{

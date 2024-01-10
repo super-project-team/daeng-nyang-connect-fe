@@ -26,7 +26,7 @@ const CITY = 'city';
 const ADOPTION_STATUS = 'adoptionStatus';
 const GET_ALL = 'getAll';
 const DELETE = '/delete';
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://52.79.108.20:8080';
 
 const animalMockApi = new APIClient('/data');
 
@@ -42,7 +42,7 @@ export const getNewFamily = async (): Promise<any> => {
 	return await NewFamilyApi.get(GET_ALL);
 };
 
-export const adoptComplete = async (animalId: number, adoptUserId: number) => {
+export const adoptComplete = async (animalId: number, adoptUserId: any) => {
 	return await NewFamilyApi.put(
 		COMPLETE + `?animalId=${animalId}&&adoptedUserId=${adoptUserId}`,
 	);

@@ -1,32 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface ChatAnimalInfo {
-	animalId: number;
-	animalName: string;
-	animalAge: string;
-	breed: string;
-	animalImage: string;
-}
-interface ChatRoom {
-	roomId: number;
-}
-
-export interface ChatState {
-	chatAnimals: ChatAnimalInfo;
-	chatRoom: ChatRoom;
-}
-
-const initialState: ChatState = {
-	chatAnimals: {
-		animalId: 0,
-		animalAge: '',
-		animalImage: '',
-		animalName: '',
-		breed: '',
-	},
-	chatRoom: {
-		roomId: 0,
-	},
+const initialState = {
+	chatAnimal: {},
+	chatAnimalId: 0,
+	chatCounterUser: {},
 };
 
 const chatSlice = createSlice({
@@ -34,21 +11,25 @@ const chatSlice = createSlice({
 	initialState,
 	reducers: {
 		GET_ANIMAL_ID(state, action) {
-			state.chatAnimals.animalId = action.payload;
+			state.chatAnimalId = action.payload;
 		},
-		MOVE_TO_CHAT(state, action) {
+		CHAT_ANIMAL(state, action) {
 			const newAnimal = action.payload;
-			state.chatAnimals.animalImage = newAnimal.animalImage;
-			state.chatAnimals.animalName = newAnimal.animalNmae;
-			state.chatAnimals.animalAge = newAnimal.animalAge;
-			state.chatAnimals.breed = newAnimal.breed;
+			state.chatAnimal = {
+				chatRoomId: newAnimal.chatRoomId,
+				animalName: newAnimal.animalName,
+				animalImage: newAnimal.animalImage,
+				animalAge: newAnimal.animalAge,
+				breed: newAnimal.breed,
+			};
 		},
-		MOVE_ROOM(state, action) {
-			state.chatRoom.roomId = action.payload;
+		ADD_CHAT_COUNTER_USER(state, action) {
+			state.chatCounterUser = action.payload;
 		},
 	},
 });
 
-export const { MOVE_TO_CHAT, MOVE_ROOM, GET_ANIMAL_ID } = chatSlice.actions;
+export const { CHAT_ANIMAL, GET_ANIMAL_ID, ADD_CHAT_COUNTER_USER } =
+	chatSlice.actions;
 
 export default chatSlice.reducer;

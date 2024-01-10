@@ -14,7 +14,8 @@ const ChatRoom = ({ chatLists }: any) => {
 	const { $isMobile } = useResponsive();
 	const params = useParams();
 	const userId = Number(params.id);
-	const roomId = useSelector((state: any) => state.chat.chatRoom.roomId);
+	const roomId = useSelector((state: any) => state.chat.chatAnimal.chatRoomId);
+	const counterUser = useSelector((state: any) => state.chat.chatCounterUser);
 
 	const [stompClient, setStompClient] = useState<any>(null);
 	const [messages, setMessages] = useState<any>([]);
@@ -39,21 +40,21 @@ const ChatRoom = ({ chatLists }: any) => {
 			}
 		};
 	}, []);
-
 	useEffect(() => {
 		if (stompClient) {
 			stompClient.subscribe(`/topic/chat/${roomId}`, (response: any) => {
 				const message = JSON.parse(response.body);
 				console.log(message);
-				setMessages((prev: any) => [...prev, message]);
+				console.log('구독');
+				// setMessages((prev: any) => [...prev, message]);
 			});
 		}
-
 		return () => {
 			stompClient?.unsubscribe();
+			console.log('return문');
 		};
 	}, [stompClient]);
-
+	console.log('메시지 :', messages);
 	return (
 		<ChatRoomDiv $isMobile={$isMobile}>
 			<ChatRoomHeader />
@@ -63,9 +64,7 @@ const ChatRoom = ({ chatLists }: any) => {
 					messages.map((message: any, index: number) => (
 						<ChatBubbleLi
 							key={index}
-							className={
-								message.receiverUserId == userId ? 'receiver' : 'sender'
-							}>
+							className={counterUser !== userId ? 'sender' : 'receiver'}>
 							{message.content}
 						</ChatBubbleLi>
 					))}

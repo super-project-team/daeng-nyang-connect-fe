@@ -15,18 +15,10 @@ interface Message {
 
 const token = localToken.get();
 
-const ChatInput = ({ stompClient, chatLists }: any) => {
+const ChatInput = ({ stompClient }: any) => {
 	const { $isMobile } = useResponsive();
-	const roomId = useSelector((state: any) => state.chat.chatRoom.roomId);
+	const roomId = useSelector((state: any) => state.chat.chatAnimal.chatRoomId);
 	const [messageInput, setMessageInput] = useState('');
-	const params = useParams();
-	const currentUser = Number(params.id);
-	// const counterUser = chatLists.userList.find(
-	// 	(users: any) => users.user.userId !== currentUser,
-	// );
-	// console.log(
-	// 	chatLists.find((chats: any) => chats.chatRoomId === roomId).userList,
-	// );
 
 	const sendMessage = () => {
 		if (stompClient && messageInput) {

@@ -11,15 +11,18 @@ import {
 import { useParams } from 'react-router-dom';
 import { getChatDetails, getChatLists } from '../../../../api/chatApi';
 import { useQuery } from 'react-query';
-import { MOVE_ROOM, MOVE_TO_CHAT } from '../../../../slice/chatSlice';
+import {
+	ADD_CHAT_COUNTER_USER,
+	CHAT_ANIMAL,
+} from '../../../../slice/chatSlice';
 import { useEffect, useState } from 'react';
 
-const ChatInfo = ({ chatinfo }: any) => {
+const ChatInfo = ({ chatinfo, key }: any) => {
 	const { $isMobile } = useResponsive();
 	const dispatch = useDispatch();
 	const params = useParams();
 
-	const [isClicked, setIsClicked] = useState(false);
+	const [isClicked, setIsClicked] = useState<{ [key: number]: boolean }>({});
 	const [counterUser, setCounterUser] = useState({
 		userId: 0,
 		nickname: '',
@@ -32,19 +35,35 @@ const ChatInfo = ({ chatinfo }: any) => {
 			const counterUserInfo = chatinfo.userList.find(
 				(users: any) => users.userId !== currentUser,
 			);
+			dispatch(ADD_CHAT_COUNTER_USER(counterUserInfo));
 			setCounterUser(counterUserInfo);
 		}
 	}, [chatinfo]);
 
 	const changeRoomHandler = async (roomId: number) => {
 		// console.log(roomId);
-		dispatch(MOVE_ROOM(roomId));
-		setIsClicked((prev: any) => !prev);
-		const response = await getChatDetails(roomId);
-		if (response) dispatch(MOVE_TO_CHAT(response));
+		setIsClicked((prev: any) => ({ [key]: !prev[key] }));
+		try {
+			const response = await getChatDetails(roomId);
+			if (response) {
+				const { chatRoomId, animalImage, animalAge, animalName, breed } =
+					response;
+				dispatch(
+					CHAT_ANIMAL({
+						chatRoomId: chatRoomId,
+						animalAge: animalAge,
+						animalImage: animalImage,
+						animalName: animalName,
+						breed: breed,
+					}),
+				);
+			}
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
-	const classChange = isClicked ? 'active' : '';
+	const classChange = isClicked[key] ? 'active' : '';
 
 	return (
 		<ChatListLi

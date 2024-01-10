@@ -26,7 +26,13 @@ export const ChatBubbleLi = styled.li`
 	padding: 8px 12px;
 	margin-bottom: 10px;
 	border-radius: 15px;
-	background-color: var(--color-light-salmon);
-	color: #fff;
+
 	list-style: none;
+	&.sender {
+		background-color: var(--color-light-salmon);
+		color: #fff;
+	}
+	&.receiver {
+		background-color: #ddd;
+	}
 `;

@@ -9,7 +9,7 @@ import {
 } from './AnimalInfo.style';
 import { useSelector } from 'react-redux';
 import { adoptComplete } from '../../../../api/newFamilyApi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface CompleteResponse {
 	status: number;
@@ -26,20 +26,16 @@ const AnimalInfo = ({ chatLists }: any) => {
 	const [isCompleted, setIsCompleted] = useState(false);
 	const { $isMobile } = useResponsive();
 	const navigate = useNavigate();
-	const params = useParams();
 
-	const chatAnimalState = useSelector((state: any) => state.chat.chatAnimals);
+	const chatAnimalState = useSelector((state: any) => state.chat.chatAnimal);
 	const animalId = chatAnimalState.animalId;
-	const currentUser = Number(params.id);
-	const counterUser = chatLists?.userList.find(
-		(users: any) => users.userId !== currentUser,
-	);
+	const counterUser = useSelector((state: any) => state.chat.chatCounterUser);
 
 	const reviewBtnHandler = () => {
 		navigate(`/adoptionReviews/reviewForm/${animalId}`);
 	};
 	const adoptCompleteHandler = async () => {
-		const adoptUserId = counterUser;
+		const adoptUserId = counterUser.userId;
 
 		try {
 			const complete: any = await adoptComplete(animalId, adoptUserId);
@@ -54,7 +50,7 @@ const AnimalInfo = ({ chatLists }: any) => {
 
 	return (
 		<>
-			{chatAnimalState.length > 0 && (
+			{chatAnimalState && (
 				<AnimalInfoDiv $isMobile={$isMobile}>
 					<AnimalInfoImgDiv $isMobile={$isMobile}>
 						<img src={chatAnimalState.animalImage} alt="" />

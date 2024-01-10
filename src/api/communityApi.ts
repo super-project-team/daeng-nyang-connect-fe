@@ -6,7 +6,7 @@ const SIZE = 'getSize';
 const POST = 'post';
 const MODIFY = 'modify';
 const DELETE = 'delete';
-const BASE_URL = 'http://localhost:8080';
+const BASE_URL = 'http://52.79.108.20:8080';
 
 export const communityApi = new APIClient(BASE_URL + '/api');
 

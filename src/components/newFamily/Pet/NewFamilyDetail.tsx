@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { GET_ANIMAL_ID, MOVE_TO_CHAT } from '../../../slice/chatSlice';
+import { GET_ANIMAL_ID } from '../../../slice/chatSlice';
 import {
 	deleteAnimal,
 	getNewFamily,

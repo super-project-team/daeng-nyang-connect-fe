@@ -1,14 +1,18 @@
 /* eslint-disable react/prop-types */
+import { useQuery } from 'react-query';
 import { useResponsive } from '../../hooks/useResponsive';
 import { AlarmContainer, AlarmItemBox, AlarmTitle } from './Alarm.style';
+import { NotifyLike } from '../../api/alarmApi';
 
-interface Re {
+interface ResponsiveProps {
 	$isMobile: boolean;
 	$isMaxWidth: boolean;
 }
 
-const Alarm: React.FC<Re> = () => {
+const Alarm: React.FC<ResponsiveProps> = () => {
 	const { $isMobile, $isMaxWidth } = useResponsive();
+
+	const { data: items, refetch } = useQuery(['NotifyLike'], NotifyLike);
 
 	return (
 		<AlarmContainer $isMobile={$isMobile} $isMaxWidth={$isMaxWidth}>
@@ -16,7 +20,11 @@ const Alarm: React.FC<Re> = () => {
 				내소식
 			</AlarmTitle>
 			<AlarmItemBox $isMobile={$isMobile} $isMaxWidth={$isMaxWidth}>
-				<div></div>
+				{items && Array.isArray(items) ? (
+					items?.map((item: string, index) => <div key={index}></div>)
+				) : (
+					<p>새로운 알람이 없습니다</p>
+				)}
 			</AlarmItemBox>
 		</AlarmContainer>
 	);

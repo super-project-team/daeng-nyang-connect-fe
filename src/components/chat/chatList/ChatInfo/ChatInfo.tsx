@@ -12,7 +12,7 @@ import { useParams } from 'react-router-dom';
 import { getChatDetails, getChatLists } from '../../../../api/chatApi';
 import { useQuery } from 'react-query';
 import { MOVE_ROOM, MOVE_TO_CHAT } from '../../../../slice/chatSlice';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 const ChatInfo = ({ chatinfo }: any) => {
 	const { $isMobile } = useResponsive();
@@ -20,11 +20,21 @@ const ChatInfo = ({ chatinfo }: any) => {
 	const params = useParams();
 
 	const [isClicked, setIsClicked] = useState(false);
+	const [counterUser, setCounterUser] = useState({
+		userId: 0,
+		nickname: '',
+		userThumbnail: '',
+	});
 
 	const currentUser = Number(params.id);
-	const counterUser = chatinfo?.userList.find(
-		(users: any) => users.userId !== currentUser,
-	);
+	useEffect(() => {
+		if (chatinfo) {
+			const counterUserInfo = chatinfo.userList.find(
+				(users: any) => users.userId !== currentUser,
+			);
+			setCounterUser(counterUserInfo);
+		}
+	}, [chatinfo]);
 
 	const changeRoomHandler = async (roomId: number) => {
 		// console.log(roomId);

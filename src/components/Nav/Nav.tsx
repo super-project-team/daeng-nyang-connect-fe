@@ -27,7 +27,7 @@ const Nav = () => {
 	const location = useLocation();
 	const pathname = location.pathname;
 	const navigate = useNavigate();
-	const { $isMaxWidth, $isMobile } = useResponsive();
+	const { $isMaxWidth, $isTablet, $isPc, $isMobile } = useResponsive();
 	const [mMenuIsOpen, setmMenuIsOpen] = useState(false);
 	const user = useSelector((state: UserState) => state.user);
 
@@ -42,9 +42,7 @@ const Nav = () => {
 	};
 
 	const alarmIconClickHandler = () => {
-		user.isLoggedIn
-			? navigate(`/users/${user.id}/alarmBox`)
-			: navigate('/login');
+		user.isLoggedIn ? navigate(`/users/${user.id}/alarm`) : navigate('/login');
 	};
 
 	const chatIconClickHandler = () => {

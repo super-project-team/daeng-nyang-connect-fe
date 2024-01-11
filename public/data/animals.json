@@ -1,0 +1,86 @@
+[
+	{
+		"animalId": 1,
+		"index": 1,
+		"animalName": "gpdl",
+		"age": "6년5개월",
+		"image": "/assets/animal4.jpg"
+	},
+	{
+		"animalId": 2,
+		"index": 2,
+		"animalName": "냥냥",
+		"age": "6년5개월",
+		"image": "/assets/animal1.jpg"
+	},
+	{
+		"animalId": 3,
+		"index": 3,
+		"animalName": "냥냥",
+		"age": "6년5개월",
+		"image": "/assets/animal1.jpg"
+	},
+	{
+		"animalId": 4,
+		"index": 4,
+		"animalName": "냥냥",
+		"age": "6년5개월",
+		"image": "/assets/animal1.jpg"
+	},
+	{
+		"animalId": 5,
+		"index": 5,
+		"animalName": "냥냥",
+		"age": "6년5개월",
+		"image": "/assets/animal1.jpg"
+	},
+	{
+		"animalId": 6,
+		"index": 6,
+		"animalName": "냥냥",
+		"age": "6년5개월",
+		"image": "/assets/animal1.jpg"
+	},
+	{
+		"animalId": 7,
+		"index": 7,
+		"animalName": "냥냥",
+		"age": "6년5개월",
+		"image": "/assets/animal1.jpg"
+	},
+	{
+		"animalId": 8,
+		"index": 8,
+		"animalName": "냥냥",
+		"age": "6년5개월",
+		"image": "/assets/animal1.jpg"
+	},
+	{
+		"animalId": 9,
+		"index": 9,
+		"animalName": "냥냥",
+		"age": "6년5개월",
+		"image": "/assets/animal1.jpg"
+	},
+	{
+		"animalId": 10,
+		"index": 10,
+		"animalName": "냥냥",
+		"age": "6년5개월",
+		"image": "/assets/animal1.jpg"
+	},
+	{
+		"animalId": 11,
+		"index": 11,
+		"animalName": "냥냥",
+		"age": "6년5개월",
+		"image": "/assets/animal1.jpg"
+	},
+	{
+		"animalId": 12,
+		"index": 12,
+		"animalName": "냥냥",
+		"age": "6년5개월",
+		"image": "/assets/animal1.jpg"
+	}
+]

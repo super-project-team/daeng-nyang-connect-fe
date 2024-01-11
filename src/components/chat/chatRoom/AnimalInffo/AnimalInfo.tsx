@@ -10,6 +10,7 @@ import {
 import { useSelector } from 'react-redux';
 import { adoptComplete } from '../../../../api/newFamilyApi';
 import { useEffect, useState } from 'react';
+import useCounterUser from '../../../../hooks/useCounterUser';
 
 interface CompleteResponse {
 	status: number;
@@ -22,14 +23,13 @@ export interface ChatAnimalInfo {
 	images: string[];
 }
 
-const AnimalInfo = ({ chatLists }: any) => {
+const AnimalInfo = ({ counterUser }: any) => {
 	const [isCompleted, setIsCompleted] = useState(false);
 	const { $isMobile } = useResponsive();
 	const navigate = useNavigate();
 
 	const chatAnimalState = useSelector((state: any) => state.chat.chatAnimal);
 	const animalId = chatAnimalState.animalId;
-	const counterUser = useSelector((state: any) => state.chat.chatCounterUser);
 	const reviewBtnHandler = () => {
 		navigate(`/adoptionReviews/reviewForm/${animalId}`);
 	};

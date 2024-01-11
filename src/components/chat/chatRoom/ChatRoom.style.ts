@@ -19,6 +19,19 @@ export const ChatBubbleUl = styled.ul`
 	margin: 30px 30px;
 	height: 560px;
 	overflow-y: scroll;
+	&::-webkit-scrollbar {
+		width: 6px;
+	}
+	&::-webkit-scrollbar-thumb {
+		height: 20%; /* 스크롤바의 길이 */
+		background: var(--color-peach); /* 스크롤바의 색상 */
+
+		border-radius: 10px;
+	}
+	&::-webkit-scrollbar-track {
+		background: rgba(0, 0, 0, 0.05); /*스크롤바 뒷 배경 색상*/
+	}
+
 	&.sender {
 		align-items: end;
 	}
@@ -37,6 +50,7 @@ export const ChatBubbleLi = styled.li`
 	&.sender {
 		background-color: var(--color-light-salmon);
 		color: #fff;
+		margin-right: 20px;
 	}
 	&.receiver {
 		background-color: #ddd;

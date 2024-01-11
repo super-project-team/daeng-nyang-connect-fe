@@ -28,10 +28,10 @@ const ChatInput = ({ stompClient }: any) => {
 
 			const message = {
 				roomId: roomId,
-				content: messageInput,
+				content: messageInput.trim(),
 			};
 
-			// stompClient.send('app/sendMessage', headers, JSON.stringify(message));
+			stompClient.send('app/sendMessage', headers, JSON.stringify(message));
 			stompClient.send(
 				'/topic/chat/' + roomId,
 				headers,
@@ -50,6 +50,9 @@ const ChatInput = ({ stompClient }: any) => {
 				onChange={(e) => {
 					e.stopPropagation();
 					setMessageInput(e.target.value);
+				}}
+				onKeyDown={(e) => {
+					e.keyCode === 13 ? sendMessage() : null;
 				}}
 			/>
 			<SendBtn $isMobile={$isMobile} onClick={sendMessage}>

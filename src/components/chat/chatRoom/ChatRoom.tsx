@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import localToken from '../../../api/LocalToken';
 import { useResponsive } from '../../../hooks/useResponsive';
 import AnimalInfo from './AnimalInffo/AnimalInfo';
@@ -13,6 +13,7 @@ import useCounterUser from '../../../hooks/useCounterUser';
 
 const ChatRoom = () => {
 	const { $isMobile } = useResponsive();
+	const scrollRef = useRef<HTMLUListElement | null>(null);
 	const userId = useSelector((state: any) => state.user.id);
 	const roomId = useSelector((state: any) => state.chat.chatAnimal.chatRoomId);
 	const counterUser = useCounterUser(roomId);
@@ -59,11 +60,22 @@ const ChatRoom = () => {
 		}
 	}, [stompClient, roomId]);
 
+	useEffect(() => {
+		scrollToBottom();
+	}, [messages]);
+
+	const scrollToBottom = () => {
+		if (scrollRef.current) {
+			scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+		}
+	};
+
 	return (
 		<ChatRoomDiv $isMobile={$isMobile}>
 			<ChatRoomHeader counterUser={counterUser} />
 			<AnimalInfo counterUser={counterUser} />
 			<ChatBubbleUl
+				ref={scrollRef}
 				className={counterUser.userId != userId ? 'sender' : 'receiver'}>
 				{messages.length > 0 &&
 					messages.map((message: any, index: number) => (

@@ -9,16 +9,14 @@ import { LuMoreVertical } from 'react-icons/lu';
 import { IoIosArrowBack } from 'react-icons/io';
 import { useNavigate } from 'react-router';
 import { useSelector } from 'react-redux';
-import { useEffect } from 'react';
 
 const ChatRoomHeader = ({ counterUser }: any) => {
 	const navigate = useNavigate();
 	const { $isMobile } = useResponsive();
-	const user = useSelector((state: any) => state.user);
+	const userId = useSelector((state: any) => state.user.id);
 
 	const backToChatListHandler = () => {
-		const id = user.id;
-		navigate(`/users/${id}/chatBox`);
+		navigate(`/users/${userId}/chatBox`);
 	};
 
 	return (

@@ -30,7 +30,6 @@ const AnimalInfo = ({ chatLists }: any) => {
 	const chatAnimalState = useSelector((state: any) => state.chat.chatAnimal);
 	const animalId = chatAnimalState.animalId;
 	const counterUser = useSelector((state: any) => state.chat.chatCounterUser);
-
 	const reviewBtnHandler = () => {
 		navigate(`/adoptionReviews/reviewForm/${animalId}`);
 	};

@@ -9,39 +9,13 @@ import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import useCounterUser from '../../../hooks/useCounterUser';
 
-interface CounterUser {
-	nickname: string;
-	userId: number;
-	userThumbnail: string;
-}
-const ChatRoom = ({ chatLists }: any) => {
+const ChatRoom = () => {
 	const { $isMobile } = useResponsive();
-	const params = useParams();
-	const userId = Number(params.id);
-	const chatAnimals = useSelector((state: any) => state.chat.chatAnimal);
-	const roomId = chatAnimals.chatRoomId;
-
-	const [counterUser, setCounterUser] = useState<CounterUser>({
-		nickname: '',
-		userId: 0,
-		userThumbnail: '',
-	});
-
-	useEffect(() => {
-		if (chatLists) {
-			const currentRoom = chatLists.find(
-				(chat: any) => chat.chatRoomId === chatAnimals.chatRoomId,
-			);
-			if (currentRoom) {
-				const counterUser = currentRoom.userList.filter(
-					(users: any) => users.userId !== userId,
-				);
-
-				setCounterUser(counterUser[0]);
-			}
-		}
-	}, [chatAnimals]);
+	const userId = useSelector((state: any) => state.user.id);
+	const roomId = useSelector((state: any) => state.chat.chatAnimal.chatRoomId);
+	const counterUser = useCounterUser(roomId);
 
 	const [stompClient, setStompClient] = useState<any>(null);
 	const [messages, setMessages] = useState<any>([]);
@@ -83,23 +57,24 @@ const ChatRoom = ({ chatLists }: any) => {
 				subscription.unsubscribe();
 			};
 		}
-	}, [stompClient, chatAnimals]);
+	}, [stompClient, roomId]);
 
 	return (
 		<ChatRoomDiv $isMobile={$isMobile}>
 			<ChatRoomHeader counterUser={counterUser} />
-			<AnimalInfo chatLists={chatLists} />
-			<ChatBubbleUl>
+			<AnimalInfo counterUser={counterUser} />
+			<ChatBubbleUl
+				className={counterUser.userId != userId ? 'sender' : 'receiver'}>
 				{messages.length > 0 &&
 					messages.map((message: any, index: number) => (
 						<ChatBubbleLi
 							key={index}
-							className={counterUser.userId !== userId ? 'sender' : 'receiver'}>
+							className={counterUser.userId != userId ? 'sender' : 'receiver'}>
 							{message.content}
 						</ChatBubbleLi>
 					))}
 			</ChatBubbleUl>
-			<ChatInput stompClient={stompClient} chatLists={chatLists} />
+			<ChatInput stompClient={stompClient} />
 		</ChatRoomDiv>
 	);
 };

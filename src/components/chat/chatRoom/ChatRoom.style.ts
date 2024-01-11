@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 type ChatRoomProps = {
-	$isMobile: boolean;
+	$isMobile?: boolean;
 };
 
 export const ChatRoomDiv = styled.div<ChatRoomProps>`
@@ -16,10 +16,15 @@ export const ChatRoomDiv = styled.div<ChatRoomProps>`
 export const ChatBubbleUl = styled.ul`
 	display: flex;
 	flex-direction: column;
-	align-items: end;
 	margin: 30px 30px;
 	height: 560px;
 	overflow-y: scroll;
+	&.sender {
+		align-items: end;
+	}
+	&.receiver {
+		align-items: start;
+	}
 `;
 
 export const ChatBubbleLi = styled.li`

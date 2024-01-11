@@ -7,7 +7,7 @@ import ChatRoom from './chatRoom/ChatRoom';
 import { getChatLists } from '../../api/chatApi';
 import Loading from '../../pages/Loading/Loading';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { ChatRoomDiv } from './chatRoom/ChatRoom.style';
 
 const ChatContentsBox = () => {
 	const { $isMobile } = useResponsive();
@@ -15,15 +15,14 @@ const ChatContentsBox = () => {
 		data: chatLists,
 		isError,
 		isLoading,
+		refetch,
 	} = useQuery('getChatLists', getChatLists);
 
-	const [SelectedRoomId, setSelectedRoomId] = useState(0);
-	console.log(SelectedRoomId);
-	const chatAnimal = useSelector((state: any) => state.chat.chatAnimal);
+	const [openChat, setOpenChat] = useState(false);
 
 	useEffect(() => {
-		console.log(chatAnimal.chatRoomId);
-	}, [chatAnimal]);
+		refetch();
+	}, [chatLists]);
 
 	if (isLoading) return <Loading />;
 	return (
@@ -33,13 +32,18 @@ const ChatContentsBox = () => {
 				{chatLists ? (
 					<ChatList
 						chatLists={chatLists}
-						setSelectedRoomId={setSelectedRoomId}
+						setOpenChat={setOpenChat}
+						openChat={openChat}
 					/>
 				) : null}
 			</ChatInnerLeftDiv>
 			{!$isMobile && (
 				<ChatInnerRightDiv>
-					<ChatRoom chatLists={chatLists} />
+					{openChat ? (
+						<ChatRoom />
+					) : (
+						<ChatRoomDiv $isMobile={$isMobile}></ChatRoomDiv>
+					)}
 				</ChatInnerRightDiv>
 			)}
 		</>

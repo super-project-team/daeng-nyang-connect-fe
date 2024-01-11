@@ -13,12 +13,13 @@ export const ChatRoomDiv = styled.div<ChatRoomProps>`
 	border-radius: 20px;
 	margin-top: ${(props) => (props.$isMobile ? '45px' : null)};
 `;
-
 export const ChatBubbleUl = styled.ul`
 	display: flex;
 	flex-direction: column;
 	align-items: end;
 	margin: 30px 30px;
+	height: 560px;
+	overflow-y: scroll;
 `;
 
 export const ChatBubbleLi = styled.li`

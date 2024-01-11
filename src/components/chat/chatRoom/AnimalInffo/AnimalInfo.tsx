@@ -34,6 +34,7 @@ const AnimalInfo = ({ chatLists }: any) => {
 	const reviewBtnHandler = () => {
 		navigate(`/adoptionReviews/reviewForm/${animalId}`);
 	};
+
 	const adoptCompleteHandler = async () => {
 		const adoptUserId = counterUser.userId;
 

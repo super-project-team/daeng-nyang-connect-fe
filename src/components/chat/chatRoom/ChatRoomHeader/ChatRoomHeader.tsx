@@ -8,13 +8,16 @@ import {
 import { LuMoreVertical } from 'react-icons/lu';
 import { IoIosArrowBack } from 'react-icons/io';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
+import { useEffect } from 'react';
 
-const ChatRoomHeader = () => {
+const ChatRoomHeader = ({ counterUser }: any) => {
 	const navigate = useNavigate();
 	const { $isMobile } = useResponsive();
-	const id = 3;
+	const user = useSelector((state: any) => state.user);
 
 	const backToChatListHandler = () => {
+		const id = user.id;
 		navigate(`/users/${id}/chatBox`);
 	};
 
@@ -27,14 +30,16 @@ const ChatRoomHeader = () => {
 						onClick={backToChatListHandler}
 					/>
 				)}
-				<UserDiv $isMobile={$isMobile}>
-					{!$isMobile && (
-						<UserImgDiv size="44px">
-							<img src="/assets/community3.jpg" alt="" />
-						</UserImgDiv>
-					)}
-					<p>닉네임</p>
-				</UserDiv>
+				{counterUser && (
+					<UserDiv $isMobile={$isMobile}>
+						{!$isMobile && (
+							<UserImgDiv size="44px">
+								<img src={counterUser?.userThumbnail} alt="" />
+							</UserImgDiv>
+						)}
+						<p>{counterUser?.nickname}</p>
+					</UserDiv>
+				)}
 				<LuMoreVertical className="more-btn" />
 			</ChatRoomHeaderBdDiv>
 		</ChatRoomHeaderDiv>

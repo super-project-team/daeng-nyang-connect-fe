@@ -17,12 +17,11 @@ import {
 } from '../../../../slice/chatSlice';
 import { useEffect, useState } from 'react';
 
-const ChatInfo = ({ chatinfo, key }: any) => {
+const ChatInfo = ({ chatinfo, click, isSelected, chatClick }: any) => {
 	const { $isMobile } = useResponsive();
 	const dispatch = useDispatch();
 	const params = useParams();
 
-	const [isClicked, setIsClicked] = useState<{ [key: number]: boolean }>({});
 	const [counterUser, setCounterUser] = useState({
 		userId: 0,
 		nickname: '',
@@ -30,19 +29,23 @@ const ChatInfo = ({ chatinfo, key }: any) => {
 	});
 
 	const currentUser = Number(params.id);
+
 	useEffect(() => {
 		if (chatinfo) {
 			const counterUserInfo = chatinfo.userList.find(
 				(users: any) => users.userId !== currentUser,
 			);
-			dispatch(ADD_CHAT_COUNTER_USER(counterUserInfo));
 			setCounterUser(counterUserInfo);
 		}
 	}, [chatinfo]);
 
-	const changeRoomHandler = async (roomId: number) => {
-		// console.log(roomId);
-		setIsClicked((prev: any) => ({ [key]: !prev[key] }));
+	const changeRoomHandler = async (
+		e: React.MouseEvent<HTMLLIElement>,
+		roomId: number,
+	) => {
+		e.stopPropagation();
+		click();
+		chatClick(roomId);
 		try {
 			const response = await getChatDetails(roomId);
 			if (response) {
@@ -63,13 +66,11 @@ const ChatInfo = ({ chatinfo, key }: any) => {
 		}
 	};
 
-	const classChange = isClicked[key] ? 'active' : '';
-
 	return (
 		<ChatListLi
-			className={classChange}
+			className={isSelected ? 'active' : ''}
 			$isMobile={$isMobile}
-			onClick={() => changeRoomHandler(chatinfo.chatRoomId)}>
+			onMouseDown={(e) => changeRoomHandler(e, chatinfo.chatRoomId)}>
 			<UserImgDiv size="36px">
 				<img src={counterUser?.userThumbnail} alt="" />
 			</UserImgDiv>

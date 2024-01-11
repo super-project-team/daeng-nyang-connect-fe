@@ -87,7 +87,7 @@ const router = createBrowserRouter([
 				children: [
 					{ index: true, element: <User /> },
 					{ path: 'chatBox', element: <ChatBox /> },
-					{ path: 'chatRoom', element: <ChatRoom /> },
+					{ path: 'chatRoom/:id', element: <ChatRoom /> },
 				],
 			},
 			{

@@ -16,3 +16,10 @@ export const ChatBoxInnerdiv = styled.div<ChatWapperProps>`
 	padding: ${(props) => (props.$isMobile ? '0 0 200px 0' : '30px 0')};
 	margin: ${(props) => (props.$isMaxWidth ? '0 30px' : 'auto')};
 `;
+export const NoneChatListDiv = styled.div`
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: calc(100vh - 64px);
+`;

@@ -40,15 +40,17 @@ const Login = () => {
 	});
 
 	const REST_API_KEY = '6fc9a85c166f286a6359b9c663ebcfbd';
-	const REDIRECT_URI = 'http://3.35.16.126:8080/kakao_redirect';
-	const kakaoLink = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=9a6d4d310426b352391b42b2cb0d0f93&scope=profile_nickname%20profile_image&state=imDR6apbGH24izXzRz6EdvTiicMnNt6rUzM3c_zoMH8%3D&redirect_uri=http://localhost:8080/kakao_redirect`;
+	const REDIRECT_URI =
+		'https://daeng-nyang-be-qyu5xzcspa-du.a.run.app:8080/oauth/kakao';
+	const kakaoLink = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=6fc9a85c166f286a6359b9c663ebcfbd&scope=profile_nickname%20profile_image&state=imDR6apbGH24izXzRz6EdvTiicMnNt6rUzM3c_zoMH8%3D&redirect_uri=https://daeng-nyang-be-qyu5xzcspa-du.a.run.app:8080/oauth/kakao`;
 
 	const kakaoLoginHandler = () => {
 		window.location.href = kakaoLink;
 	};
 
 	const NaverLink =
-		'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=E6A9JK080EcQ6AeJLJTf&scope=name%20email%20profile_image%20nickname%20gender%20mobile&state=wRRwsVwQNglwTdCE-uj3TZRmx6wfbI1q50HKX2xKsGQ%3D&redirect_uri=http://localhost:8080/naver_redirect';
+		'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=cbVjavYbFKaTxTrJFGaC&scope=name%20email%20profile_image%20nickname%20gender%20mobile&state=wRRwsVwQNglwTdCE-uj3TZRmx6wfbI1q50HKX2xKsGQ%3D&redirect_uri=https://daeng-nyang-be-qyu5xzcspa-du.a.run.app:8080/oauth/naver';
+
 	const NaverLoginHandler = () => {
 		window.location.href = NaverLink;
 	};

@@ -26,7 +26,7 @@ const CITY = 'city';
 const ADOPTION_STATUS = 'adoptionStatus';
 const GET_ALL = 'getAll';
 const DELETE = '/delete';
-const BASE_URL = 'http://52.79.108.20:8080';
+const BASE_URL = 'https://daeng-nyang-be-qyu5xzcspa-du.a.run.app';
 
 const animalMockApi = new APIClient('/data');
 

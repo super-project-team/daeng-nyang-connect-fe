@@ -3,7 +3,7 @@ import APIClient from './ApiClient';
 const GET = 'rooms';
 const POST = 'add?animalId=';
 const DETAIL = 'room/detail?chatRoomId=';
-const BASE_URL = 'http://52.79.108.20:8080';
+const BASE_URL = 'https://daeng-nyang-be-qyu5xzcspa-du.a.run.app';
 
 export const chatApi = new APIClient(BASE_URL + '/api/chat/');
 

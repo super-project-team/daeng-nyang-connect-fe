@@ -21,9 +21,9 @@ const Alarm: React.FC<ResponsiveProps> = () => {
 			</AlarmTitle>
 			<AlarmItemBox $isMobile={$isMobile} $isMaxWidth={$isMaxWidth}>
 				{items && Array.isArray(items) ? (
-					items?.map((item: string, index) => <div key={index}></div>)
+					items?.map((item: any, index) => <div key={index}></div>)
 				) : (
-					<p>새로운 알람이 없습니다</p>
+					<p className="">새로운 알람이 없습니다</p>
 				)}
 			</AlarmItemBox>
 		</AlarmContainer>

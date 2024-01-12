@@ -8,14 +8,16 @@ interface ResponsiveProps {
 export const AlarmContainer = styled.div<ResponsiveProps>`
 	max-width: 1320px;
 	width: 100%;
+	height: 40vh;
 	padding: ${(props) =>
-		props.$isMobile ? '0 10px' : props.$isMaxWidth ? '0' : '0 30px'};
+		props.$isMobile ? '0 10px' : props.$isMaxWidth ? '0 30px' : '0'};
 	margin: ${(props) =>
 		props.$isMobile ? '50px auto 100px auto' : '120px auto 150px auto'};
 `;
 
 export const AlarmTitle = styled.div<ResponsiveProps>`
-	font-size: ${(props) => (props.$isMaxWidth ? '24px' : '16px')};
+	padding-bottom: 10px;
+	font-size: ${(props) => (props.$isMobile ? '16px' : '24px')};
 	font-weight: 400;
 	border-bottom: 1px solid var(--color-light-salmon);
 `;

@@ -4,12 +4,12 @@ import { ListDiv, ListWrapper, Wrapper } from './Liked.style';
 import { getMyLiked } from '../../../api/myPageApi';
 
 interface LikedItem {
-	boardId?: number; // 또는 다른 적절한 유형으로 변경
-	tipsBoardId?: number; // 또는 다른 적절한 유형으로 변경
-	myPetBoardId?: number; // 또는 다른 적절한 유형으로 변경
+	boardId?: number;
+	tipsBoardId?: number;
+	myPetBoardId?: number;
 	title: string;
 	text?: string;
-	// 기타 필요한 속성들을 추가하세요
+	boardName: string;
 }
 
 const Liked: React.FC = () => {
@@ -44,21 +44,19 @@ const Liked: React.FC = () => {
 				) : (
 					likedItems &&
 					likedItems.map((item) => (
-						<ListDiv
-							key={item.boardId || item.tipsBoardId || item.myPetBoardId}
-							$isMobile={$isMobile}
-							$isTablet={$isTablet}
-							$isPc={$isPc}
-							$isMaxWidth={$isMaxWidth}>
-							<div>
-								<strong>
-									{item.title ||
-										(item.text && item.text.substring(0, 10) + '...')}
-								</strong>
-								{item.title && <p>{item.text?.substring(0, 10) + '...'}</p>}
-							</div>
-							{/* 표시하려는 다른 세부 정보를 추가하세요 */}
-						</ListDiv>
+						<div key={item.boardId || item.tipsBoardId || item.myPetBoardId}>
+							<ListDiv
+								$isMobile={$isMobile}
+								$isTablet={$isTablet}
+								$isPc={$isPc}
+								$isMaxWidth={$isMaxWidth}>
+								<div>{item.boardName}</div>
+								{item.title ||
+									(item.text && item.text.length <= 30
+										? item.text
+										: item.text?.substring(0, 30) + '...')}
+							</ListDiv>
+						</div>
 					))
 				)}
 			</ListWrapper>

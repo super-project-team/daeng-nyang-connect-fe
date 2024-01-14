@@ -27,7 +27,7 @@ const Nav = () => {
 	const location = useLocation();
 	const pathname = location.pathname;
 	const navigate = useNavigate();
-	const { $isMaxWidth, $isTablet, $isPc, $isMobile } = useResponsive();
+	const { $isMaxWidth, $isMobile } = useResponsive();
 	const [mMenuIsOpen, setmMenuIsOpen] = useState(false);
 	const user = useSelector((state: UserState) => state.user);
 

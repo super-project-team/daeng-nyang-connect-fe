@@ -12,7 +12,7 @@ export const AlarmContainer = styled.div<ResponsiveProps>`
 	padding: ${(props) =>
 		props.$isMobile ? '0 10px' : props.$isMaxWidth ? '0 30px' : '0'};
 	margin: ${(props) =>
-		props.$isMobile ? '50px auto 100px auto' : '120px auto 150px auto'};
+		props.$isMobile ? '70px auto 100px auto' : '120px auto 150px auto'};
 `;
 
 export const AlarmTitle = styled.div<ResponsiveProps>`

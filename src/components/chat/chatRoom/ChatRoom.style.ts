@@ -7,7 +7,7 @@ type ChatRoomProps = {
 export const ChatRoomDiv = styled.div<ChatRoomProps>`
 	position: relative;
 	width: 100%;
-	height: ${(props) => (props.$isMobile ? '100vh' : '900px')};
+	height: ${(props) => (props.$isMobile ? '100vh' : '100%')};
 	border: ${(props) =>
 		props.$isMobile ? null : '1px solid var(--color-light-salmon)'};
 	border-radius: 20px;
@@ -16,7 +16,7 @@ export const ChatRoomDiv = styled.div<ChatRoomProps>`
 export const ChatBubbleUl = styled.ul`
 	display: flex;
 	flex-direction: column;
-	margin: 30px 30px;
+	margin-top: 20px;
 	height: 560px;
 	overflow-y: scroll;
 	&::-webkit-scrollbar {
@@ -29,14 +29,14 @@ export const ChatBubbleUl = styled.ul`
 		border-radius: 10px;
 	}
 	&::-webkit-scrollbar-track {
-		background: rgba(0, 0, 0, 0.05); /*스크롤바 뒷 배경 색상*/
+		background: #fff; /*스크롤바 뒷 배경 색상*/
 	}
 
-	&.sender {
-		align-items: end;
+	.sender {
+		align-self: end;
 	}
-	&.receiver {
-		align-items: start;
+	.receiver {
+		align-self: start;
 	}
 `;
 
@@ -54,5 +54,6 @@ export const ChatBubbleLi = styled.li`
 	}
 	&.receiver {
 		background-color: #ddd;
+		margin-left: 20px;
 	}
 `;

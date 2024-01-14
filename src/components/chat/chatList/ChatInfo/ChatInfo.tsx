@@ -50,6 +50,7 @@ const ChatInfo = ({
 	) => {
 		e.stopPropagation();
 		click();
+
 		try {
 			const response = await getChatDetails(roomId);
 			if (response) {
@@ -65,7 +66,8 @@ const ChatInfo = ({
 					}),
 				);
 				setOpenChat(!openChat);
-				navigate(`/users/${currentUser}/chatBox/${chatRoomId}`);
+				if ($isMobile) navigate(`/users/${currentUser}/chatRoom/${chatRoomId}`);
+				else navigate(`/users/${currentUser}/chatBox/${chatRoomId}`);
 			}
 		} catch (err) {
 			console.error(err);

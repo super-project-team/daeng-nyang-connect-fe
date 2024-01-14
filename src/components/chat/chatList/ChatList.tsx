@@ -1,12 +1,21 @@
 import { useEffect, useState } from 'react';
 import ChatInfo from './ChatInfo/ChatInfo';
 
-const ChattingList = ({ chatLists, setOpenChat, openChat }: any) => {
+const ChattingList = ({
+	chatLists,
+	setOpenChat,
+	openChat,
+	chatRefetch,
+}: any) => {
 	const [selectedChatIndex, setSelectedChatIndex] = useState(0);
 
 	const clickListHandler = (index: number) => {
 		setSelectedChatIndex(index);
 	};
+
+	useEffect(() => {
+		chatRefetch();
+	}, [chatLists]);
 
 	return (
 		<ul>

@@ -11,12 +11,12 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import useCounterUser from '../../../hooks/useCounterUser';
 
-const ChatRoom = () => {
+const ChatRoom = ({ chatRefetch, setOpenChat }: any) => {
 	const { $isMobile } = useResponsive();
 	const scrollRef = useRef<HTMLUListElement | null>(null);
 	const userId = useSelector((state: any) => state.user.id);
-	const roomId = useSelector((state: any) => state.chat.chatAnimal.chatRoomId);
-	const counterUser = useCounterUser(roomId);
+	const { roomId } = useParams();
+	const counterUser = useCounterUser(Number(roomId));
 
 	const [stompClient, setStompClient] = useState<any>(null);
 	const [messages, setMessages] = useState<any>([]);
@@ -32,6 +32,13 @@ const ChatRoom = () => {
 		stomp.connect(headers, () => {
 			setStompClient(stomp);
 			console.log('연결');
+
+			stompClient.subscribe(`/topic/chat/${roomId}`, (response: any) => {
+				const message = JSON.parse(response.body);
+				console.log('구독');
+
+				setMessages(message);
+			});
 		});
 
 		// 컴포넌트 언마운트시 연결해제
@@ -72,16 +79,18 @@ const ChatRoom = () => {
 
 	return (
 		<ChatRoomDiv $isMobile={$isMobile}>
-			<ChatRoomHeader counterUser={counterUser} />
+			<ChatRoomHeader
+				counterUser={counterUser}
+				chatRefetch={chatRefetch}
+				setOpenChat={setOpenChat}
+			/>
 			<AnimalInfo counterUser={counterUser} />
-			<ChatBubbleUl
-				ref={scrollRef}
-				className={counterUser.userId != userId ? 'sender' : 'receiver'}>
+			<ChatBubbleUl ref={scrollRef}>
 				{messages.length > 0 &&
 					messages.map((message: any, index: number) => (
 						<ChatBubbleLi
 							key={index}
-							className={counterUser.userId != userId ? 'sender' : 'receiver'}>
+							className={message.senderId == userId ? 'sender' : 'receiver'}>
 							{message.content}
 						</ChatBubbleLi>
 					))}

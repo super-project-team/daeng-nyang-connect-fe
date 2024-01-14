@@ -11,6 +11,7 @@ interface CounterUser {
 
 const useCounterUser = (roomId: number) => {
 	const { data: chatLists } = useQuery('getChatLists', getChatLists);
+
 	const userId = useSelector((state: any) => state.user.id);
 
 	const [counterUser, setCounterUser] = useState<CounterUser>({

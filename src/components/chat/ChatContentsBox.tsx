@@ -4,7 +4,7 @@ import { ChatInnerLeftDiv, ChatInnerRightDiv } from './ChatContentsBox.style';
 import ChatCategory from './chatCategory/ChatCategory';
 import ChatList from './chatList/ChatList';
 import ChatRoom from './chatRoom/ChatRoom';
-import { getChatLists } from '../../api/chatApi';
+import { getChatDetails, getChatLists } from '../../api/chatApi';
 import Loading from '../../pages/Loading/Loading';
 import { useEffect, useState } from 'react';
 import { ChatRoomDiv } from './chatRoom/ChatRoom.style';
@@ -15,13 +15,13 @@ const ChatContentsBox = () => {
 		data: chatLists,
 		isError,
 		isLoading,
-		refetch,
+		refetch: chatRefetch,
 	} = useQuery('getChatLists', getChatLists);
 
 	const [openChat, setOpenChat] = useState(false);
 
 	useEffect(() => {
-		refetch();
+		chatRefetch();
 	}, [chatLists]);
 
 	if (isLoading) return <Loading />;
@@ -34,16 +34,15 @@ const ChatContentsBox = () => {
 						chatLists={chatLists}
 						setOpenChat={setOpenChat}
 						openChat={openChat}
+						chatRefetch={chatRefetch}
 					/>
 				) : null}
 			</ChatInnerLeftDiv>
 			{!$isMobile && (
 				<ChatInnerRightDiv>
 					{openChat ? (
-						<ChatRoom />
-					) : (
-						<ChatRoomDiv $isMobile={$isMobile}></ChatRoomDiv>
-					)}
+						<ChatRoom chatRefetch={chatRefetch} setOpenChat={setOpenChat} />
+					) : null}
 				</ChatInnerRightDiv>
 			)}
 		</>

@@ -48,29 +48,29 @@ const AnimalInfo = () => {
 		}
 	};
 
-	return (
-		<AnimalInfoDiv $isMobile={$isMobile}>
-			<AnimalInfoImgDiv $isMobile={$isMobile}>
-				<img src={chatAnimalState[2].images} alt="" />
-			</AnimalInfoImgDiv>
-			<AnimalInfoTextDiv>
-				<p>이름: {chatAnimalState[2].animalName}</p>
-				<p>나이: {chatAnimalState[2].age}</p>
-				<p>품종: {chatAnimalState[2].breed}</p>
-			</AnimalInfoTextDiv>
-			<BtnDiv>
-				{!isCompleted ? (
-					<CompleteBtn $isMobile={$isMobile} onClick={reviewBtnHandler}>
-						후기 쓰기
-					</CompleteBtn>
-				) : (
-					<CompleteBtn $isMobile={$isMobile} onClick={adoptCompleteHandler}>
-						입양 신청
-					</CompleteBtn>
-				)}
-			</BtnDiv>
-		</AnimalInfoDiv>
-	);
+	// return (
+	// 	<AnimalInfoDiv $isMobile={$isMobile}>
+	// 		<AnimalInfoImgDiv $isMobile={$isMobile}>
+	// 			<img src={chatAnimalState[2].images} alt="" />
+	// 		</AnimalInfoImgDiv>
+	// 		<AnimalInfoTextDiv>
+	// 			<p>이름: {chatAnimalState[2].animalName}</p>
+	// 			<p>나이: {chatAnimalState[2].age}</p>
+	// 			<p>품종: {chatAnimalState[2].breed}</p>
+	// 		</AnimalInfoTextDiv>
+	// 		<BtnDiv>
+	// 			{!isCompleted ? (
+	// 				<CompleteBtn $isMobile={$isMobile} onClick={reviewBtnHandler}>
+	// 					후기 쓰기
+	// 				</CompleteBtn>
+	// 			) : (
+	// 				<CompleteBtn $isMobile={$isMobile} onClick={adoptCompleteHandler}>
+	// 					입양 신청
+	// 				</CompleteBtn>
+	// 			)}
+	// 		</BtnDiv>
+	// 	</AnimalInfoDiv>
+	// );
 };
 
 export default AnimalInfo;

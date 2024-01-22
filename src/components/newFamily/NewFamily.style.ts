@@ -401,7 +401,9 @@ export const UserThumbnail = styled.div<ResponsiveProps>`
 
 	& img {
 		width: 100%;
-		object-fit: contain;
+		height: 100%;
+		object-fit: cover;
+		object-position: center center;
 	}
 
 	& svg {

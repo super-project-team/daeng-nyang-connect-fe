@@ -7,7 +7,6 @@ import { getReviews } from '../../api/reviewApi';
 import { getNewFamily } from '../../api/newFamilyApi';
 import Loading from '../Loading/Loading';
 import { useEffect } from 'react';
-import localToken from '../../api/LocalToken';
 
 const Home = () => {
 	const results = useQueries([
@@ -33,7 +32,6 @@ const Home = () => {
 	if (loading) {
 		return <Loading />;
 	}
-
 	return (
 		<>
 			<Banner />

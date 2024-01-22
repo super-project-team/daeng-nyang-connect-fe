@@ -34,9 +34,14 @@ import CheckLogin from '../CheckLogin/CheckLogin';
 interface CommunityNavProps {
 	setIsPopUp: React.Dispatch<React.SetStateAction<boolean>>;
 	isPopUp: boolean;
+	isLoading: boolean;
 }
 
-const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
+const CommunityNav = ({
+	setIsPopUp,
+	isPopUp,
+	isLoading,
+}: CommunityNavProps) => {
 	const [text, setText] = useState<string>('');
 	const [isCheckLogin, setIsCheckLogin] = useState(false);
 
@@ -127,7 +132,10 @@ const CommunityNav = ({ setIsPopUp, isPopUp }: CommunityNavProps) => {
 
 	return (
 		<>
-			<TitleAndSearchWrap $isMaxWidth={$isMaxWidth} $isMobile={$isMobile}>
+			<TitleAndSearchWrap
+				$isMaxWidth={$isMaxWidth}
+				$isMobile={$isMobile}
+				isLoading={isLoading}>
 				{!$isMobile && (
 					<TitleWrap $isTablet={$isTablet} $isMobile={$isMobile}>
 						<span>댕냥 톡톡</span>

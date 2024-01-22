@@ -6,7 +6,6 @@ import StompJs from 'stompjs';
 import { Client, IFrame, IMessage, Stomp } from '@stomp/stompjs';
 import { useSelector } from 'react-redux';
 import { ChatState } from './../../../../slice/chatSlice';
-import { io } from 'socket.io-client';
 import localToken from '../../../../api/LocalToken';
 import SockJS from 'sockjs-client';
 
@@ -17,7 +16,7 @@ interface Message {
 interface CustomIFrame extends IFrame {
 	access_token: string | null;
 }
-const socketUrl = 'ws://3.35.16.126:8080/websocket';
+const socketUrl = 'ws://52.79.108.20:8080/websocket';
 
 const ChatInput = () => {
 	const { $isMobile } = useResponsive();
@@ -27,6 +26,7 @@ const ChatInput = () => {
 	const [clientData, setClientData] = useState<Client>();
 
 	const token = localToken.get();
+	const socketUrl = 'http://52.79.108.20:8080/websocket';
 
 	// 첫번째 방법
 	// const {createProxyMiddleWare} = require()

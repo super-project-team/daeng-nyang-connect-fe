@@ -6,6 +6,7 @@ interface NavOptionProps {
 	$isActive?: boolean;
 	$isTablet?: boolean;
 	$isMobile?: boolean;
+	isLoading?: boolean;
 }
 
 export const TitleAndSearchWrap = styled.div<NavOptionProps>`
@@ -21,6 +22,8 @@ export const TitleAndSearchWrap = styled.div<NavOptionProps>`
 			: props.$isMaxWidth
 			  ? '105px 30px 0'
 			  : '105px 0 0 0'};
+	margin-top: ${(props) =>
+		props.isLoading ? '-30px' : props.$isMobile ? '70px' : '105px'};
 	border-bottom: 1px solid var(--color-light-salmon);
 `;
 

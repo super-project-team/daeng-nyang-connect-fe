@@ -15,31 +15,33 @@ interface AnimalType {
 	adoptionStatus: string;
 }
 
-const FindNewList = () => {
+const FindNewList = ({ newFamilyData }: any) => {
 	const { $isMaxWidth, $isMobile, $isTablet } = useResponsive();
 	const sildePerView = $isMobile ? 1 : $isTablet ? 2 : $isMaxWidth ? 3 : 5;
 
-	const { data: newFamilyData } = useQuery('getNewFamily', getNewFamily);
-
 	return (
-		<Swiper
-			slidesPerView={sildePerView}
-			centeredSlides={true}
-			autoplay={{
-				delay: 1000,
-				disableOnInteraction: false,
-			}}
-			loop={true}
-			modules={[Autoplay]}
-			speed={2000}
-			className="mySwiper">
-			{newFamilyData &&
-				newFamilyData.map((data: AnimalType) => (
-					<SwiperSlide key={data.boardId}>
-						<VerticalCard data={data} $isMobile={$isMobile} />
-					</SwiperSlide>
-				))}
-		</Swiper>
+		<>
+			{newFamilyData && (
+				<Swiper
+					slidesPerView={sildePerView}
+					centeredSlides={true}
+					autoplay={{
+						delay: 1000,
+						disableOnInteraction: false,
+					}}
+					loop={true}
+					modules={[Autoplay]}
+					speed={2000}
+					className="mySwiper">
+					{newFamilyData &&
+						newFamilyData.map((data: AnimalType) => (
+							<SwiperSlide key={newFamilyData.boardId}>
+								<VerticalCard data={data} $isMobile={$isMobile} />
+							</SwiperSlide>
+						))}
+				</Swiper>
+			)}
+		</>
 	);
 };
 

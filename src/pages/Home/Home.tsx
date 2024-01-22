@@ -32,7 +32,6 @@ const Home = () => {
 	if (loading) {
 		return <Loading />;
 	}
-
 	return (
 		<>
 			<Banner />

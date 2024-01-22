@@ -2,11 +2,12 @@ import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import { ChatInputDiv, SendBtn, TextArea } from './ChatInput.style';
 import { FiPlusCircle } from 'react-icons/fi';
-import SockJS from 'sockjs-client';
+import StompJs from 'stompjs';
 import { Client, IFrame, IMessage, Stomp } from '@stomp/stompjs';
 import { useSelector } from 'react-redux';
 import { ChatState } from './../../../../slice/chatSlice';
 import localToken from '../../../../api/LocalToken';
+import SockJS from 'sockjs-client';
 
 interface Message {
 	username: string;
@@ -26,6 +27,9 @@ const ChatInput = () => {
 
 	const token = localToken.get();
 	const socketUrl = 'http://52.79.108.20:8080/websocket';
+
+	// 첫번째 방법
+	// const {createProxyMiddleWare} = require()
 
 	// useEffect(() => {
 	// 	const socket = io(socketUrl, {

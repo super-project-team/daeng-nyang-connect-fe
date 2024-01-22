@@ -88,7 +88,7 @@ export const modifyBoard = async (
 		}
 	});
 
-	return await communityApi.put<PostBoard>(
+	return await communityApi.put(
 		`${communityType}/${MODIFY}?${communityIdType}=${id}`,
 		formData,
 	);

@@ -201,9 +201,9 @@ const WritingModalForm = ({ setIsPopUp }: CommunityNavProps) => {
 	const fetchGetAllBoardSize = async () => {
 		const response = await getSize(boardType);
 
-		setTotalBoardSize(response.size);
+		setTotalBoardSize(response?.size);
 
-		return response.size;
+		return response?.size;
 	};
 
 	const { data, refetch } = useQuery<Board[]>(

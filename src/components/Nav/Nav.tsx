@@ -9,6 +9,7 @@ import {
 	UtilDd,
 } from './Nav.style';
 import { IoChatbubblesOutline, IoChatbubblesSharp } from 'react-icons/io5';
+import { GoBell, GoBellFill } from 'react-icons/go';
 import { HiOutlineUser, HiUser } from 'react-icons/hi';
 import { FiMenu } from 'react-icons/fi';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
@@ -38,6 +39,10 @@ const Nav = () => {
 
 	const userIconClickHandler = () => {
 		user.isLoggedIn ? navigate(`/users/${user.id}`) : navigate('/login');
+	};
+
+	const alarmIconClickHandler = () => {
+		user.isLoggedIn ? navigate(`/users/${user.id}/alarm`) : navigate('/login');
 	};
 
 	const chatIconClickHandler = () => {
@@ -83,6 +88,16 @@ const Nav = () => {
 					</HeaderNav>
 					<UtilDl>
 						<dt></dt>
+						<UtilDd $isMobile={$isMobile}>
+							{!pathname.includes('alarm') ? (
+								<GoBell
+									className="alarm-icon"
+									onClick={alarmIconClickHandler}
+								/>
+							) : (
+								<GoBellFill className="alarm-icon" />
+							)}
+						</UtilDd>
 						<UtilDd $isMobile={$isMobile}>
 							{!pathname.includes('chat') ? (
 								<IoChatbubblesOutline onClick={chatIconClickHandler} />

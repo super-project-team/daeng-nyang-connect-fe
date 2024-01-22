@@ -1,13 +1,12 @@
+import { useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
+import { getChatLists } from '../../api/chatApi';
 import { useResponsive } from '../../hooks/useResponsive';
+import Loading from '../../pages/Loading/Loading';
 import { ChatInnerLeftDiv, ChatInnerRightDiv } from './ChatContentsBox.style';
 import ChatCategory from './chatCategory/ChatCategory';
 import ChatList from './chatList/ChatList';
 import ChatRoom from './chatRoom/ChatRoom';
-import { getChatLists } from '../../api/chatApi';
-import Loading from '../../pages/Loading/Loading';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 const ChatContentsBox = () => {
 	const { $isMobile } = useResponsive();
@@ -15,15 +14,14 @@ const ChatContentsBox = () => {
 		data: chatLists,
 		isError,
 		isLoading,
+		refetch: chatRefetch,
 	} = useQuery('getChatLists', getChatLists);
 
-	const [SelectedRoomId, setSelectedRoomId] = useState(0);
-	console.log(SelectedRoomId);
-	const chatAnimal = useSelector((state: any) => state.chat.chatAnimal);
+	const [openChat, setOpenChat] = useState(false);
 
 	useEffect(() => {
-		console.log(chatAnimal.chatRoomId);
-	}, [chatAnimal]);
+		chatRefetch();
+	}, [chatLists]);
 
 	if (isLoading) return <Loading />;
 	return (
@@ -33,13 +31,17 @@ const ChatContentsBox = () => {
 				{chatLists ? (
 					<ChatList
 						chatLists={chatLists}
-						setSelectedRoomId={setSelectedRoomId}
+						setOpenChat={setOpenChat}
+						openChat={openChat}
+						chatRefetch={chatRefetch}
 					/>
 				) : null}
 			</ChatInnerLeftDiv>
 			{!$isMobile && (
 				<ChatInnerRightDiv>
-					<ChatRoom chatLists={chatLists} />
+					{openChat ? (
+						<ChatRoom chatRefetch={chatRefetch} setOpenChat={setOpenChat} />
+					) : null}
 				</ChatInnerRightDiv>
 			)}
 		</>

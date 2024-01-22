@@ -10,7 +10,7 @@ import {
 	NewFamilyDetailContainer,
 	UserThumbnail,
 } from '../NewFamily.style';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import NewFamilySwiper from './NewFamilySwiper';
 import { useEffect, useState } from 'react';
 import { useResponsive } from '../../../hooks/useResponsive';
@@ -200,12 +200,15 @@ const NewFamilyDetail = () => {
 		}
 	};
 	//채팅창으로 이동
-	const moveToChatHandler = () => {
+	const moveToChatHandler = async () => {
 		if (isLoggedIn) {
 			dispatch(GET_ANIMAL_ID(boardIdData?.boardId));
-			makeChatRoom(boardIdData?.boardId);
-			if ($isMobile) navigate(`/users/${user.id}/chatRoom`);
-			navigate(`/users/${user.id}/chatBox`);
+			const makeRoomId = await makeChatRoom(boardIdData?.boardId);
+			if (makeRoomId) {
+				const chatRoomId = makeRoomId.chatRoomId;
+				if ($isMobile) navigate(`/users/${user.id}/chatRoom/${chatRoomId}`);
+				navigate(`/users/${user.id}/chatBox/${chatRoomId}`);
+			}
 		} else {
 			navigate('/login');
 		}

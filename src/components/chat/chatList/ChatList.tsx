@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
 import ChatInfo from './ChatInfo/ChatInfo';
-import { useQuery } from 'react-query';
-import { getChatLists } from '../../../api/chatApi';
 
-const ChattingList = ({ chatLists, setSelectedRoomId }: any) => {
+const ChattingList = ({
+	chatLists,
+	setOpenChat,
+	openChat,
+	chatRefetch,
+}: any) => {
 	const [selectedChatIndex, setSelectedChatIndex] = useState(0);
 
 	const clickListHandler = (index: number) => {
 		setSelectedChatIndex(index);
 	};
 
-	const clickListChatRoomHandler = (roomId: number) => {
-		setSelectedRoomId(roomId);
-	};
+	useEffect(() => {
+		chatRefetch();
+	}, [chatLists]);
+
 	return (
 		<ul>
 			{chatLists && chatLists.length > 0
@@ -20,9 +24,10 @@ const ChattingList = ({ chatLists, setSelectedRoomId }: any) => {
 						<ChatInfo
 							key={index}
 							chatinfo={chatinfo}
+							setOpenChat={setOpenChat}
+							openChat={openChat}
 							isSelected={selectedChatIndex === index}
 							click={() => clickListHandler(index)}
-							chatClick={clickListChatRoomHandler}
 						/>
 				  ))
 				: null}

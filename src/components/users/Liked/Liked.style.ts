@@ -14,10 +14,14 @@ export const Wrapper = styled.div`
 	width: 100%;
 	max-width: 1380px;
 	height: 100vh;
+	align-items: flex-start;
+	margin-top: 20px;
 `;
 
 export const ListWrapper = styled.div`
 	vertical-align: baseline;
+	display: flex;
+	flex-direction: column;
 `;
 
 export const ListDiv = styled.div<ResponsiveProps>`
@@ -31,8 +35,9 @@ export const ListDiv = styled.div<ResponsiveProps>`
 	align-items: center;
 	margin-top: 16px;
 	margin-left: ${(props) => (props.$isMobile ? '0px' : '16px')};
-	padding-left: 20px;
+	padding-left: 10px;
 	padding-right: 8px;
 	box-shadow: 1px 2px 6px 1px rgba(0, 0, 0, 0.3);
 	border-radius: 10px;
+	border-left: 15px solid var(--color-light-salmon);
 `;

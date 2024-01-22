@@ -1,7 +1,11 @@
-import { ChangeEvent, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { ChangeEvent, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import localToken from '../../api/LocalToken';
+import { loginUser } from '../../api/authApi';
+import { useResponsive } from '../../hooks/useResponsive';
+import { LOGIN_USER } from '../../slice/userSlice';
 import {
 	Button,
 	ButtonWrapper,
@@ -13,16 +17,11 @@ import {
 	LoginTitleDiv,
 	LoginWrapper,
 	Logo,
-	NaverLoginButton,
 	Paragraph,
 	ParagraphLogin,
 	SignUpButton,
 	SignUpDiv,
 } from './Login.style';
-import localToken from '../../api/LocalToken';
-import { useResponsive } from '../../hooks/useResponsive';
-import { loginUser } from '../../api/authApi';
-import { LOGIN_USER } from '../../slice/userSlice';
 
 const Login = () => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
@@ -53,6 +52,7 @@ const Login = () => {
 
 	const NaverLoginHandler = () => {
 		window.location.href = NaverLink;
+		dispatch(LOGIN_USER({ isLoggedIn: true }));
 	};
 
 	const onRegisterClick = () => {
@@ -107,9 +107,11 @@ const Login = () => {
 					return;
 				}
 
-				const { access_token, nickname, id } = response;
-				const saveToken = (token: string) => {
-					localToken.save(token);
+				console.log('response', response);
+
+				const { access_token, refresh_token, nickname, id } = response;
+				const saveToken = (token: string, isRefreshToken?: boolean) => {
+					localToken.save(token, isRefreshToken);
 				};
 
 				dispatch(
@@ -122,8 +124,11 @@ const Login = () => {
 
 				if (access_token) {
 					saveToken(access_token);
+					saveToken(refresh_token, true);
 					navigate('/');
 				}
+
+				localToken.isTokenExpired();
 			} catch (error) {
 				if (error instanceof TypeError) {
 					// TypeError

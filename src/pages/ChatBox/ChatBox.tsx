@@ -7,10 +7,14 @@ import {
 	NoneChatListDiv,
 } from './ChatBox.style';
 import { getChatLists } from '../../api/chatApi';
+import { useEffect } from 'react';
 
 const ChatBox = () => {
 	const { $isMaxWidth, $isMobile } = useResponsive();
-	const { data } = useQuery('getChatLists', getChatLists);
+	const { data, refetch } = useQuery('getChatLists', getChatLists);
+	useEffect(() => {
+		refetch();
+	}, [data]);
 
 	return (
 		<ChatBoxWrapperDiv>

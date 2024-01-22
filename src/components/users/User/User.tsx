@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UserInfo from '../UserInfo/UserInfo';
 
 import { useResponsive } from '../../../hooks/useResponsive';
@@ -11,9 +11,25 @@ import {
 import MyPost from '../MyPost/MyPost';
 import Liked from '../Liked/Liked';
 import Scraps from '../Scraps/Scraps';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { RootUserState } from '../../../slice/userSlice';
 
 const User = () => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const { isLoggedIn } = useSelector((state: RootUserState) => state.user);
+
+	useEffect(() => {
+		if (!isLoggedIn) {
+			redirectToLoginPage();
+		}
+	}, []);
+
+	const redirectToLoginPage = () => {
+		navigate('/login');
+	};
 
 	const [openMyInfo, setOpenMyInfo] = useState(true);
 	const [openMyPost, setOpenMyPost] = useState(false);

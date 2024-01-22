@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import { UserImgDiv } from '../../ChatContentsBox.style';
 import {
@@ -8,7 +8,7 @@ import {
 	ChatTime,
 	NoneReadCountEm,
 } from './ChatInfo.style';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getChatDetails, getChatLists } from '../../../../api/chatApi';
 import { useQuery } from 'react-query';
 import {
@@ -17,10 +17,17 @@ import {
 } from '../../../../slice/chatSlice';
 import { useEffect, useState } from 'react';
 
-const ChatInfo = ({ chatinfo, click, isSelected, chatClick }: any) => {
+const ChatInfo = ({
+	chatinfo,
+	click,
+	isSelected,
+	setOpenChat,
+	openChat,
+}: any) => {
 	const { $isMobile } = useResponsive();
 	const dispatch = useDispatch();
-	const params = useParams();
+	const navigate = useNavigate();
+	const currentUser = useSelector((state: any) => state.user.id);
 
 	const [counterUser, setCounterUser] = useState({
 		userId: 0,
@@ -28,16 +35,14 @@ const ChatInfo = ({ chatinfo, click, isSelected, chatClick }: any) => {
 		userThumbnail: '',
 	});
 
-	const currentUser = Number(params.id);
-
 	useEffect(() => {
 		if (chatinfo) {
-			const counterUserInfo = chatinfo.userList.find(
-				(users: any) => users.userId !== currentUser,
+			const counterUserInfo = chatinfo.userList.filter(
+				(users: any) => users.userId != currentUser,
 			);
-			setCounterUser(counterUserInfo);
+			setCounterUser(counterUserInfo[0]);
 		}
-	}, [chatinfo]);
+	}, []);
 
 	const changeRoomHandler = async (
 		e: React.MouseEvent<HTMLLIElement>,
@@ -45,7 +50,7 @@ const ChatInfo = ({ chatinfo, click, isSelected, chatClick }: any) => {
 	) => {
 		e.stopPropagation();
 		click();
-		chatClick(roomId);
+
 		try {
 			const response = await getChatDetails(roomId);
 			if (response) {
@@ -60,6 +65,9 @@ const ChatInfo = ({ chatinfo, click, isSelected, chatClick }: any) => {
 						breed: breed,
 					}),
 				);
+				setOpenChat(!openChat);
+				if ($isMobile) navigate(`/users/${currentUser}/chatRoom/${chatRoomId}`);
+				else navigate(`/users/${currentUser}/chatBox/${chatRoomId}`);
 			}
 		} catch (err) {
 			console.error(err);

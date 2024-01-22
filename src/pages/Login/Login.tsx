@@ -1,7 +1,11 @@
-import { ChangeEvent, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { ChangeEvent, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import localToken from '../../api/LocalToken';
+import { loginUser } from '../../api/authApi';
+import { useResponsive } from '../../hooks/useResponsive';
+import { LOGIN_USER } from '../../slice/userSlice';
 import {
 	Button,
 	ButtonWrapper,
@@ -13,16 +17,11 @@ import {
 	LoginTitleDiv,
 	LoginWrapper,
 	Logo,
-	NaverLoginButton,
 	Paragraph,
 	ParagraphLogin,
 	SignUpButton,
 	SignUpDiv,
 } from './Login.style';
-import localToken from '../../api/LocalToken';
-import { useResponsive } from '../../hooks/useResponsive';
-import { loginUser } from '../../api/authApi';
-import { LOGIN_USER } from '../../slice/userSlice';
 
 const Login = () => {
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();

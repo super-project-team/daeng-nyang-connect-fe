@@ -6,6 +6,7 @@ import SectionReview from '../../components/home/SectionReview/SectionReview';
 import { getReviews } from '../../api/reviewApi';
 import { getNewFamily } from '../../api/newFamilyApi';
 import Loading from '../Loading/Loading';
+import { useEffect } from 'react';
 
 const Home = () => {
 	const results = useQueries([
@@ -14,6 +15,10 @@ const Home = () => {
 	]);
 
 	const loading = results.some((result) => result.isLoading);
+
+	if (loading) {
+		return <Loading />;
+	}
 
 	if (loading) {
 		return <Loading />;

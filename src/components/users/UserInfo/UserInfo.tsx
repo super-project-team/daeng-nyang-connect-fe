@@ -129,6 +129,7 @@ const UserInfo = () => {
 			await logoutUser();
 			dispatch(LOGOUT_USER());
 			localToken.remove();
+			localToken.remove(true);
 			navigate('/');
 		} catch (error) {
 			if (error instanceof TypeError) {

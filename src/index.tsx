@@ -45,6 +45,8 @@ import IdFind from './pages/AuthFind/IdFind/IdFind';
 import PasswordFind from './pages/AuthFind/PasswordFind/PasswordFind';
 import KaKaoRegister from './pages/OauthRegister/KaKaoRegister/KaKaoRegister';
 import NaverRegister from './pages/OauthRegister/NaverRegister/NaverRegister';
+import Alarm from './components/alarm/Alarm';
+import NaverSocial from './pages/SocialLogin/NaverSocial';
 
 const router = createBrowserRouter([
 	{
@@ -55,6 +57,10 @@ const router = createBrowserRouter([
 			{
 				path: 'login',
 				element: <Login />,
+			},
+			{
+				path: 'socialLogin',
+				element: <NaverSocial />,
 			},
 			{
 				path: 'idFind',
@@ -73,7 +79,7 @@ const router = createBrowserRouter([
 				element: <KaKaoRegister />,
 			},
 			{
-				path: 'naverRegister',
+				path: 'oauthAddInfo',
 				element: <NaverRegister />,
 			},
 			{
@@ -83,6 +89,12 @@ const router = createBrowserRouter([
 					{ index: true, element: <User /> },
 					{ path: 'chatBox', element: <ChatBox /> },
 					{ path: 'chatRoom', element: <ChatRoom /> },
+					{
+						path: 'alarm',
+						element: <Alarm $isMobile={false} $isMaxWidth={false} />,
+					},
+					{ path: 'chatBox/:roomId', element: <ChatBox /> },
+					{ path: 'chatRoom/:roomId', element: <ChatRoom /> },
 				],
 			},
 			{

@@ -58,7 +58,7 @@ export const FooterMenuDD = styled.dd<FooterProps>`
 export const FooterCopyrightDiv = styled.div<FooterProps>`
 	position: absolute;
 	bottom: 0;
-	width: ${(props) => (props.$isMobile ? 'calc(100% - 60px)' : '100%')};
+	width: ${(props) => (props.$isMaxWidth ? '100%' : 'calc(100% - 60px)')};
 	border-top: 1px solid var(--color-peach);
 	text-align: center;
 `;

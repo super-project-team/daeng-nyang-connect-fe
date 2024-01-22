@@ -1,4 +1,4 @@
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import { UserImgDiv } from '../../ChatContentsBox.style';
 import {
@@ -8,33 +8,84 @@ import {
 	ChatTime,
 	NoneReadCountEm,
 } from './ChatInfo.style';
-import { ROOM_ID_CHECK } from '../../../../slice/chatSlice';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getChatDetails, getChatLists } from '../../../../api/chatApi';
+import { useQuery } from 'react-query';
+import {
+	ADD_CHAT_COUNTER_USER,
+	CHAT_ANIMAL,
+} from '../../../../slice/chatSlice';
+import { useEffect, useState } from 'react';
 
-type BgProps = {
-	className?: string;
-};
-
-const ChatInfo = ({ className }: BgProps) => {
+const ChatInfo = ({
+	chatinfo,
+	click,
+	isSelected,
+	setOpenChat,
+	openChat,
+}: any) => {
 	const { $isMobile } = useResponsive();
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const currentUser = useSelector((state: any) => state.user.id);
 
-	const changeRoomHandler = (roomId: string) => {
-		console.log(roomId);
-		dispatch(ROOM_ID_CHECK(roomId));
+	const [counterUser, setCounterUser] = useState({
+		userId: 0,
+		nickname: '',
+		userThumbnail: '',
+	});
+
+	useEffect(() => {
+		if (chatinfo) {
+			const counterUserInfo = chatinfo.userList.filter(
+				(users: any) => users.userId != currentUser,
+			);
+			setCounterUser(counterUserInfo[0]);
+		}
+	}, []);
+
+	const changeRoomHandler = async (
+		e: React.MouseEvent<HTMLLIElement>,
+		roomId: number,
+	) => {
+		e.stopPropagation();
+		click();
+
+		try {
+			const response = await getChatDetails(roomId);
+			if (response) {
+				const { chatRoomId, animalImage, animalAge, animalName, breed } =
+					response;
+				dispatch(
+					CHAT_ANIMAL({
+						chatRoomId: chatRoomId,
+						animalAge: animalAge,
+						animalImage: animalImage,
+						animalName: animalName,
+						breed: breed,
+					}),
+				);
+				setOpenChat(!openChat);
+				if ($isMobile) navigate(`/users/${currentUser}/chatRoom/${chatRoomId}`);
+				else navigate(`/users/${currentUser}/chatBox/${chatRoomId}`);
+			}
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
 	return (
 		<ChatListLi
-			className={className}
+			className={isSelected ? 'active' : ''}
 			$isMobile={$isMobile}
-			onClick={() => changeRoomHandler('roomId2')}>
+			onMouseDown={(e) => changeRoomHandler(e, chatinfo.chatRoomId)}>
 			<UserImgDiv size="36px">
-				<img src="/assets/community1.jpg" alt="" />
+				<img src={counterUser?.userThumbnail} alt="" />
 			</UserImgDiv>
 			<ChatInfoDiv>
 				<ChatInfoEachDiv className="first-box">
-					<p>유저닉네임</p>
-					<ChatTime $isMobile={$isMobile}>30분 전</ChatTime>
+					<p>{counterUser?.nickname}</p>
+					{/* <ChatTime $isMobile={$isMobile}>30분 전</ChatTime> */}
 				</ChatInfoEachDiv>
 				<ChatInfoEachDiv>
 					<p>메시지 미리보기</p>

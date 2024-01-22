@@ -9,6 +9,7 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import { reviewPost } from '../../../api/reviewApi';
 import { useMutation, useQueryClient } from 'react-query';
+import { useSelector } from 'react-redux';
 
 interface ReviewInfo {
 	files: File[];
@@ -24,6 +25,8 @@ const ReviewForm = () => {
 		files: [],
 		textReview: '',
 	});
+
+	const chatAniaml = useSelector((state: any) => state.chat.chatAnimals);
 
 	const mutationFunction = async (): Promise<any> => {
 		return await reviewPost(reviewInfo, Number(params.animalId));
@@ -87,11 +90,11 @@ const ReviewForm = () => {
 					$isMaxWidth={$isMaxWidth}>
 					<div>
 						<h5>동물 이름</h5>
-						<input type="text" name="animal_name" id="animal_name" />
+						<p>{chatAniaml[1].animalName}</p>
 					</div>
 					<div>
 						<h5>나이</h5>
-						<input type="text" name="age" id="age" />
+						<p>{chatAniaml[1].age}</p>
 					</div>
 					<div>
 						<h5>이미지 등록</h5>

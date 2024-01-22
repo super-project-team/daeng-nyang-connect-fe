@@ -10,13 +10,23 @@ import { RiMore2Line } from 'react-icons/ri';
 import { DetailText, ReviewTextBox } from '../Reviews.style';
 import ReviewCommentBox from './ReviewCommentBox';
 import { useResponsive } from '../../../hooks/useResponsive';
-import { useMutation, useQuery, useQueryClient } from 'react-query';
-import { deleteReview, getDetailReview } from '../../../api/reviewApi';
+import { useMutation, useQueries, useQuery, useQueryClient } from 'react-query';
+import {
+	deleteReview,
+	getDetailReview,
+	modifyReview,
+} from '../../../api/reviewApi';
 import { useNavigate, useParams } from 'react-router-dom';
 import ReviewModify from './ReviewModify';
 import { useSelector } from 'react-redux';
 import { UserState } from '../../../slice/userSlice';
-import { myPageGet } from '../../../api/myPageApi';
+import { getUserLikes, myPageGet } from '../../../api/myPageApi';
+import Loading from '../../../pages/Loading/Loading';
+
+interface LikedItems {
+	boardId: number;
+	boardName: string;
+}
 
 const Review = () => {
 	const params = useParams();
@@ -26,24 +36,15 @@ const Review = () => {
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 	const [isOpenModify, setIsOpenModify] = useState(false);
 	const { $isMobile, $isTablet, $isPc, $isMaxWidth } = useResponsive();
-
-	const { data: detailReview } = useQuery('getDetailReview', () =>
-		getDetailReview(animalId),
-	);
 	const user = useSelector((state: any) => state.user);
 
-	const { mutate: deleteMutate } = useMutation(
-		async (boardId: number) => {
-			return deleteReview(boardId);
-		},
-		{
-			onSuccess: () => {
-				queryClient.refetchQueries(['getReviews'], { exact: true });
-			},
-		},
-	);
-
-	// console.log(detailReview[0].boardId);
+	const result = useQueries([
+		{ queryKey: 'getDetailReview', queryFn: () => getDetailReview(animalId) },
+		{ queryKey: 'getUserLikes', queryFn: getUserLikes },
+	]);
+	const detailReview = result[0].data;
+	const reviewRefetch = result[0].refetch;
+	const loading = result.some((result) => result.isLoading);
 
 	const toggleDropdown = () => {
 		setIsDropdownVisible((prev) => !prev);
@@ -59,11 +60,16 @@ const Review = () => {
 		setIsOpenModify((prev) => !prev);
 		setIsDropdownVisible((prev) => !prev);
 	};
+
 	const deleteClickHandler = () => {
 		const boardId = detailReview ? detailReview[0].boardId : null;
-		if (boardId) deleteMutate(boardId);
+		if (boardId) deleteReview(boardId);
+		reviewRefetch();
 		navigate('/adoptionReviews');
 	};
+
+	if (loading) return <Loading />;
+
 	return (
 		<>
 			{detailReview && detailReview.length > 0 && (
@@ -150,6 +156,7 @@ const Review = () => {
 									age={detailReview[0].age}
 									reviewId={detailReview[0].boardId}
 									images={detailReview[0].images}
+									refetch={reviewRefetch}
 								/>
 							)}
 							<p>이름 : {detailReview[0].adoptedAnimalName}</p>
@@ -159,7 +166,12 @@ const Review = () => {
 								{detailReview[0].textReview}
 							</DetailText>
 						</DetailTextBox>
-						{<ReviewCommentBox reviewId={detailReview[0].boardId} />}
+						{
+							<ReviewCommentBox
+								reviewId={detailReview[0].boardId}
+								reviewLike={detailReview[0].reviewLike}
+							/>
+						}
 					</ReviewTextBox>
 				</NewFamilyDetailContainer>
 			)}

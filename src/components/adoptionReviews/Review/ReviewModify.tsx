@@ -1,9 +1,9 @@
 import { ChangeEvent, useEffect, useState } from 'react';
-import { modifyReview } from '../../../api/reviewApi';
+import { getAllComments, modifyReview } from '../../../api/reviewApi';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { DetailTextBox } from '../../newFamily/NewFamily.style';
 import { ModifyBtnsDiv, ModifyDiv } from '../Reviews.style';
-import { useMutation, useQueryClient } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 
 interface FormData {
 	textReview: string;
@@ -15,34 +15,20 @@ const ReviewModify = ({
 	age,
 	reviewId,
 	images,
+	refetch,
 }: any) => {
 	const queryClient = useQueryClient();
 	const { $isMobile, $isTablet, $isPc } = useResponsive();
-	const [formData, setFormData] = useState<FormData>({
-		textReview: '',
-	});
+	const [modifyText, setModifyText] = useState('');
 
-	const { mutate: detailReview } = useMutation(
-		async () => {
-			return modifyReview(reviewId, formData);
-		},
-		{
-			onSuccess: () => {
-				queryClient.refetchQueries(['getDetailReview'], { exact: true });
-			},
-		},
-	);
-
-	useEffect(() => {
-		setFormData((prev) => ({ ...prev, files: images }));
-	}, []);
 	const textChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-		setFormData({ textReview: e.target.value });
-		console.log(formData);
+		setModifyText(e.target.value);
 	};
 
-	const modifyReviewHandler = () => {
-		detailReview();
+	const modifyReviewHandler = async () => {
+		const response = await modifyReview(reviewId, modifyText);
+		console.log(response);
+		refetch();
 		setIsOpenModify((prev: boolean) => !prev);
 	};
 

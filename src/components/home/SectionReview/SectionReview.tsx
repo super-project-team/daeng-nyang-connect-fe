@@ -29,9 +29,9 @@ const SectionReview = () => {
 
 	return (
 		<>
-			{reviews ? (
-				<MainSection $isMaxWidth={$isMaxWidth} $isMobile={$isMobile}>
-					<MainSectionH2 $isMobile={$isMobile}>입양 후기</MainSectionH2>
+			<MainSection $isMaxWidth={$isMaxWidth} $isMobile={$isMobile}>
+				<MainSectionH2 $isMobile={$isMobile}>입양 후기</MainSectionH2>
+				{reviews ? (
 					<CardListUl $isMobile={$isMobile}>
 						{reviews.map((review, index) => (
 							<HorizentalCard
@@ -40,21 +40,20 @@ const SectionReview = () => {
 								review={review}></HorizentalCard>
 						))}
 					</CardListUl>
-					<SalmonBtn onClick={moveToReview} $isMobile={$isMobile}>
-						더보기
-					</SalmonBtn>
-				</MainSection>
-			) : (
-				<MainSection $isMaxWidth={$isMaxWidth} $isMobile={$isMobile}>
-					<MainSectionH2 $isMobile={$isMobile}>입양 후기</MainSectionH2>
-					<CardListUl $isMobile={$isMobile}>
-						<p>No reviews available</p>
-					</CardListUl>
-					<SalmonBtn onClick={moveToReview} $isMobile={$isMobile}>
-						더보기
-					</SalmonBtn>
-				</MainSection>
-			)}
+				) : (
+					<div
+						style={{
+							textAlign: 'center',
+							height: '150px',
+						}}>
+						<p>입양 후기가 없습니다.</p>
+					</div>
+				)}
+
+				<SalmonBtn onClick={moveToReview} $isMobile={$isMobile}>
+					더보기
+				</SalmonBtn>
+			</MainSection>
 		</>
 	);
 };

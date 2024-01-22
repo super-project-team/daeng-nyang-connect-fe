@@ -49,9 +49,9 @@ const Login = () => {
 
 	const NaverLink =
 		'https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=E6A9JK080EcQ6AeJLJTf&scope=name%20email%20profile_image%20nickname%20gender%20mobile&state=wRRwsVwQNglwTdCE-uj3TZRmx6wfbI1q50HKX2xKsGQ%3D&redirect_uri=http://localhost:8080/naver_redirect';
-
 	const NaverLoginHandler = () => {
 		window.location.href = NaverLink;
+		dispatch(LOGIN_USER({ isLoggedIn: true }));
 	};
 
 	const onRegisterClick = () => {
@@ -106,9 +106,11 @@ const Login = () => {
 					return;
 				}
 
-				const { access_token, nickname, id } = response;
-				const saveToken = (token: string) => {
-					localToken.save(token);
+				console.log('response', response);
+
+				const { access_token, refresh_token, nickname, id } = response;
+				const saveToken = (token: string, isRefreshToken?: boolean) => {
+					localToken.save(token, isRefreshToken);
 				};
 
 				dispatch(
@@ -121,8 +123,11 @@ const Login = () => {
 
 				if (access_token) {
 					saveToken(access_token);
+					saveToken(refresh_token, true);
 					navigate('/');
 				}
+
+				localToken.isTokenExpired();
 			} catch (error) {
 				if (error instanceof TypeError) {
 					// TypeError
@@ -231,7 +236,9 @@ const Login = () => {
 						<Image
 							src="/assets/icons/icon-naver.png"
 							alt="twitter-icon"
-							onClick={NaverLoginHandler}
+							onClick={async () => {
+								NaverLoginHandler();
+							}}
 						/>
 					</Button>
 					<Button>

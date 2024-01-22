@@ -40,7 +40,11 @@ const Community = () => {
 			{(isPopUp || isModifyPopUp) && <WritingModal setIsPopUp={setIsPopUp} />}
 			{isLoading && <Loading />}
 			<CommunitySection>
-				<CommunityNav setIsPopUp={setIsPopUp} isPopUp={isPopUp} />
+				<CommunityNav
+					setIsPopUp={setIsPopUp}
+					isPopUp={isPopUp}
+					isLoading={isLoading}
+				/>
 				{(displayLabel === '나의 댕냥이' || displayLabel === '댕냥 미아센터') &&
 					!$isMobile && (
 						<ArrowButtonWrap onClick={scrollToTopHandler}>

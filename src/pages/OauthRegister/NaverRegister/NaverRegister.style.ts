@@ -1,10 +1,10 @@
 import styled from 'styled-components';
 
 interface ResponsiveProps {
-	$isMobile: boolean;
-	$isTablet: boolean;
-	$isPc: boolean;
-	$isMaxWidth: boolean;
+	$isMobile?: boolean;
+	$isTablet?: boolean;
+	$isPc?: boolean;
+	$isMaxWidth?: boolean;
 }
 
 export const RegisterWrapper = styled.div<ResponsiveProps>`
@@ -105,8 +105,6 @@ export const RegisterSelectBoxLeft = styled.select<ResponsiveProps>`
 		color: #111;
 	}
 `;
-
-export const Option = styled.option``;
 
 export const RegisterInputSmall = styled(RegisterInput)`
 	width: 48%;

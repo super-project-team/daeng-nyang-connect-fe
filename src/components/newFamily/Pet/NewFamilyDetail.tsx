@@ -16,7 +16,7 @@ import { useEffect, useState } from 'react';
 import { useResponsive } from '../../../hooks/useResponsive';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { MOVE_TO_CHAT } from '../../../slice/chatSlice';
+import { GET_ANIMAL_ID } from '../../../slice/chatSlice';
 import {
 	deleteAnimal,
 	getNewFamily,
@@ -26,6 +26,10 @@ import {
 } from '../../../api/newFamilyApi';
 import { IoCloseOutline } from 'react-icons/io5';
 import { PiPawPrintFill } from 'react-icons/pi';
+import SockJS from 'sockjs-client';
+import { Stomp } from '@stomp/stompjs';
+import localToken from '../../../api/LocalToken';
+import { makeChatRoom } from '../../../api/chatApi';
 
 interface AnimalData {
 	boardId: number;
@@ -195,20 +199,16 @@ const NewFamilyDetail = () => {
 			console.error('수정 오류:', error);
 		}
 	};
-
 	//채팅창으로 이동
-	const moveToChatHandler = () => {
+	const moveToChatHandler = async () => {
 		if (isLoggedIn) {
-			dispatch(
-				MOVE_TO_CHAT({
-					animalId: boardIdData?.boardId,
-					animalName: boardIdData?.animalName,
-					age: boardIdData?.age,
-					breed: boardIdData?.breed,
-					images: boardIdData?.images,
-				}),
-			);
-			navigate(`/users/${user.id}/chatBox`);
+			dispatch(GET_ANIMAL_ID(boardIdData?.boardId));
+			const makeRoomId = await makeChatRoom(boardIdData?.boardId);
+			if (makeRoomId) {
+				const chatRoomId = makeRoomId.chatRoomId;
+				if ($isMobile) navigate(`/users/${user.id}/chatRoom/${chatRoomId}`);
+				navigate(`/users/${user.id}/chatBox/${chatRoomId}`);
+			}
 		} else {
 			navigate('/login');
 		}
@@ -681,7 +681,7 @@ const NewFamilyDetail = () => {
 								{boardIdData?.textEtc}
 							</p>
 						</DetailTextBox>
-						<button onClick={moveToChatHandler}>문의하기</button>
+						<button onClick={() => moveToChatHandler()}>문의하기</button>
 					</div>
 				</NewFamilyDetailContainer>
 			)}

@@ -18,12 +18,12 @@ interface MobileDrawerProps {
 }
 
 const MobileMenuDrawer = ({ setmMenuIsOpen }: MobileDrawerProps) => {
-	const user = useSelector((state: UserState) => state);
+	const user = useSelector((state: any) => state.user);
 
 	return (
 		<MobileMenuBackdrop setmMenuIsOpen={setmMenuIsOpen}>
 			<MobileDrawerDiv>
-				{user.isLoggedIn ? (
+				{!user.isLoggedIn ? (
 					<ul style={{ marginBottom: '50px' }}>
 						<MobileDrawerH3>
 							<img src="/assets/LOGO(footer).svg" alt="" />

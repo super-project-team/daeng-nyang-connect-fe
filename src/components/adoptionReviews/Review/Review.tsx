@@ -46,8 +46,6 @@ const Review = () => {
 	const reviewRefetch = result[0].refetch;
 	const loading = result.some((result) => result.isLoading);
 
-	// console.log(detailReview[0].boardId);
-
 	const toggleDropdown = () => {
 		setIsDropdownVisible((prev) => !prev);
 	};
@@ -168,7 +166,12 @@ const Review = () => {
 								{detailReview[0].textReview}
 							</DetailText>
 						</DetailTextBox>
-						{<ReviewCommentBox reviewId={detailReview[0].boardId} />}
+						{
+							<ReviewCommentBox
+								reviewId={detailReview[0].boardId}
+								reviewLike={detailReview[0].reviewLike}
+							/>
+						}
 					</ReviewTextBox>
 				</NewFamilyDetailContainer>
 			)}

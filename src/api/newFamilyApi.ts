@@ -42,7 +42,7 @@ export const getNewFamily = async (): Promise<any> => {
 	return await NewFamilyApi.get(GET_ALL);
 };
 
-export const adoptComplete = async (animalId: number, adoptUserId: number) => {
+export const adoptComplete = async (animalId: number, adoptUserId: any) => {
 	return await NewFamilyApi.put(
 		COMPLETE + `?animalId=${animalId}&&adoptedUserId=${adoptUserId}`,
 	);

@@ -10,7 +10,7 @@ import {
 	NewFamilyDetailContainer,
 	UserThumbnail,
 } from '../NewFamily.style';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import NewFamilySwiper from './NewFamilySwiper';
 import { useEffect, useState } from 'react';
 import { useResponsive } from '../../../hooks/useResponsive';

@@ -24,7 +24,9 @@ const ChatRoom = ({ chatRefetch, setOpenChat }: any) => {
 	const token = localToken.get();
 
 	useEffect(() => {
-		const socket = new SockJS('http://52.79.108.20:8080/websocket');
+		const socket = new SockJS(
+			'https://daeng-nyang-be-qyu5xzcspa-du.a.run.app/websocket',
+		);
 		const stomp = Stomp.over(socket);
 		const headers = {
 			access_token: token,

@@ -105,13 +105,12 @@ const Nav = () => {
 								<IoChatbubblesSharp />
 							)}
 						</UtilDd>
-						{/* <UtilDd>
-						<IoNotificationsOutline />
-					</UtilDd> */}
 						<UtilDd $isMobile={$isMobile}>
 							{$isMobile ? (
 								<FiMenu onClick={mMenuClickHandler} />
-							) : pathname.includes('users') && !pathname.includes('chat') ? (
+							) : pathname.includes('users') &&
+							  !pathname.includes('chat') &&
+							  !pathname.includes('alarm') ? (
 								<HiUser />
 							) : (
 								<HiOutlineUser onClick={userIconClickHandler} />

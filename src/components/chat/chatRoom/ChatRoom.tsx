@@ -35,12 +35,12 @@ const ChatRoom = ({ chatRefetch, setOpenChat }: any) => {
 			setStompClient(stomp);
 			console.log('연결');
 
-			stompClient.subscribe(`/topic/chat/${roomId}`, (response: any) => {
-				const message = JSON.parse(response.body);
-				console.log('구독');
+			// stompClient.subscribe(`/topic/chat/${roomId}`, (response: any) => {
+			// 	const message = JSON.parse(response.body);
+			// 	console.log('구독');
 
-				setMessages(message);
-			});
+			// 	setMessages(message);
+			// });
 		});
 
 		// 컴포넌트 언마운트시 연결해제

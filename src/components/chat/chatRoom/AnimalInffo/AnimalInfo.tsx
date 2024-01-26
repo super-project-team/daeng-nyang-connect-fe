@@ -40,7 +40,7 @@ const AnimalInfo = ({ counterUser }: any) => {
 
 	useEffect(() => {
 		refetch();
-	}, [chatDetails]);
+	}, [chatDetails, roomId]);
 
 	const adoptCompleteHandler = async () => {
 		const adoptUserId = counterUser.userId;
@@ -75,7 +75,7 @@ const AnimalInfo = ({ counterUser }: any) => {
 							</CompleteBtn>
 						) : (
 							<CompleteBtn $isMobile={$isMobile} onClick={adoptCompleteHandler}>
-								입양 신청
+								입양 완료
 							</CompleteBtn>
 						)}
 					</BtnDiv>

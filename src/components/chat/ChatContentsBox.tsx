@@ -7,6 +7,7 @@ import { ChatInnerLeftDiv, ChatInnerRightDiv } from './ChatContentsBox.style';
 import ChatCategory from './chatCategory/ChatCategory';
 import ChatList from './chatList/ChatList';
 import ChatRoom from './chatRoom/ChatRoom';
+import { useParams } from 'react-router-dom';
 
 const ChatContentsBox = () => {
 	const { $isMobile } = useResponsive();
@@ -16,8 +17,7 @@ const ChatContentsBox = () => {
 		isLoading,
 		refetch: chatRefetch,
 	} = useQuery('getChatLists', getChatLists);
-
-	const [openChat, setOpenChat] = useState(false);
+	const { roomId } = useParams();
 
 	useEffect(() => {
 		chatRefetch();
@@ -29,19 +29,12 @@ const ChatContentsBox = () => {
 			<ChatInnerLeftDiv $isMobile={$isMobile}>
 				<ChatCategory />
 				{chatLists ? (
-					<ChatList
-						chatLists={chatLists}
-						setOpenChat={setOpenChat}
-						openChat={openChat}
-						chatRefetch={chatRefetch}
-					/>
+					<ChatList chatLists={chatLists} chatRefetch={chatRefetch} />
 				) : null}
 			</ChatInnerLeftDiv>
 			{!$isMobile && (
 				<ChatInnerRightDiv>
-					{openChat ? (
-						<ChatRoom chatRefetch={chatRefetch} setOpenChat={setOpenChat} />
-					) : null}
+					{roomId ? <ChatRoom chatRefetch={chatRefetch} /> : null}
 				</ChatInnerRightDiv>
 			)}
 		</>

@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import ChatInfo from './ChatInfo/ChatInfo';
 
-const ChattingList = ({
-	chatLists,
-	setOpenChat,
-	openChat,
-	chatRefetch,
-}: any) => {
+const ChattingList = ({ chatLists, chatRefetch }: any) => {
 	const [selectedChatIndex, setSelectedChatIndex] = useState(0);
 
 	const clickListHandler = (index: number) => {
@@ -24,12 +19,10 @@ const ChattingList = ({
 						<ChatInfo
 							key={index}
 							chatinfo={chatinfo}
-							setOpenChat={setOpenChat}
-							openChat={openChat}
 							isSelected={selectedChatIndex === index}
 							click={() => clickListHandler(index)}
 						/>
-				  ))
+					))
 				: null}
 		</ul>
 	);

@@ -12,6 +12,7 @@ import useCounterUser from '../../../hooks/useCounterUser';
 import AnimalInfo from './AnimalInffo/AnimalInfo';
 import { useQuery } from 'react-query';
 import { getChatDetails } from '../../../api/chatApi';
+import formatTime from './../../../utils/formatTime';
 
 const ChatRoom = ({ setOpenChat }: any) => {
 	const { $isMobile } = useResponsive();
@@ -91,11 +92,15 @@ const ChatRoom = ({ setOpenChat }: any) => {
 			<ChatBubbleUl ref={scrollRef}>
 				{messages.length > 0 &&
 					messages.map((message: any, index: number) => (
-						<ChatBubbleLi
-							key={index}
-							className={message.senderId == userId ? 'sender' : 'receiver'}>
-							{message.content}
-						</ChatBubbleLi>
+						<div key={index} style={{ display: 'flex', alignItems: 'center' }}>
+							<ChatBubbleLi
+								className={message.senderId == userId ? 'sender' : 'receiver'}>
+								{message.content}
+							</ChatBubbleLi>
+							<time style={{ fontSize: '11px', marginLeft: '3px' }}>
+								{formatTime(message.createdAt)}
+							</time>
+						</div>
 					))}
 			</ChatBubbleUl>
 			<ChatInput stompClient={stompClient} />

@@ -1,4 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { RiMore2Line } from 'react-icons/ri';
+import { useQueries } from 'react-query';
+import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getUserLikes } from '../../../api/myPageApi';
+import { deleteReview, getDetailReview } from '../../../api/reviewApi';
+import { useResponsive } from '../../../hooks/useResponsive';
+import Loading from '../../../pages/Loading/Loading';
 import {
 	DetailImageBox,
 	DetailTextBox,
@@ -6,22 +14,9 @@ import {
 	NewFamilyDetailContainer,
 	UserThumbnail,
 } from '../../newFamily/NewFamily.style';
-import { RiMore2Line } from 'react-icons/ri';
 import { DetailText, ReviewTextBox } from '../Reviews.style';
 import ReviewCommentBox from './ReviewCommentBox';
-import { useResponsive } from '../../../hooks/useResponsive';
-import { useMutation, useQueries, useQuery, useQueryClient } from 'react-query';
-import {
-	deleteReview,
-	getDetailReview,
-	modifyReview,
-} from '../../../api/reviewApi';
-import { useNavigate, useParams } from 'react-router-dom';
 import ReviewModify from './ReviewModify';
-import { useSelector } from 'react-redux';
-import { UserState } from '../../../slice/userSlice';
-import { getUserLikes, myPageGet } from '../../../api/myPageApi';
-import Loading from '../../../pages/Loading/Loading';
 
 interface LikedItems {
 	boardId: number;
@@ -31,7 +26,6 @@ interface LikedItems {
 const Review = () => {
 	const params = useParams();
 	const navigate = useNavigate();
-	const queryClient = useQueryClient();
 	const animalId = Number(params.reviewId);
 	const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 	const [isOpenModify, setIsOpenModify] = useState(false);
@@ -161,7 +155,6 @@ const Review = () => {
 							)}
 							<p>이름 : {detailReview[0].adoptedAnimalName}</p>
 							<p>나이 : {detailReview[0].age}</p>
-							{/* <p>입양 시기: ??</p> */}
 							<DetailText $isMobile={$isMobile}>
 								{detailReview[0].textReview}
 							</DetailText>

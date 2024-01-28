@@ -20,7 +20,6 @@ export const UserWrapper = styled.div`
 export const UserBox = styled.div`
 	display: flex;
 	align-items: center;
-	justify-content: center;
 	width: 1380px;
 	height: 100vh;
 	flex-direction: column;

@@ -1,8 +1,12 @@
 import { useEffect, useState } from 'react';
 import ChatInfo from './ChatInfo/ChatInfo';
+import { useParams } from 'react-router-dom';
 
 const ChattingList = ({ chatLists, chatRefetch }: any) => {
-	const [selectedChatIndex, setSelectedChatIndex] = useState(0);
+	const { roomId } = useParams();
+	const [selectedChatIndex, setSelectedChatIndex] = useState<
+		number | string | null
+	>(Number(roomId));
 
 	const clickListHandler = (index: number) => {
 		setSelectedChatIndex(index);
@@ -19,8 +23,8 @@ const ChattingList = ({ chatLists, chatRefetch }: any) => {
 						<ChatInfo
 							key={index}
 							chatinfo={chatinfo}
-							isSelected={selectedChatIndex === index}
-							click={() => clickListHandler(index)}
+							isSelected={selectedChatIndex == chatinfo.chatRoomId}
+							click={clickListHandler}
 						/>
 					))
 				: null}

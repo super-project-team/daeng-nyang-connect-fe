@@ -44,5 +44,8 @@ export const MoreUl = styled.ul`
 		&:first-of-type {
 			margin-bottom: 10px;
 		}
+		&:hover {
+			cursor: pointer;
+		}
 	}
 `;

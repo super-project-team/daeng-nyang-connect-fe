@@ -21,15 +21,11 @@ export interface ChatAnimalInfo {
 	images: string[];
 }
 
-const AnimalInfo = ({ counterUser }: any) => {
+const AnimalInfo = ({ counterUser, chatDetails, refetch }: any) => {
 	const [isCompleted, setIsCompleted] = useState(false);
 	const { $isMobile } = useResponsive();
 	const navigate = useNavigate();
 	const { roomId } = useParams();
-
-	const { data: chatDetails, refetch } = useQuery('getChatDetails', () =>
-		getChatDetails(Number(roomId)),
-	);
 
 	const animalId = useSelector(
 		(state: any) => state.chat.chatAnimal.chatAnimalId,
@@ -40,7 +36,7 @@ const AnimalInfo = ({ counterUser }: any) => {
 
 	useEffect(() => {
 		refetch();
-	}, [chatDetails, roomId]);
+	}, [roomId]);
 
 	const adoptCompleteHandler = async () => {
 		const adoptUserId = counterUser.userId;

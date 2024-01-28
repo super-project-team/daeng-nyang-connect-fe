@@ -4,11 +4,12 @@ import { useSelector } from 'react-redux';
 import localToken from '../../../../api/LocalToken';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import { ChatInputDiv, ChatTextInput, SendBtn } from './ChatInput.style';
+import { useParams } from 'react-router-dom';
 
 const ChatInput = ({ stompClient }: any) => {
 	const token = localToken.get();
 	const { $isMobile } = useResponsive();
-	const roomId = useSelector((state: any) => state.chat.chatAnimal.chatRoomId);
+	const { roomId } = useParams();
 	const userId = useSelector((state: any) => state.user.id);
 	const [messageInput, setMessageInput] = useState('');
 
@@ -27,12 +28,6 @@ const ChatInput = ({ stompClient }: any) => {
 				headers,
 				JSON.stringify(message),
 			);
-
-			// stompClient.publish({
-			// 	destination: '/topic/chat/' + roomId,
-			// 	body: JSON.stringify(message),
-			// 	headers: { access_token: token },
-			// });
 
 			setMessageInput('');
 		}

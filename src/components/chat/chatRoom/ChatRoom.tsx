@@ -10,8 +10,10 @@ import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import useCounterUser from '../../../hooks/useCounterUser';
 import AnimalInfo from './AnimalInffo/AnimalInfo';
+import { useQuery } from 'react-query';
+import { getChatDetails } from '../../../api/chatApi';
 
-const ChatRoom = ({ chatRefetch, setOpenChat }: any) => {
+const ChatRoom = ({ setOpenChat }: any) => {
 	const { $isMobile } = useResponsive();
 	const scrollRef = useRef<HTMLUListElement | null>(null);
 	const userId = useSelector((state: any) => state.user.id);
@@ -22,6 +24,12 @@ const ChatRoom = ({ chatRefetch, setOpenChat }: any) => {
 	const [messages, setMessages] = useState<any>([]);
 
 	const token = localToken.get();
+
+	const { data: chatDetails, refetch } = useQuery(
+		['getChatDetails', roomId],
+		() => getChatDetails(Number(roomId)),
+	);
+	// console.log(chatDetails.messageList);
 
 	useEffect(() => {
 		const socket = new SockJS(
@@ -35,12 +43,7 @@ const ChatRoom = ({ chatRefetch, setOpenChat }: any) => {
 			setStompClient(stomp);
 			console.log('연결');
 
-			// stompClient.subscribe(`/topic/chat/${roomId}`, (response: any) => {
-			// 	const message = JSON.parse(response.body);
-			// 	console.log('구독');
-
-			// 	setMessages(message);
-			// });
+			// setMessages(chatDetails.messageList);
 		});
 
 		// 컴포넌트 언마운트시 연결해제
@@ -58,9 +61,7 @@ const ChatRoom = ({ chatRefetch, setOpenChat }: any) => {
 				(response: any) => {
 					const message = JSON.parse(response.body);
 					console.log('구독');
-					if (!messages.some((msg: any) => msg.roomId === message.roomId)) {
-						setMessages((prev: any) => [...prev, message]);
-					}
+					setMessages((prev: any) => [...prev, message]);
 				},
 			);
 			return () => {
@@ -81,12 +82,12 @@ const ChatRoom = ({ chatRefetch, setOpenChat }: any) => {
 
 	return (
 		<ChatRoomDiv $isMobile={$isMobile}>
-			<ChatRoomHeader
+			<ChatRoomHeader counterUser={counterUser} setOpenChat={setOpenChat} />
+			<AnimalInfo
 				counterUser={counterUser}
-				chatRefetch={chatRefetch}
-				setOpenChat={setOpenChat}
+				chatDetails={chatDetails}
+				refetch={refetch}
 			/>
-			<AnimalInfo counterUser={counterUser} />
 			<ChatBubbleUl ref={scrollRef}>
 				{messages.length > 0 &&
 					messages.map((message: any, index: number) => (

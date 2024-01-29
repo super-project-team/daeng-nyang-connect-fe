@@ -86,10 +86,13 @@ const NaverRegister = () => {
 		e.preventDefault();
 		try {
 			const response = await naverRegister(inputValue);
-			if (!response) return;
-			setConfirmModalIsOpen(true);
-			navigate('/socialLogin');
+			console.log(response);
+			if (response) {
+				setConfirmModalIsOpen(true);
+				navigate('/socialLogin');
+			}
 		} catch (error) {
+			console.log(error);
 			if (e instanceof TypeError) {
 				// TypeError
 			} else if (e instanceof SyntaxError) {

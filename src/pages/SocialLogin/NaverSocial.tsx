@@ -14,7 +14,7 @@ const NaverSocial = () => {
 		localToken.remove();
 		navigate('/login');
 	};
-	const loginCompeteHandler = async () => {
+	const loginCompleteHandler = async () => {
 		const token = localToken.get();
 		try {
 			if (token) {
@@ -42,7 +42,7 @@ const NaverSocial = () => {
 				<LoginButton className="social cancel" onClick={loginCancelHandler}>
 					로그인 취소
 				</LoginButton>
-				<LoginButton className="social" onClick={loginCompeteHandler}>
+				<LoginButton className="social" onClick={loginCompleteHandler}>
 					로그인 완료
 				</LoginButton>
 			</LoginDiv>

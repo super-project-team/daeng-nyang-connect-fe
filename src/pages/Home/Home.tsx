@@ -16,6 +16,19 @@ const Home = () => {
 
 	const loading = results.some((result) => result.isLoading);
 
+	useEffect(() => {
+		if (document.cookie.includes('access')) {
+			const cookie = document.cookie;
+			const accessTokenMatch = cookie.match(/access_token=([^;]*)/);
+			const accessToken = accessTokenMatch ? accessTokenMatch[1] : null;
+
+			const refreshTokenMatch = cookie.match(/refresh_token=([^;]*)/);
+			const refreshToken = refreshTokenMatch ? refreshTokenMatch[1] : null;
+			if (accessToken) localStorage.setItem('access_token', accessToken);
+			if (refreshToken) localStorage.setItem('refresh_token', refreshToken);
+		}
+	}, [document.cookie]);
+
 	if (loading) {
 		return <Loading />;
 	}

@@ -17,17 +17,12 @@ import {
 } from '../../../../slice/chatSlice';
 import { useEffect, useState } from 'react';
 
-const ChatInfo = ({
-	chatinfo,
-	click,
-	isSelected,
-	setOpenChat,
-	openChat,
-}: any) => {
+const ChatInfo = ({ chatinfo, click, isSelected }: any) => {
 	const { $isMobile } = useResponsive();
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const currentUser = useSelector((state: any) => state.user.id);
+	const { roomId } = useParams();
 
 	const [counterUser, setCounterUser] = useState({
 		userId: 0,
@@ -51,27 +46,8 @@ const ChatInfo = ({
 		e.stopPropagation();
 		click();
 
-		try {
-			const response = await getChatDetails(roomId);
-			if (response) {
-				const { chatRoomId, animalImage, animalAge, animalName, breed } =
-					response;
-				dispatch(
-					CHAT_ANIMAL({
-						chatRoomId: chatRoomId,
-						animalAge: animalAge,
-						animalImage: animalImage,
-						animalName: animalName,
-						breed: breed,
-					}),
-				);
-				setOpenChat(!openChat);
-				if ($isMobile) navigate(`/users/${currentUser}/chatRoom/${chatRoomId}`);
-				else navigate(`/users/${currentUser}/chatBox/${chatRoomId}`);
-			}
-		} catch (err) {
-			console.error(err);
-		}
+		if ($isMobile) navigate(`/users/${currentUser}/chatRoom/${roomId}`);
+		else navigate(`/users/${currentUser}/chatBox/${roomId}`);
 	};
 
 	return (

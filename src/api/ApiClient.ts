@@ -55,7 +55,7 @@ class APIClient {
 		try {
 			console.log('refreshToken', refreshToken);
 			const response = await axios.post(
-				`http://52.79.108.20:8080/api/refresh`,
+				`https://daeng-nyang-be-qyu5xzcspa-du.a.run.app/api/refresh`,
 				{
 					refreshToken,
 				},

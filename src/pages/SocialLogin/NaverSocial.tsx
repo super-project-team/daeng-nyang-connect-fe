@@ -16,6 +16,8 @@ const NaverSocial = () => {
 	};
 	const loginCompleteHandler = async () => {
 		const token = localToken.get();
+		console.log('로컬스토리지 토큰 : ', token);
+		console.log('쿠키 :', document.cookie);
 		try {
 			if (token) {
 				const response = await oauthLoginCheck(token);

@@ -52,7 +52,6 @@ const Login = () => {
 
 	const NaverLoginHandler = () => {
 		window.location.href = NaverLink;
-		dispatch(LOGIN_USER({ isLoggedIn: true }));
 	};
 
 	const onRegisterClick = () => {

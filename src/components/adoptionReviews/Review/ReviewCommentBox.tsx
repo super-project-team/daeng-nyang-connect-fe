@@ -203,11 +203,11 @@ const ReviewCommentBox = ({ reviewId, reviewLike }: CommentsProps) => {
 										)}
 									</ModifyInputDiv>
 									<span
-										onClick={() =>
+										onClick={() => {
 											setCommentMore((prev) => ({
 												[comment.commentsId]: !prev[comment.commentsId],
-											}))
-										}>
+											}));
+										}}>
 										{user.isLoggedIn && comment.nickname == user.nickname && (
 											<RiMore2Line className="more-icon" />
 										)}

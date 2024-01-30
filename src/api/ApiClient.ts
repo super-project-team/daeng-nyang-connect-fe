@@ -1,6 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import localToken from './LocalToken';
 
+axios.defaults.withCredentials = true;
 type Method = 'get' | 'post' | 'put' | 'delete';
 
 type Headers = Record<string, string | boolean> & {

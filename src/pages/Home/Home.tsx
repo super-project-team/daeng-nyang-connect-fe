@@ -29,9 +29,6 @@ const Home = () => {
 		}
 	}, [document.cookie]);
 
-	if (loading) {
-		return <Loading />;
-	}
 	return (
 		<>
 			<Banner />

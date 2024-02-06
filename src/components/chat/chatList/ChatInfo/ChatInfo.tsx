@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import { UserImgDiv } from '../../ChatContentsBox.style';
 import {
@@ -8,21 +10,11 @@ import {
 	ChatTime,
 	NoneReadCountEm,
 } from './ChatInfo.style';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getChatDetails, getChatLists } from '../../../../api/chatApi';
-import { useQuery } from 'react-query';
-import {
-	ADD_CHAT_COUNTER_USER,
-	CHAT_ANIMAL,
-} from '../../../../slice/chatSlice';
-import { useEffect, useState } from 'react';
 
 const ChatInfo = ({ chatinfo, click, isSelected }: any) => {
 	const { $isMobile } = useResponsive();
-	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const currentUser = useSelector((state: any) => state.user.id);
-	const { roomId } = useParams();
 
 	const [counterUser, setCounterUser] = useState({
 		userId: 0,
@@ -44,7 +36,7 @@ const ChatInfo = ({ chatinfo, click, isSelected }: any) => {
 		roomId: number,
 	) => {
 		e.stopPropagation();
-		click();
+		click(roomId);
 
 		if ($isMobile) navigate(`/users/${currentUser}/chatRoom/${roomId}`);
 		else navigate(`/users/${currentUser}/chatBox/${roomId}`);
@@ -61,11 +53,11 @@ const ChatInfo = ({ chatinfo, click, isSelected }: any) => {
 			<ChatInfoDiv>
 				<ChatInfoEachDiv className="first-box">
 					<p>{counterUser?.nickname}</p>
-					{/* <ChatTime $isMobile={$isMobile}>30분 전</ChatTime> */}
+					<ChatTime $isMobile={$isMobile}>?분 전</ChatTime>
 				</ChatInfoEachDiv>
 				<ChatInfoEachDiv>
-					<p>메시지 미리보기</p>
-					<NoneReadCountEm $isMobile={$isMobile}>4</NoneReadCountEm>
+					<p>{chatinfo?.latestContent}</p>
+					{/* <NoneReadCountEm $isMobile={$isMobile}>4</NoneReadCountEm> */}
 				</ChatInfoEachDiv>
 			</ChatInfoDiv>
 		</ChatListLi>

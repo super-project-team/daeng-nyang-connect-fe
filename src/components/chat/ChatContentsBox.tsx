@@ -33,9 +33,7 @@ const ChatContentsBox = () => {
 				) : null}
 			</ChatInnerLeftDiv>
 			{!$isMobile && (
-				<ChatInnerRightDiv>
-					{roomId ? <ChatRoom chatRefetch={chatRefetch} /> : null}
-				</ChatInnerRightDiv>
+				<ChatInnerRightDiv>{roomId ? <ChatRoom /> : null}</ChatInnerRightDiv>
 			)}
 		</>
 	);

@@ -1,3 +1,10 @@
+import { useState } from 'react';
+import { IoIosArrowBack } from 'react-icons/io';
+import { LuMoreVertical } from 'react-icons/lu';
+import { useMutation, useQueryClient } from 'react-query';
+import { useSelector } from 'react-redux';
+import { useNavigate, useParams } from 'react-router';
+import { deleteChat } from '../../../../api/chatApi';
 import { useResponsive } from '../../../../hooks/useResponsive';
 import { UserImgDiv } from '../../ChatContentsBox.style';
 import {
@@ -6,33 +13,15 @@ import {
 	MoreUl,
 	UserDiv,
 } from './ChatRoomHeader.style';
-import { LuMoreVertical } from 'react-icons/lu';
-import { IoIosArrowBack } from 'react-icons/io';
-import { useNavigate, useParams } from 'react-router';
-import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
-import {
-	deleteChat,
-	getChatDetails,
-	getChatLists,
-} from '../../../../api/chatApi';
-import { useQuery } from 'react-query';
 
-const ChatRoomHeader = ({ counterUser, chatRefetch, setOpenChat }: any) => {
+const ChatRoomHeader = ({ counterUser }: any) => {
 	const navigate = useNavigate();
 	const { $isMobile } = useResponsive();
-	const userId = useSelector((state: any) => state.user.id);
 	const { roomId } = useParams();
+	const userId = useSelector((state: any) => state.user.id);
+	const queryClient = useQueryClient();
 
 	const [openMenu, setOpenMenu] = useState(false);
-
-	const { data: chatDetails, refetch } = useQuery('getChatDetails', () =>
-		getChatDetails(Number(roomId)),
-	);
-
-	useEffect(() => {
-		refetch();
-	}, [chatDetails]);
 
 	const backToChatListHandler = () => {
 		navigate(`/users/${userId}/chatBox`);
@@ -42,11 +31,22 @@ const ChatRoomHeader = ({ counterUser, chatRefetch, setOpenChat }: any) => {
 		setOpenMenu((prev) => !prev);
 	};
 
+	const { mutate } = useMutation(
+		async (roomId: number) => {
+			return deleteChat(roomId);
+		},
+		{
+			onSuccess: () => {
+				queryClient.invalidateQueries(['getChatLists'], {
+					exact: true,
+				});
+				navigate(`/users/${userId}/chatBox`);
+			},
+		},
+	);
+
 	const deleteChatRoomHandler = async () => {
-		await deleteChat(Number(roomId));
-		chatRefetch();
-		setOpenChat((prev: boolean) => !prev);
-		navigate(`/users/${userId}/chatBox`);
+		mutate(Number(roomId));
 	};
 
 	return (
